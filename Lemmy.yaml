@@ -1,0 +1,720 @@
+openapi: '3.1.0'
+info:
+  title: Lemmy client API
+  description: This is an unofficial OpenAPI spec for Lemmy client API.
+  contact:
+    url: https://github.com/shadone/Lemmy-OpenAPI-Spec
+    email: denis@ddenis.info
+  license:
+    name: BSD 2-Clause
+    identifier: BSD-2-Clause
+  version: '0.19.1+1'
+
+servers:
+  - url: https://discuss.tchncs.de/api/v3
+  - url: https://lemmy-0-19-1.ddenis.info/api/v3
+
+tags:
+  - name: user
+    description: Operations on users.
+  - name: post
+    description: Operations on posts.
+
+paths:
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: Login
+      description: Login with a user account.
+      operationId: login
+      requestBody:
+        description: User credential
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post:
+    get:
+      tags:
+        - post
+      summary: Get Post
+      description: Fetch a post by its id.
+      operationId: getPost
+      parameters:
+        - in: query
+          name: GetPost
+          schema:
+            $ref: '#/components/schemas/GetPostRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/list:
+    get:
+      tags:
+        - post
+      summary: Get Posts
+      description: Fetch a collection of posts.
+      operationId: getPosts
+      parameters:
+        - in: query
+          name: GetPosts
+          schema:
+            $ref: '#/components/schemas/GetPostsRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPostsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  responses:
+    ErrorResponse:
+      description: An error has occurred.
+      content: 
+        application/json:
+          schema: 
+            type: array
+            items:
+              $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+
+    PostID:
+      type: integer
+      format: int32
+      summary: Post identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+    
+    CommentID:
+      type: integer
+      format: int32
+      summary: Comment identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    PersonID:
+      type: integer
+      format: int32
+      summary: Person identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    CommunityID:
+      type: integer
+      format: int32
+      summary: Community identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    LanguageID:
+      type: integer
+      format: int32
+      summary: Language identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    InstanceID:
+      type: integer
+      format: int32
+      summary: Instance identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    LoginRequest:
+      type: object
+      required:
+        - username_or_email
+        - password
+      properties:
+        username_or_email:
+          type: string
+          example: 'foobar@example.org'
+        password:
+          type: string
+          format: password
+          example: 'mys3cur3p4$$w0rd'
+        totp_2fa_token:
+          type: string
+    
+    LoginResponse:
+      type: object
+      required:
+        - registration_created
+        - verify_email_sent
+      properties:
+        jwt:
+          type: string
+        registration_created:
+          type: boolean
+        verify_email_sent:
+          type: boolean
+
+    GetPostRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/PostID'
+          description: The post identifier to fetch.
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+          description: The comment identifier to fetch.
+    
+    GetPostResponse:
+      type: object
+      required:
+        - post_view
+        - community_view
+        - moderators
+        - cross_posts
+      properties:
+        post_view:
+          $ref: '#/components/schemas/PostView'
+        community_view:
+          $ref: '#/components/schemas/CommunityView'
+        moderators:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
+        cross_posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostView'
+
+    PostView:
+      type: object
+      required:
+        - post
+        - creator
+        - community
+        - creator_banned_from_community
+        - creator_is_moderator
+        - creator_is_admin
+        - counts
+        - subscribed
+        - saved
+        - read
+        - creator_blocked
+        - unread_comments
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      properties:
+        post:
+          description: The post content.
+          $ref: '#/components/schemas/Post'
+        creator:
+          description: Author of the post.
+          $ref: '#/components/schemas/Person'
+        community:
+          description: Community to which the post was submitted.
+          $ref: '#/components/schemas/Community'
+        creator_banned_from_community:
+          type: boolean
+          description: Specifies whether the post author is banned from the community.
+        creator_is_moderator:
+          type: boolean
+        creator_is_admin:
+          type: boolean
+        counts:
+          description: Stats about the post.
+          $ref: '#/components/schemas/PostAggregates'
+        subscribed:
+          $ref: '#/components/schemas/SubscribedType'
+        saved:
+          type: boolean
+          description: Specifies whether the user marked the post as saved.
+        read:
+          type: boolean
+          description: Specifies whether the user read the post.
+        creator_blocked:
+          type: boolean
+          description: Specifies whether the user blocked the post author.
+        my_vote:
+          type: integer
+          format: int32 # int16
+          minimum: -32768
+          maximum: 32767
+          description: Users' vote status.
+        unread_comments:
+          type: integer
+          format: int64
+          description: The number of unread comments in the post for the user.
+
+    Post:
+      type: object
+      required:
+        - id
+        - name
+        - creator_id
+        - community_id
+        - removed
+        - locked
+        - published
+        - deleted
+        - nsfw
+        - ap_id
+        - local
+        - language_id
+        - featured_community
+        - featured_local
+      properties:
+        id:
+          description: Post identifier
+          $ref: '#/components/schemas/PostID'
+        name:
+          type: string
+          description: The title of the post, in markdown.
+        url:
+          type: string
+          format: uri
+          description: An optional link / url for the post.
+        body:
+          type: string
+          description: An optional post body, in markdown.
+        creator_id:
+          $ref: '#/components/schemas/PersonID'
+          description: Post author identifier. The identifier is local to this instance.
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+          description: Community identifier. The identifier is local to this instance.
+        removed:
+          type: boolean
+          description: Whether the post is removed.
+        locked:
+          type: boolean
+          description: Whether the post is locked.
+        published:
+          type: string
+          format: date-time
+          description: The date this post was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this post was last updated.
+        deleted:
+          type: boolean
+          description: Whether the post is deleted.
+        nsfw:
+          type: boolean
+          description: Whether the post is NSFW.
+        embed_title:
+          type: string
+          description: A title for the link.
+        embed_description:
+          type: string
+          description: A description for the link.
+        thumbnail_url:
+          type: string
+          format: uri
+          description: A thumbnail picture url.
+        ap_id:
+          type: string
+          format: uri
+          description: The federated activity id / ap_id.
+          example: https://sh.itjust.works/post/109799
+        local:
+          type: boolean
+          description: Whether the post is local.
+        embed_video_url:
+          type: string
+          format: uri
+          description: A video url for the link.
+        language_id:
+          $ref: '#/components/schemas/LanguageID'
+          description: The language of the post.
+        featured_community:
+          type: boolean
+          description: Whether the post is featured to its community.
+        featured_local:
+          type: boolean
+          description: Whether the post is featured to its site.
+
+    Community:
+      type: object
+      required:
+        - id
+        - name
+        - title
+        - removed
+        - published
+        - deleted
+        - nsfw
+        - actor_id
+        - local
+        - hidden
+        - posting_restricted_to_mods
+        - instance_id
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/community.rs
+      properties:
+        id:
+          description: Community identifier
+          $ref: '#/components/schemas/CommunityID'
+        name:
+          type: string
+          description: The unique name of the community.
+          example: mylittlepony
+        title:
+          type: string
+          description: A longer title, that can contain other characters, and doesn't have to be unique.
+          example: 'MLP: Friendship is Magic Reddit Community'
+        description:
+          type: string
+          description: A sidebar / markdown description.
+        removed:
+          type: boolean
+          description: Whether the community is removed by a mod.
+        published:
+          type: string
+          format: date-time
+          description: The date community was created.
+        updated:
+          type: string
+          format: date-time
+          description: The date community info was last updated.
+        deleted:
+          type: boolean
+          description: Whether the community has been deleted by its creator.
+        nsfw:
+          type: boolean
+          description: Whether it is an NSFW community.
+        actor_id:
+          type: string
+          format: uri
+          description: The federated actor_id.
+          example: https://lemmit.online/c/mylittlepony
+        local:
+          type: boolean
+          description: Whether the community is local.
+        icon:
+          type: string
+          format: uri
+          description: A URL for an icon.
+        banner:
+          type: string
+          format: uri
+          description: A URL for a banner.
+        hidden:
+          type: boolean
+          description: Whether the community is hidden.
+        posting_restricted_to_mods:
+          type: boolean
+          description: Whether posting is restricted to mods only.
+        instance_id:
+          $ref: '#/components/schemas/InstanceID'
+          
+    Person:
+      type: object
+      required:
+        - id
+        - name
+        - banned
+        - published
+        - actor_id
+        - local
+        - deleted
+        - bot_account
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/person.rs
+      properties:
+        id:
+          description: Person identifier
+          $ref: '#/components/schemas/PersonID'
+        name:
+          type: string
+          description: Username (aka nickname aka short users' name).
+          example: helloworld
+        display_name:
+          type: string
+          description: A display name for the user.
+          example: Hello World!
+        avatar:
+          type: string
+          format: uri
+          description: A URL for an avatar.
+        banned:
+          type: boolean
+          description: Whether the person is banned.
+        published:
+          type: string
+          format: date-time
+          description: The account creation date.
+        updated:
+          type: string
+          format: date-time
+        actor_id:
+          type: string
+          format: uri
+          description: The federated actor_id.
+          example: https://discuss.tchncs.de/u/milan
+        bio:
+          type: string
+          description: An optional bio, in markdown.
+        local:
+          type: boolean
+          description: Whether the person is local to our site.
+        banner:
+          type: string
+          format: uri
+          description: A URL for a banner.
+        deleted:
+          type: boolean
+          description: Whether the person is deleted.
+        matrix_user_id:
+          type: string
+          description: A matrix id, usually given an @person:matrix.org
+        bot_account:
+          type: boolean
+          description: Whether the person is a bot account.
+        ban_expires:
+          type: string
+          format: date-time
+          description: When their ban, if it exists, expires, if at all.
+        instance_id:
+          description: Which instance the person belongs to.
+          $ref: '#/components/schemas/InstanceID'
+
+    PostAggregates:
+      type: object
+      required:
+        - post_id
+        - comments
+        - score
+        - upvotes
+        - downvotes
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        comments:
+          type: integer
+          format: int64
+          description: Number of comments in the post.
+        score:
+          type: integer
+          format: int64
+          description: Overall score of the post.
+        upvotes:
+          type: integer
+          format: int64
+          description: Number of upvotes.
+        downvotes:
+          type: integer
+          format: int64
+          description: Number of downvotes.
+        published:
+          type: string
+          format: date-time
+          description: The timestamp when the post was published.
+
+    SubscribedType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      description: A type / status for a community subscribe.
+      enum:
+        - Subscribed
+        - NotSubscribed
+        - Pending
+
+    CommunityView:
+      type: object
+      required:
+        - community
+        - subscribed
+        - blocked
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      properties:
+        community:
+          $ref: '#/components/schemas/Community'
+        subscribed:
+          $ref: '#/components/schemas/SubscribedType'
+        blocked:
+          type: boolean
+        counts:
+          $ref: '#/components/schemas/CommunityAggregates'
+
+    CommunityAggregates:
+      type: object
+      required:
+        - community_id
+        - subscribers
+        - posts
+        - comments
+        - published
+        - users_active_day
+        - users_active_week
+        - users_active_month
+        - users_active_half_year
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
+      description: Aggregate data for a community.
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        subscribers:
+          type: integer
+          format: int64
+        posts:
+          type: integer
+          format: int64
+        comments:
+          type: integer
+          format: int64
+        published:
+          type: string
+          format: date-time
+        users_active_day:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last day.
+        users_active_week:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last week.
+        users_active_month:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last month.
+        users_active_half_year:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last 6 months.
+
+    CommunityModeratorView:
+      type: object
+      required:
+        - community
+        - moderator
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      description: A community moderator.
+      properties:
+        community:
+          $ref: '#/components/schemas/Community'
+        moderator:
+          $ref: '#/components/schemas/Person'
+
+    PaginationCursor:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+
+    ListingType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      enum:
+        # Content from your own site, as well as all connected / federated sites.
+        - All
+        # Content from your site only.
+        - Local
+        # Content only from communities you've subscribed to.
+        - Subscribed
+        # Content that you can moderate (because you are a moderator of the community it is posted to).
+        - ModeratorView
+
+    SortType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      enum:
+        - Active
+        - Hot
+        - New
+        - Old
+        - TopSixHour
+        - TopTwelveHour
+        - TopDay
+        - TopWeek
+        - TopMonth
+        - TopYear
+        - TopAll
+        - MostComments
+        - NewComments
+        - TopThreeMonths
+        - TopSixMonths
+        - TopNineMonths
+        - Controversial
+        - Scaled
+
+    GetPostsRequest:
+      type: object
+      properties:
+        type_:
+          description: The type of listing to fetch.
+          $ref: '#/components/schemas/ListingType'
+        sort:
+          description: Specifies how the posts in response should be ordered.
+          $ref: '#/components/schemas/SortType'
+        page:
+          type: integer
+          format: int64
+          summary: Page number
+          description: >
+            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
+            The first page is number 1.
+        limit:
+          type: integer
+          format: int64
+          summary: Desired number of results per page
+          description: >
+            Pagination. Specifies the maximum number of results per page.
+            Specifies the max number of posts to be fetched.
+            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
+        community_id:
+          description: The community identifier to fetch posts from.
+          $ref: '#/components/schemas/CommunityID'
+        community_name:
+          type: string
+          description: The community name to fetch posts from.
+        saved_only:
+          type: boolean
+          description: Whether to fetch only saved posts.
+        liked_only: 
+          type: boolean
+        disliked_only: 
+          type: boolean
+        page_cursor: 
+          $ref: '#/components/schemas/PaginationCursor'
+
+    GetPostsResponse:
+      type: object
+      required:
+        - posts
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostView'
+        next_page:
+          $ref: '#/components/schemas/PaginationCursor'
