@@ -1189,6 +1189,29 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Comments
+      summary: Get Comment
+      description: Get / fetch comment.
+      operationId: getComment
+      security:
+        - BearerAuth: []
+        - {}
+      parameters:
+        - in: query
+          name: id
+          schema:
+            $ref: '#/components/schemas/CommentID'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
 
   /comment/delete:
     post:
@@ -1351,6 +1374,7 @@ paths:
       tags:
         - Comments
       summary: Get Comments
+      description: Get / fetch comments.
       operationId: getComments
       security:
         - BearerAuth: []
@@ -1414,6 +1438,86 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetCommentsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/report:
+    post:
+      tags:
+        - Comments
+      summary: Report Comment
+      description: Report a comment.
+      operationId: reportComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Report Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Mod
+      summary: Resolve Comment Report
+      description: Resolve a comment report. Only a mod can do this.
+      operationId: resolveCommentReport
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Resolve Comment Report
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolveCommentReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/report/list:
+    get:
+      tags:
+        - Mod
+      summary: List Comment Reports
+      description: List comment reports.
+      operationId: listCommentReports
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: unresolved_only
+          schema:
+            type: boolean
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCommentReportsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
@@ -1607,7 +1711,7 @@ components:
       description: The identifier is local to this instance.
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
-    
+
     CommentID:
       type: integer
       format: int32
@@ -1700,6 +1804,14 @@ components:
       type: integer
       format: int32
       summary: The comment reply id.
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    CommentReportID:
+      type: integer
+      format: int32
+      summary: The comment report id.
       description: The identifier is local to this instance.
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
@@ -1970,7 +2082,7 @@ components:
           description: Whether posting is restricted to mods only.
         instance_id:
           $ref: '#/components/schemas/InstanceID'
-          
+
     Person:
       type: object
       required:
@@ -5081,3 +5193,120 @@ components:
           $ref: '#/components/schemas/CommentID'
         distinguished:
           type: boolean
+
+    CreateCommentReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Report a comment.
+      required:
+        - comment_id
+        - reason
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        reason:
+          type: string
+
+    CommentReportResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: The comment report response.
+      required:
+        - comment_report_view
+      properties:
+        comment_report_view:
+          $ref: '#/components/schemas/CommentReportView'
+
+    CommentReportView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A comment report view.
+      required:
+        - comment_report
+        - comment
+        - post
+        - community
+        - creator
+        - comment_creator
+        - counts
+        - creator_banned_from_community
+      properties:
+        comment_report:
+          $ref: '#/components/schemas/CommentReport'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+        creator:
+          $ref: '#/components/schemas/Person'
+        comment_creator:
+          $ref: '#/components/schemas/Person'
+        counts:
+          $ref: '#/components/schemas/CommentAggregates'
+        creator_banned_from_community:
+          type: boolean
+        my_vote:
+          $ref: '#/components/schemas/MyVote'
+        resolver:
+          $ref: '#/components/schemas/Person'
+
+    CommentReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_report.rs
+      description: A comment report.
+      required:
+        - id
+        - creator_id
+        - comment_id
+        - original_comment_text
+        - reason
+        - resolved
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/CommentReportID'
+        creator_id:
+          $ref: '#/components/schemas/PersonID'
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        original_comment_text:
+          type: string
+        reason:
+          type: string
+        resolved:
+          type: boolean
+        resolver_id:
+          $ref: '#/components/schemas/PersonID'
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    ResolveCommentReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Resolve a comment report (only doable by mods).
+      required:
+        - report_id
+        - resolved
+      properties:
+        report_id:
+          $ref: '#/components/schemas/CommentReportID'
+        resolved:
+          type: boolean
+
+    ListCommentReportsResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: The comment report list response.
+      required:
+        - comment_reports
+      properties:
+        comment_reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentReportView'
