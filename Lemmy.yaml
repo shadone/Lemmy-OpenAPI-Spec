@@ -280,6 +280,7 @@ paths:
       tags:
         - Site
       summary: Get Site
+      description: Gets the site, and your user data.
       operationId: getSite
       responses:
         '200':
@@ -288,6 +289,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetSiteResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - Site
+      summary: Create Site
+      description: Create your site
+      operationId: createSite
+      requestBody:
+        description: Create Site
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSite'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Site
+      summary: Edit Site
+      description: Edit your site
+      operationId: editSite
+      requestBody:
+        description: Edit Site
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditSite'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
@@ -1913,3 +1958,305 @@ components:
           $ref: '#/components/schemas/CommunityView'
         person:
           $ref: '#/components/schemas/PersonView'
+
+    CreateSite:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      summary: Creates a site
+      description: Should be done after first running Lemmy.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        sidebar:
+          type: string
+        description:
+          type: string
+          description: A shorter, one line description of your site.
+        icon:
+          type: string
+          description: A url for your site's icon.
+        banner:
+          type: string
+          description: A url for your site's banner.
+        enable_downvotes:
+          type: boolean
+          description: Whether to enable downvotes
+        enable_nsfw:
+          type: boolean
+          description: Whether to enable NSFW.
+        community_creation_admin_only:
+          type: boolean
+          description: Limits community creation to admins only.
+        require_email_verification:
+          type: boolean
+          description: Whether to require email verification
+        application_question:
+          type: string
+          description: Your application question form. This is in markdown, and can be many questions.
+        private_instance:
+          type: boolean
+          description: Whether your instance is public, or private
+        default_theme:
+          type: string
+          description: The default theme. Usually "browser"
+        default_post_listing_type:
+          $ref: '#/components/schemas/ListingType'
+        legal_information:
+          type: string
+          description: An optional page of legal information
+        application_email_admins:
+          type: boolean
+          description: Whether to email admins when receiving a new application.
+        hide_modlog_mod_names:
+          type: boolean
+          description: Whether to hide moderator names from the modlog.
+        discussion_languages:
+          type: array
+          description: A list of allowed discussion languages.
+          items:
+            $ref: '#/components/schemas/LanguageID'
+        slur_filter_regex:
+          type: string
+          description: A regex string of items to filter.
+        actor_name_max_length:
+          type: integer
+          format: int32
+          description: The max length of actor names.
+        rate_limit_message:
+          type: integer
+          format: int32
+          description: The number of messages allowed in a given time frame
+        rate_limit_message_per_second:
+          type: integer
+          format: int32
+          description: The number of messages allowed in a given time frame
+        rate_limit_post:
+          type: integer
+          format: int32
+          description: The number of posts allowed in a given time frame.
+        rate_limit_post_per_second:
+          type: integer
+          format: int32
+          description: The number of posts allowed in a given time frame.
+        rate_limit_register:
+          type: integer
+          format: int32
+          description: The number of registrations allowed in a given time frame.
+        rate_limit_register_per_second:
+          type: integer
+          format: int32
+          description: The number of registrations allowed in a given time frame.
+        rate_limit_image:
+          type: integer
+          format: int32
+          description: The number of image uploads allowed in a given time frame.
+        rate_limit_image_per_second:
+          type: integer
+          format: int32
+          description: The number of image uploads allowed in a given time frame.
+        rate_limit_comment:
+          type: integer
+          format: int32
+          description: The number of comments allowed in a given time frame.
+        rate_limit_comment_per_second:
+          type: integer
+          format: int32
+          description: The number of comments allowed in a given time frame.
+        rate_limit_search:
+          type: integer
+          format: int32
+          description: The number of searches allowed in a given time frame.
+        rate_limit_search_per_second:
+          type: integer
+          format: int32
+          description: The number of searches allowed in a given time frame.
+        federation_enabled:
+          type: boolean
+          description: Whether to enable federation.
+        federation_debug:
+          type: boolean
+          description: Enables federation debugging.
+        captcha_enabled:
+          type: boolean
+          description: Whether to enable captchas for signups.
+        captcha_difficulty:
+          type: string
+          description: The captcha difficulty. Can be easy, medium, or hard
+        allowed_instances:
+          type: array
+          description: A list of allowed instances. If none are set, federation is open.
+          items:
+            type: string
+        blocked_instances:
+          type: array
+          description: A list of blocked instances.
+          items:
+            type: string
+        taglines:
+          type: array
+          description: A list of taglines shown at the top of the front page.
+          items:
+            type: string
+        registration_mode:
+          $ref: '#/components/schemas/RegistrationMode'
+
+    EditSite:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      summary: Edits a site
+      properties:
+        name:
+          type: string
+        sidebar:
+          type: string
+        description:
+          type: string
+          description: A shorter, one line description of your site.
+        icon:
+          type: string
+          description: A url for your site's icon.
+        banner:
+          type: string
+          description: A url for your site's banner.
+        enable_downvotes:
+          type: boolean
+          description: Whether to enable downvotes.
+        enable_nsfw:
+          type: boolean
+          description: Whether to enable NSFW.
+        community_creation_admin_only:
+          type: boolean
+          description: Limits community creation to admins only.
+        require_email_verification:
+          type: boolean
+          description: Whether to require email verification
+        application_question:
+          type: string
+          description: Your application question form. This is in markdown, and can be many questions.
+        private_instance:
+          type: boolean
+          description: Whether your instance is public, or private
+        default_theme:
+          type: string
+          description: The default theme. Usually "browser"
+        default_post_listing_type:
+          $ref: '#/components/schemas/ListingType'
+        legal_information:
+          type: string
+          description: An optional page of legal information
+        application_email_admins:
+          type: boolean
+          description: Whether to email admins when receiving a new application.
+        hide_modlog_mod_names:
+          type: boolean
+          description: Whether to hide moderator names from the modlog.
+        discussion_languages:
+          type: array
+          description: A list of allowed discussion languages.
+          items:
+            $ref: '#/components/schemas/LanguageID'
+        slur_filter_regex:
+          type: string
+          description: A regex string of items to filter.
+        actor_name_max_length:
+          type: integer
+          format: int32
+          description: The max length of actor names.
+        rate_limit_message:
+          type: integer
+          format: int32
+          description: The number of messages allowed in a given time frame
+        rate_limit_message_per_second:
+          type: integer
+          format: int32
+          description: The number of messages allowed in a given time frame
+        rate_limit_post:
+          type: integer
+          format: int32
+          description: The number of posts allowed in a given time frame.
+        rate_limit_post_per_second:
+          type: integer
+          format: int32
+          description: The number of posts allowed in a given time frame.
+        rate_limit_register:
+          type: integer
+          format: int32
+          description: The number of registrations allowed in a given time frame.
+        rate_limit_register_per_second:
+          type: integer
+          format: int32
+          description: The number of registrations allowed in a given time frame.
+        rate_limit_image:
+          type: integer
+          format: int32
+          description: The number of image uploads allowed in a given time frame.
+        rate_limit_image_per_second:
+          type: integer
+          format: int32
+          description: The number of image uploads allowed in a given time frame.
+        rate_limit_comment:
+          type: integer
+          format: int32
+          description: The number of comments allowed in a given time frame.
+        rate_limit_comment_per_second:
+          type: integer
+          format: int32
+          description: The number of comments allowed in a given time frame.
+        rate_limit_search:
+          type: integer
+          format: int32
+          description: The number of searches allowed in a given time frame.
+        rate_limit_search_per_second:
+          type: integer
+          format: int32
+          description: The number of searches allowed in a given time frame.
+        federation_enabled:
+          type: boolean
+          description: Whether to enable federation.
+        federation_debug:
+          type: boolean
+          description: Enables federation debugging.
+        captcha_enabled:
+          type: boolean
+          description: Whether to enable captchas for signups.
+        captcha_difficulty:
+          type: string
+          description: The captcha difficulty. Can be easy, medium, or hard
+        allowed_instances:
+          type: array
+          description: A list of allowed instances. If none are set, federation is open.
+          items:
+            type: string
+        blocked_instances:
+          type: array
+          description: A list of blocked instances.
+          items:
+            type: string
+        taglines:
+          type: array
+          description: A list of taglines shown at the top of the front page.
+          items:
+            type: string
+        registration_mode:
+          $ref: '#/components/schemas/RegistrationMode'
+        reports_email_admins:
+          type: boolean
+          description: Whether to email admins for new reports.
+
+    SiteResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The response for a site.
+      required:
+        - site_view
+        - taglines
+      properties:
+        site_view:
+          $ref: '#/components/schemas/SiteView'
+        taglines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tagline'
+
