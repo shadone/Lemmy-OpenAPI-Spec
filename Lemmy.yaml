@@ -1325,13 +1325,13 @@ paths:
             type: string
             description: Search query.
             required: true
-            examples:
-              LemmyUserSyntax:
-                value: '@ruud@lemmy.world'
-                summary: Resolve user by Lemmy shorthand syntax.
-              ActivityPubObject:
-                value: 'https://lemmy.world/u/ruud'
-                summary: Resolve an ActivityPub actor.
+          examples:
+            LemmyUserSyntax:
+              value: '@ruud@lemmy.world'
+              summary: Resolve user by Lemmy shorthand syntax.
+            ActivityPubObject:
+              value: 'https://lemmy.world/u/ruud'
+              summary: Resolve an ActivityPub actor.
       responses:
         '200':
           description: Successful operation
