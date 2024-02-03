@@ -25,6 +25,8 @@ tags:
     description: Operations on comments.
   - name: Misc
     description: Miscellaneous operations.
+  - name: Mod
+    description: Moderator operations.
 
 paths:
   /user:
@@ -299,8 +301,6 @@ paths:
   /modlog:
     get:
       tags:
-        - Account
-        - User
         - Mod
       summary: Get Modlog
       description: Fetches the modlog
@@ -390,6 +390,331 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community:
+    post:
+      tags:
+        - Community
+      summary: Create Community
+      description: Create a new community.
+      operationId: createCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Create Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Community
+      summary: Get Community
+      description: Get / fetch a community.
+      operationId: getCommunity
+      security:
+        - BearerAuth: []
+        - {}
+      parameters:
+        - in: query
+          name: id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - in: query
+          name: name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Community
+      summary: Edit Community
+      description: Edit a community.
+      operationId: editCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Edit Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/list:
+    get:
+      tags:
+        - Community
+      summary: List Communities
+      description: List communities, with various filters.
+      operationId: listCommunities
+      security:
+        - BearerAuth: []
+        - {}
+      parameters:
+        - in: query
+          name: type_
+          schema:
+            $ref: '#/components/schemas/ListingType'
+        - in: query
+          name: sort
+          schema:
+            $ref: '#/components/schemas/SortType'
+        - in: query
+          name: show_nsfw
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCommunitiesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/follow:
+    post:
+      tags:
+        - Community
+      summary: Follow Community
+      description: Follow / subscribe to a community.
+      operationId: followCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Follow Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/block:
+    post:
+      tags:
+        - Community
+      summary: Block Community
+      description: Block a community.
+      operationId: blockCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Block Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockCommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/delete:
+    post:
+      tags:
+        - Community
+      summary: Delete Community
+      description: Delete a community.
+      operationId: deleteCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/hide:
+    put:
+      tags:
+        - Community
+        - Admin
+      summary: Hide Community
+      description: Hide a community from public / "All" view. Admins only.
+      operationId: hideCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Hide Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HideCommunity'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/remove:
+    post:
+      tags:
+        - Community
+        - Mod
+      summary: Remove Community
+      description: A moderator remove for a community.
+      operationId: removeCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Remove Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/transfer:
+    post:
+      tags:
+        - Community
+        - Mod
+      summary: Transfer Community
+      description: Transfer your community to an existing moderator.
+      operationId: transferCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Transfer Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/ban_user:
+    post:
+      tags:
+        - Community
+        - Mod
+      summary: Ban From Community
+      description: Ban a user from a community.
+      operationId: banUserFromCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Ban From Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BanFromCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanFromCommunityResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /community/mod:
+    post:
+      tags:
+        - Community
+        - Mod
+      summary: Add Mod to Community
+      description: Add a moderator to your community.
+      operationId: addModToCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Add Mod To Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddModToCommunity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddModToCommunityResponse'
+        '400':
           $ref: '#/components/responses/ErrorResponse'
 
   /post:
@@ -3398,3 +3723,277 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PersonView'
+
+    CreateCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Create a community.
+      required:
+        - name
+        - title
+      properties:
+        name:
+          type: string
+          description: The unique name
+        title:
+          type: string
+          description: A longer title.
+        description:
+          type: string
+          description: A longer sidebar, or description of your community, in markdown.
+        icon:
+          type: string
+          format: uri
+          description: An icon URL.
+        banner:
+          type: string
+          format: uri
+          description: A banner URL.
+        nsfw:
+          type: boolean
+          description: Whether its an NSFW community.
+        posting_restricted_to_mods:
+          type: boolean
+          description: Whether to restrict posting only to moderators.
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+
+    CommunityResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: A simple community response.
+      required:
+        - community_view
+        - discussion_languages
+      properties:
+        community_view:
+          $ref: '#/components/schemas/CommunityView'
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+
+    GetCommunityResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: The community response.
+      required:
+        - community_view
+        - moderators
+        - discussion_languages
+      properties:
+        community_view:
+          $ref: '#/components/schemas/CommunityView'
+        site:
+          $ref: '#/components/schemas/Site'
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+
+    EditCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Edit a community.
+      required:
+        - community_id
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        title:
+          type: string
+          description: A longer title.
+        description:
+          type: string
+          description: A longer sidebar, or description of your community, in markdown.
+        icon:
+          type: string
+          format: uri
+          description: An icon URL.
+        banner:
+          type: string
+          format: uri
+          description: A banner URL.
+        nsfw:
+          type: boolean
+          description: Whether its an NSFW community.
+        posting_restricted_to_mods:
+          type: boolean
+          description: Whether to restrict posting only to moderators.
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+
+    ListCommunitiesResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: The response for listing communities.
+      required:
+        - communities
+      properties:
+        communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityView'
+
+    FollowCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Follow / subscribe to a community.
+      required:
+        - community_id
+        - follow
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        follow:
+          type: boolean
+
+    BlockCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Block a community.
+      required:
+        - community_id
+        - block
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        block:
+          type: boolean
+
+    BlockCommunityResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: The block community response.
+      required:
+        - community_view
+        - blocked
+      properties:
+        community_view:
+          $ref: '#/components/schemas/CommunityView'
+        blocked:
+          type: boolean
+
+    DeleteCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Delete your own community.
+      required:
+        - community_id
+        - deleted
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        deleted:
+          type: boolean
+
+    HideCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Hide a community from the main view.
+      required:
+        - community_id
+        - hidden
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        hidden:
+          type: boolean
+        reason:
+          type: string
+
+    RemoveCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Remove a community (only doable by moderators).
+      required:
+        - community_id
+        - removed
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        removed:
+          type: boolean
+        reason:
+          type: string
+
+    TransferCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Transfer a community to a new owner.
+      required:
+        - community_id
+        - person_id
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+
+    BanFromCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Ban a user from a community.
+      required:
+        - community_id
+        - person_id
+        - ban
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        ban:
+          type: boolean
+        remove_data:
+          type: boolean
+        reason:
+          type: string
+        expires:
+          type: integer
+          format: int64
+
+    BanFromCommunityResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: The response for banning a user from a community.
+      required:
+        - person_view
+        - banned
+      properties:
+        person_view:
+          $ref: '#/components/schemas/PersonView'
+        banned:
+          type: boolean
+
+    AddModToCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: Add a moderator to a community.
+      required:
+        - community_id
+        - person_id
+        - added
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        added:
+          type: boolean
+
+    AddModToCommunityResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
+      description: The response of adding a moderator to a community.
+      required:
+        - moderators
+      properties:
+        moderators:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
