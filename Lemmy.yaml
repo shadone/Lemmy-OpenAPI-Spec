@@ -1140,6 +1140,32 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /comment:
+    post:
+      tags:
+        - Comment
+      summary: Create Comment
+      description: Create a comment.
+      operationId: createComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Create Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /comment/list:
     get:
       tags:
@@ -4657,3 +4683,35 @@ components:
         embed_video_url:
           type: string
           format: uri
+
+    CreateComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Create a comment.
+      required:
+        - content
+        - post_id
+      properties:
+        content:
+          type: string
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        parent_id:
+          $ref: '#/components/schemas/CommentID'
+        language_id:
+          $ref: '#/components/schemas/LanguageID'
+
+    CommentResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: A comment response.
+      required:
+        - comment_view
+        - recipient_ids
+      properties:
+        comment_view:
+          $ref: '#/components/schemas/CommentView'
+        recipient_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocalUserID'
