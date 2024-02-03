@@ -141,6 +141,108 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/totp/generate:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Generate TOTP Secret
+      description: |
+        Generate a TOTP / two-factor secret.
+
+        Afterwards you need to call `/user/totp/update` with a valid token to enable it.
+      operationId: generateTotpSecret
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateTotpSecretResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/export_settings:
+    get:
+      tags:
+        - Account
+        - User
+      summary: Export Settings
+      description: Export a backup of your user settings, including your saved content, followed communities, and blocks.
+      operationId: exportSettings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/import_settings:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Import Settings
+      description: Import a backup of your user settings.
+      operationId: importSettings
+      requestBody:
+        description: Settings
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/list_logins:
+    get:
+      tags:
+        - Account
+        - User
+      summary: List Logins
+      description: List login tokens for your user.
+      operationId: listLogins
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoginToken'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/validate_auth:
+    get:
+      tags:
+        - Account
+        - User
+      summary: Validate Auth
+      description: Returns an error message if your auth token is invalid
+      operationId: validateAuth
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
   /post:
     get:
       tags:
@@ -384,6 +486,16 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ErrorResponse'
+    SuccessResponse:
+      content: 
+        application/json:
+          schema: 
+            type: object
+            required:
+              - success
+            properties:
+              success:
+                type: boolean
 
   parameters:
     page:
@@ -2278,3 +2390,32 @@ components:
           items:
             $ref: '#/components/schemas/Tagline'
 
+    GenerateTotpSecretResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      required:
+        - totp_secret_url
+      properties:
+        totp_secret_url:
+          type: string
+
+    LoginToken:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/login_token.rs
+      required:
+        - user_id
+        - published
+      properties:
+        user_id:
+          $ref: '#/components/schemas/LocalUserID'
+        published:
+          type: string
+          format: date-time
+          description: Time of login.
+        ip:
+          type: string
+          description: |
+            IP address where login was made from, allows invalidating logins by IP address.
+            Could be stored in truncated format, or store derived information for better privacy.
+        user_agent:
+          type: string
