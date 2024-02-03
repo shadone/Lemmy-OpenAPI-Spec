@@ -123,6 +123,24 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/leave_admin:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Leave Admin
+      description: Leave the Site admins.
+      operationId: leaveAdmin
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSiteResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /post:
     get:
       tags:
