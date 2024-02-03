@@ -260,6 +260,82 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/totp/update:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Update TOTP
+      description: |
+        Enable / Disable TOTP / two-factor authentication.
+
+        To enable, you need to first call `/user/totp/generate` and then pass a valid token to this.
+
+        Disabling is only possible if 2FA was previously enabled. Again it is necessary to pass a valid token.
+      operationId: validateAuth
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Update TOTP
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTotp'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTotpResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /modlog:
+    get:
+      tags:
+        - Account
+        - User
+        - Mod
+      summary: Get Modlog
+      description: Fetches the modlog
+      operationId: validateAuth
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: mod_person_id
+          schema:
+            $ref: '#/components/schemas/PersonID'
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - in: query
+          name: type_
+          schema:
+            $ref: '#/components/schemas/ModlogActionType'
+        - in: query
+          name: other_person_id
+          schema:
+            $ref: '#/components/schemas/PersonID'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetModlogResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
   /post:
     get:
       tags:
@@ -1062,6 +1138,28 @@ components:
         - Closed
         - RequireApplication
         - Open
+
+    ModlogActionType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      description: A list of possible types for the various modlog actions.
+      enum:
+        - All
+        - ModRemovePost
+        - ModLockPost
+        - ModFeaturePost
+        - ModRemoveComment
+        - ModRemoveCommunity
+        - ModBanFromCommunity
+        - ModAddCommunity
+        - ModTransferCommunity
+        - ModAdd
+        - ModBan
+        - ModHideCommunity
+        - AdminPurgePerson
+        - AdminPurgeCommunity
+        - AdminPurgePost
+        - AdminPurgeComment
 
     Language:
       type: object
@@ -2473,3 +2571,732 @@ components:
             Could be stored in truncated format, or store derived information for better privacy.
         user_agent:
           type: string
+
+    UpdateTotp:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      required:
+        - totp_token
+        - enabled
+      properties:
+        totp_token:
+          type: string
+        enabled:
+          type: boolean
+
+    UpdateTotpResponse:
+      type: object
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: boolean
+
+    GetModlogResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      required:
+        - removed_posts
+        - locked_posts
+        - featured_posts
+        - removed_comments
+        - removed_communities
+        - banned_from_community
+        - banned
+        - added_to_community
+        - transferred_to_community
+        - added
+        - admin_purged_persons
+        - admin_purged_communities
+        - admin_purged_posts
+        - admin_purged_comments
+        - hidden_communities
+      properties:
+        removed_posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModRemovePostView'
+        locked_posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModLockPostView'
+        featured_posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModFeaturePostView'
+        removed_comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModRemoveCommentView'
+        removed_communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModRemoveCommunityView'
+        banned_from_community:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModBanFromCommunityView'
+        banned:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModBanView'
+        added_to_community:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModAddCommunityView'
+        transferred_to_community:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModTransferCommunityView'
+        added:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModAddView'
+        admin_purged_persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminPurgePersonView'
+        admin_purged_communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminPurgeCommunityView'
+        admin_purged_posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminPurgePostView'
+        admin_purged_comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminPurgeCommentView'
+        hidden_communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModHideCommunityView'
+
+    ModRemovePostView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator removes a post.
+      required:
+        - mod_remove_post
+        - post
+        - community
+      properties:
+        mod_remove_post:
+          $ref: '#/components/schemas/ModRemovePost'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModRemovePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator removes a post.
+      required:
+        - id
+        - mod_person_id
+        - post_id
+        - removed
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        reason:
+          type: string
+        removed:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    ModLockPostView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator locks a post (prevents new comments being made).
+      required:
+        - mod_lock_post
+        - post
+        - community
+      properties:
+        mod_lock_post:
+          $ref: '#/components/schemas/ModLockPost'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModLockPost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator locks a post (prevents new comments being made).
+      required:
+        - id
+        - mod_person_id
+        - post_id
+        - locked
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        locked:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    ModFeaturePostView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator locks a post (prevents new comments being made).
+      required:
+        - mod_feature_post
+        - post
+        - community
+      properties:
+        mod_feature_post:
+          $ref: '#/components/schemas/ModFeaturePost'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModFeaturePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator locks a post (prevents new comments being made).
+      required:
+        - id
+        - mod_person_id
+        - post_id
+        - featured
+        - when_
+        - is_featured_community
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        featured:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+        is_featured_community:
+          type: boolean
+
+    ModRemoveCommentView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator removes a comment.
+      required:
+        - mod_remove_comment
+        - comment
+        - commenter
+        - post
+        - community
+      properties:
+        mod_remove_comment:
+          $ref: '#/components/schemas/ModRemoveComment'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        commenter:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModRemoveComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator removes a comment.
+      required:
+        - id
+        - mod_person_id
+        - comment_id
+        - removed
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        reason:
+          type: string
+        removed:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    ModRemoveCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator removes a community.
+      required:
+        - mod_remove_community
+        - community
+      properties:
+        mod_remove_community:
+          $ref: '#/components/schemas/ModRemoveCommunity'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModRemoveCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator removes a community.
+      required:
+        - id
+        - mod_person_id
+        - community_id
+        - removed
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+        removed:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    ModBanFromCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When someone is banned from a community.
+      required:
+        - mod_ban_from_community
+        - community
+        - banned_person
+      properties:
+        mod_ban_from_community:
+          $ref: '#/components/schemas/ModBanFromCommunity'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+        banned_person:
+          $ref: '#/components/schemas/Person'
+
+    ModBanFromCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When someone is banned from a community.
+      required:
+        - id
+        - mod_person_id
+        - other_person_id
+        - community_id
+        - banned
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        other_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+        banned:
+          type: boolean
+        expires:
+          type: string
+          format: date-time
+        when_:
+          type: string
+          format: date-time
+
+    ModBanView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When someone is banned from the site.
+      required:
+        - mod_ban
+        - banned_person
+      properties:
+        mod_ban:
+          $ref: '#/components/schemas/ModBan'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        banned_person:
+          $ref: '#/components/schemas/Person'
+
+    ModBan:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When someone is banned from the site.
+      required:
+        - id
+        - mod_person_id
+        - other_person_id
+        - community_id
+        - banned
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        other_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+        banned:
+          type: boolean
+        expires:
+          type: string
+          format: date-time
+        when_:
+          type: string
+          format: date-time
+
+    ModAddCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When someone is added as a community moderator.
+      required:
+        - mod_add_community
+        - community
+        - modded_person
+      properties:
+        mod_add_community:
+          $ref: '#/components/schemas/ModAddCommunity'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+        modded_person:
+          $ref: '#/components/schemas/Person'
+
+    ModAddCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When someone is added as a community moderator.
+      required:
+        - id
+        - mod_person_id
+        - other_person_id
+        - community_id
+        - removed
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        other_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+        removed:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    ModTransferCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a moderator transfers a community to a new owner.
+      required:
+        - mod_transfer_community
+        - community
+        - modded_person
+      properties:
+        mod_transfer_community:
+          $ref: '#/components/schemas/ModTransferCommunity'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+        modded_person:
+          $ref: '#/components/schemas/Person'
+
+    ModTransferCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a moderator transfers a community to a new owner.
+      required:
+        - id
+        - mod_person_id
+        - other_person_id
+        - community_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        other_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        when_:
+          type: string
+          format: date-time
+
+    ModAddView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When someone is added as a site moderator.
+      required:
+        - mod_add
+        - modded_person
+      properties:
+        mod_add:
+          $ref: '#/components/schemas/ModAdd'
+        moderator:
+          $ref: '#/components/schemas/Person'
+        modded_person:
+          $ref: '#/components/schemas/Person'
+
+    ModAdd:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When someone is added as a site moderator.
+      required:
+        - id
+        - mod_person_id
+        - other_person_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        other_person_id:
+          $ref: '#/components/schemas/PersonID'
+        removed:
+          type: boolean
+        when_:
+          type: string
+          format: date-time
+
+    AdminPurgePersonView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When an admin purges a person.
+      required:
+        - admin_purge_person
+      properties:
+        admin_purge_person:
+          $ref: '#/components/schemas/AdminPurgePerson'
+        admin:
+          $ref: '#/components/schemas/Person'
+
+    AdminPurgePerson:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When an admin purges a person.
+      required:
+        - id
+        - admin_person_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        admin_person_id:
+          $ref: '#/components/schemas/PersonID'
+        reason:
+          type: string
+        when_:
+          type: string
+          format: date-time
+
+    AdminPurgeCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When an admin purges a community.
+      required:
+        - admin_purge_community
+      properties:
+        admin_purge_person:
+          $ref: '#/components/schemas/AdminPurgeCommunity'
+        admin:
+          $ref: '#/components/schemas/Person'
+
+    AdminPurgeCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When an admin purges a community.
+      required:
+        - id
+        - admin_person_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        admin_person_id:
+          $ref: '#/components/schemas/PersonID'
+        reason:
+          type: string
+        when_:
+          type: string
+          format: date-time
+
+    AdminPurgePostView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When an admin purges a post.
+      required:
+        - admin_purge_post
+        - community
+      properties:
+        admin_purge_post:
+          $ref: '#/components/schemas/AdminPurgePost'
+        admin:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    AdminPurgePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When an admin purges a post.
+      required:
+        - id
+        - admin_person_id
+        - community_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        admin_person_id:
+          $ref: '#/components/schemas/PersonID'
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+        when_:
+          type: string
+          format: date-time
+
+    AdminPurgeCommentView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When an admin purges a comment.
+      required:
+        - admin_purge_comment
+        - post
+      properties:
+        admin_purge_comment:
+          $ref: '#/components/schemas/AdminPurgeComment'
+        admin:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+
+    AdminPurgeComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When an admin purges a comment.
+      required:
+        - id
+        - admin_person_id
+        - post_id
+        - when_
+      properties:
+        id:
+          type: integer
+          format: int32
+        admin_person_id:
+          $ref: '#/components/schemas/PersonID'
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        reason:
+          type: string
+        when_:
+          type: string
+          format: date-time
+
+    ModHideCommunityView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
+      description: When a community is hidden from public view.
+      required:
+        - mod_hide_community
+        - community
+      properties:
+        mod_hide_community:
+          $ref: '#/components/schemas/ModHideCommunity'
+        admin:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    ModHideCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
+      description: When a community is hidden from public view.
+      required:
+        - id
+        - community_id
+        - mod_person_id
+        - when_
+        - hidden
+      properties:
+        id:
+          type: integer
+          format: int32
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        mod_person_id:
+          $ref: '#/components/schemas/PersonID'
+        reason:
+          type: string
+        when_:
+          type: string
+          format: date-time
+        hidden:
+          type: boolean
+
