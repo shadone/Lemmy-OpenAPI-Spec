@@ -1216,6 +1216,20 @@ components:
           type: string
         message:
           type: string
+    MyVote:
+      type: integer
+      format: int32 # int16
+      minimum: -1
+      maximum: 1
+      description: |
+        Users' vote status.
+
+        Possible values:
+          - 0: Neutral (not voted)
+          - 1: Upvoted
+          - -1: Downvoted
+
+      example: 1
 
     PostID:
       type: integer
@@ -1404,11 +1418,7 @@ components:
           type: boolean
           description: Specifies whether the user blocked the post author.
         my_vote:
-          type: integer
-          format: int32 # int16
-          minimum: -32768
-          maximum: 32767
-          description: Users' vote status.
+          $ref: '#/components/schemas/MyVote'
         unread_comments:
           type: integer
           format: int64
@@ -1970,11 +1980,7 @@ components:
           type: boolean
           description: Specifies whether the user blocked the comment author.
         my_vote:
-          type: integer
-          format: int32 # int16
-          minimum: -32768
-          maximum: 32767
-          description: Users' vote status.
+          $ref: '#/components/schemas/MyVote'
 
     Comment:
       type: object
@@ -2183,11 +2189,7 @@ components:
         creator_blocked:
           type: boolean
         my_vote:
-          type: integer
-          format: int32 # int16
-          minimum: -32768
-          maximum: 32767
-          description: Users' vote status.
+          $ref: '#/components/schemas/MyVote'
 
     PersonMention:
       type: object
