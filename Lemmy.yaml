@@ -34,9 +34,28 @@ paths:
       operationId: getPersonDetails
       parameters:
         - in: query
-          name: GetPersonDetails
+          name: person_id
           schema:
-            $ref: '#/components/schemas/GetPersonDetailsRequest'
+            $ref: '#/components/schemas/PersonID'
+        - in: query
+          name: username
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - in: query
+          name: saved_only
+          description: Whether to fetch only saved posts.
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful operation
@@ -55,9 +74,20 @@ paths:
       operationId: getPersonMentions
       parameters:
         - in: query
-          name: GetPersonMentions
+          name: sort
           schema:
-            $ref: '#/components/schemas/GetPersonMentionsRequest'
+            $ref: '#/components/schemas/CommentSortType'
+        - in: query
+          name: unread_only
+          schema:
+            type: boolean
+        - in: query
+          name: comment_count
+          schema:
+            type: integer
+            format: int64
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
       responses:
         '200':
           description: Successful operation
@@ -102,9 +132,14 @@ paths:
       operationId: getPost
       parameters:
         - in: query
-          name: GetPost
+          name: id
           schema:
-            $ref: '#/components/schemas/GetPostRequest'
+            $ref: '#/components/schemas/PostID'
+        - in: query
+          name: comment_id
+          description: The comment identifier to fetch.
+          schema:
+            $ref: '#/components/schemas/CommentID'
       responses:
         '200':
           description: Successful operation
@@ -124,9 +159,44 @@ paths:
       operationId: getPosts
       parameters:
         - in: query
-          name: GetPosts
+          name: type_
+          description: The type of listing to fetch.
           schema:
-            $ref: '#/components/schemas/GetPostsRequest'
+            $ref: '#/components/schemas/ListingType'
+        - in: query
+          name: sort
+          description: Specifies how the posts in response should be ordered.
+          schema:
+            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - in: query
+          name: community_id
+          description: The community identifier to fetch posts from.
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - in: query
+          name: community_name
+          description: The community name to fetch posts from.
+          schema:
+            type: string
+        - in: query
+          name: saved_only
+          description: Whether to fetch only saved posts.
+          schema:
+            type: boolean
+        - in: query
+          name: liked_only
+          schema:
+            type: boolean
+        - in: query
+          name: disliked_only
+          schema:
+            type: boolean
+        - in: query
+          name: page_cursor
+          schema:
+            $ref: '#/components/schemas/PaginationCursor'
       responses:
         '200':
           description: Successful operation
@@ -145,9 +215,56 @@ paths:
       operationId: getComments
       parameters:
         - in: query
-          name: GetComments
+          name: type_
+          description: |
+            Specify the type of listing to fetch all comments in a given listing.
+            E.g. fetch all comments for Subscribed communities.
           schema:
-            $ref: '#/components/schemas/GetCommentsRequest'
+            $ref: '#/components/schemas/ListingType'
+        - in: query
+          name: sort
+          description: Specifies how the comments in response should be ordered.
+          schema:
+            $ref: '#/components/schemas/SortType'
+        - in: query
+          name: max_depth
+          schema:
+            type: integer
+            format: int32
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - in: query
+          name: community_id
+          description: The community identifier to fetch comments from.
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - in: query
+          name: community_name
+          description: The community name to fetch comments from.
+          schema:
+            type: string
+        - in: query
+          name: post_id
+          description: The post identifier to fetch comments from.
+          schema:
+            $ref: '#/components/schemas/PostID'
+        - in: query
+          name: parent_id
+          schema:
+            $ref: '#/components/schemas/CommentID'
+        - in: query
+          name: saved_only
+          description: Whether to fetch only saved comments.
+          schema:
+            type: boolean
+        - in: query
+          name: liked_only
+          schema:
+            type: boolean
+        - in: query
+          name: disliked_only
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful operation
@@ -204,6 +321,28 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ErrorResponse'
+
+  parameters:
+    page:
+      in: query
+      name: page
+      summary: Page number
+      description: |
+        Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
+        The first page is number 1.
+      schema:
+        type: integer
+        format: int64
+    limit:
+      in: query
+      name: limit
+      summary: Desired number of results per page
+      description: |
+        Pagination. Specifies the maximum number of results per page.
+        Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
+      schema:
+        type: integer
+        format: int64
 
   schemas:
     ErrorResponse:
@@ -332,16 +471,6 @@ components:
           type: boolean
         verify_email_sent:
           type: boolean
-
-    GetPostRequest:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/PostID'
-          description: The post identifier to fetch.
-        comment_id:
-          $ref: '#/components/schemas/CommentID'
-          description: The comment identifier to fetch.
     
     GetPostResponse:
       type: object
@@ -864,45 +993,6 @@ components:
         # A smaller card-type view, usually with images as thumbnails
         - SmallCard
 
-    GetPostsRequest:
-      type: object
-      properties:
-        type_:
-          description: The type of listing to fetch.
-          $ref: '#/components/schemas/ListingType'
-        sort:
-          description: Specifies how the posts in response should be ordered.
-          $ref: '#/components/schemas/SortType'
-        page:
-          type: integer
-          format: int64
-          summary: Page number
-          description: |
-            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
-            The first page is number 1.
-        limit:
-          type: integer
-          format: int64
-          summary: Desired number of results per page
-          description: |
-            Pagination. Specifies the maximum number of results per page.
-            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
-        community_id:
-          description: The community identifier to fetch posts from.
-          $ref: '#/components/schemas/CommunityID'
-        community_name:
-          type: string
-          description: The community name to fetch posts from.
-        saved_only:
-          type: boolean
-          description: Whether to fetch only saved posts.
-        liked_only:
-          type: boolean
-        disliked_only:
-          type: boolean
-        page_cursor: 
-          $ref: '#/components/schemas/PaginationCursor'
-
     GetPostsResponse:
       type: object
       required:
@@ -914,53 +1004,6 @@ components:
             $ref: '#/components/schemas/PostView'
         next_page:
           $ref: '#/components/schemas/PaginationCursor'
-
-    GetCommentsRequest:
-      type: object
-      properties:
-        type_:
-          description: |
-            Specify the type of listing to fetch all comments in a given listing.
-            E.g. fetch all comments for Subscribed communities.
-          $ref: '#/components/schemas/ListingType'
-        sort:
-          description: Specifies how the comments in response should be ordered.
-          $ref: '#/components/schemas/SortType'
-        max_depth:
-          type: integer
-          format: int32
-        page:
-          type: integer
-          format: int64
-          summary: Page number
-          description: |
-            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
-            The first page is number 1.
-        limit:
-          type: integer
-          format: int64
-          summary: Desired number of results per page
-          description: |
-            Pagination. Specifies the maximum number of results per page.
-            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
-        community_id:
-          description: The community identifier to fetch comments from.
-          $ref: '#/components/schemas/CommunityID'
-        community_name:
-          type: string
-          description: The community name to fetch comments from.
-        post_id:
-          description: The post identifier to fetch comments from.
-          $ref: '#/components/schemas/PostID'
-        parent_id:
-          $ref: '#/components/schemas/CommentID'
-        saved_only:
-          type: boolean
-          description: Whether to fetch only saved comments.
-        liked_only:
-          type: boolean
-        disliked_only:
-          type: boolean
 
     GetCommentsResponse:
       type: object
@@ -1122,35 +1165,6 @@ components:
           format: int32
           description: The total number of children in this comment branch.
 
-    GetPersonDetailsRequest:
-      type: object
-      properties:
-        person_id:
-          $ref: '#/components/schemas/PersonID'
-        username:
-          type: string
-        sort:
-          $ref: '#/components/schemas/SortType'
-        page:
-          type: integer
-          format: int64
-          summary: Page number
-          description: |
-            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
-            The first page is number 1.
-        limit:
-          type: integer
-          format: int64
-          summary: Desired number of results per page
-          description: |
-            Pagination. Specifies the maximum number of results per page.
-            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
-        community_id:
-          $ref: '#/components/schemas/CommunityID'
-        saved_only:
-          type: boolean
-          description: Whether to fetch only saved posts.
-
     GetPersonDetailsResponse:
       type: object
       required:
@@ -1206,31 +1220,6 @@ components:
         comment_count:
           type: integer
           format: int64
-
-    GetPersonMentionsRequest:
-      type: object
-      properties:
-        sort:
-          $ref: '#/components/schemas/CommentSortType'
-        unread_only:
-          type: boolean
-        comment_count:
-          type: integer
-          format: int64
-        page:
-          type: integer
-          format: int64
-          summary: Page number
-          description: |
-            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
-            The first page is number 1.
-        limit:
-          type: integer
-          format: int64
-          summary: Desired number of results per page
-          description: |
-            Pagination. Specifies the maximum number of results per page.
-            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
 
     GetPersonMentionsResponse:
       type: object
