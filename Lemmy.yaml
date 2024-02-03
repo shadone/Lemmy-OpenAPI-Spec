@@ -1358,16 +1358,13 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ErrorResponse'
+
     SuccessResponse:
-      content: 
+      description: Successful operation.
+      content:
         application/json:
-          schema: 
-            type: object
-            required:
-              - success
-            properties:
-              success:
-                type: boolean
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
 
   parameters:
     page:
@@ -1401,6 +1398,15 @@ components:
           type: string
         message:
           type: string
+
+    SuccessResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+
     MyVote:
       type: integer
       format: int32 # int16
