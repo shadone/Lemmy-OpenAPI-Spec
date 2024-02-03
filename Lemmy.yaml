@@ -981,6 +981,140 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /post/like:
+    post:
+      tags:
+        - Post
+      summary: Like Post
+      description: Like / vote on a post
+      operationId: likePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Like Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostLike'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/save:
+    put:
+      tags:
+        - Post
+      summary: Save Post
+      description: Save a post
+      operationId: savePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Save Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SavePost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/report:
+    put:
+      tags:
+        - Post
+      summary: Report Post
+      description: Report a post.
+      operationId: reportPost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Report Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/report/resolve:
+    put:
+      tags:
+        - Mod
+      summary: Resolve Post Report
+      description: Resolve a post report. Only a mod can do this.
+      operationId: resolvePortReport
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Resolve Post Report
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolvePostReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/report/list:
+    get:
+      tags:
+        - Mod
+      summary: List Post Reports
+      description: List post reports.
+      operationId: listPortReports
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: unresolved_only
+          schema:
+            type: boolean
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPostReportsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /comment/list:
     get:
       tags:
@@ -1318,6 +1452,15 @@ components:
       description: The identifier is local to this instance.
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    PostReportID:
+      type: integer
+      format: int32
+      summary: The post report id.
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
 
     LoginRequest:
       type: object
@@ -4315,3 +4458,152 @@ components:
           type: boolean
         feature_type:
           $ref: '#/components/schemas/PostFeatureType'
+
+    CreatePostLike:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Like a post.
+      required:
+        - post_id
+        - score
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        score:
+          $ref: '#/components/schemas/MyVote'
+
+    SavePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Save / bookmark a post.
+      required:
+        - post_id
+        - save
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        save:
+          type: boolean
+
+    CreatePostReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Create a post report.
+      required:
+        - post_id
+        - reason
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        reason:
+          type: string
+
+    PostReportResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: The post report response.
+      required:
+        - post_report_view
+      properties:
+        post_report_view:
+          $ref: '#/components/schemas/PostReportView'
+
+    PostReportView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A post report view.
+      required:
+        - post_report
+        - post
+        - community
+        - creator
+        - post_creator
+        - creator_banned_from_community
+        - counts
+      properties:
+        post_report:
+          $ref: '#/components/schemas/PostReport'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+        creator:
+          $ref: '#/components/schemas/Person'
+        post_creator:
+          $ref: '#/components/schemas/Person'
+        creator_banned_from_community:
+          type: boolean
+        my_vote:
+          $ref: '#/components/schemas/MyVote'
+        counts:
+          $ref: '#/components/schemas/PostAggregates'
+        resolver:
+          $ref: '#/components/schemas/Person'
+
+    PostReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/post_report.rs
+      description: A post report.
+      required:
+        - id
+        - creator_id
+        - post_id
+        - original_post_name
+        - reason
+        - resolved
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/PostReportID'
+        creator_id:
+          $ref: '#/components/schemas/PersonID'
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        original_post_name:
+          type: string
+          description: The original post title.
+        original_post_url:
+          type: string
+          format: uri
+          description: The original post url.
+        original_post_body:
+          type: string
+          description: The original post body.
+        reason:
+          type: string
+        resolved:
+          type: boolean
+        resolver_id:
+          $ref: '#/components/schemas/PersonID'
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    ResolvePostReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Resolve a post report (mods only).
+      required:
+        - report_id
+        - resolved
+      properties:
+        report_id:
+          $ref: '#/components/schemas/PostReportID'
+        resolved:
+          type: boolean
+
+    ListPostReportsResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: The post reports response.
+      required:
+        - post_reports
+      properties:
+        post_reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostReportView'
+
