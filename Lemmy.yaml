@@ -276,7 +276,7 @@ paths:
         To enable, you need to first call `/user/totp/generate` and then pass a valid token to this.
 
         Disabling is only possible if 2FA was previously enabled. Again it is necessary to pass a valid token.
-      operationId: validateAuth
+      operationId: updateTotp
       security:
         - BearerAuth: []
       requestBody:
@@ -304,7 +304,7 @@ paths:
         - Mod
       summary: Get Modlog
       description: Fetches the modlog
-      operationId: validateAuth
+      operationId: getModlog
       security:
         - BearerAuth: []
       parameters:
