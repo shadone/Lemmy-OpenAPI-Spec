@@ -174,6 +174,26 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /resolve_object:
+    get:
+      summary: Resolve Object
+      operationId: resolveObject
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+            description: Search query.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResolveObjectResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
 components:
   responses:
     ErrorResponse:
@@ -1890,3 +1910,17 @@ components:
           $ref: '#/components/schemas/Person'
         target:
           $ref: '#/components/schemas/Person'
+
+    ResolveObjectResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The response of an apub object fetch.
+      properties:
+        comment:
+          $ref: '#/components/schemas/CommentView'
+        post:
+          $ref: '#/components/schemas/PostView'
+        community:
+          $ref: '#/components/schemas/CommunityView'
+        person:
+          $ref: '#/components/schemas/PersonView'
