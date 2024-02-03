@@ -715,7 +715,7 @@ components:
           $ref: '#/components/schemas/LanguageID'
         code:
           type: string
-          description: <
+          description: |
             Language code.
 
             Two letter ISO639-1 language code.
@@ -877,14 +877,14 @@ components:
           type: integer
           format: int64
           summary: Page number
-          description: >
+          description: |
             Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
             The first page is number 1.
         limit:
           type: integer
           format: int64
           summary: Desired number of results per page
-          description: >
+          description: |
             Pagination. Specifies the maximum number of results per page.
             Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
         community_id:
@@ -919,7 +919,7 @@ components:
       type: object
       properties:
         type_:
-          description: >
+          description: |
             Specify the type of listing to fetch all comments in a given listing.
             E.g. fetch all comments for Subscribed communities.
           $ref: '#/components/schemas/ListingType'
@@ -933,14 +933,14 @@ components:
           type: integer
           format: int64
           summary: Page number
-          description: >
+          description: |
             Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
             The first page is number 1.
         limit:
           type: integer
           format: int64
           summary: Desired number of results per page
-          description: >
+          description: |
             Pagination. Specifies the maximum number of results per page.
             Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
         community_id:
@@ -1078,7 +1078,7 @@ components:
           description: Whether the comment is local.
         path:
           type: string
-          description: <
+          description: |
             Specifies the path to this comment in a tree of comments.
             Represented as dot separated list of comment identifiers. The path starts with "0" representing the root.
           example: '0.219355.219732.225923'
@@ -1135,14 +1135,14 @@ components:
           type: integer
           format: int64
           summary: Page number
-          description: >
+          description: |
             Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
             The first page is number 1.
         limit:
           type: integer
           format: int64
           summary: Desired number of results per page
-          description: >
+          description: |
             Pagination. Specifies the maximum number of results per page.
             Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
         community_id:
@@ -1221,14 +1221,14 @@ components:
           type: integer
           format: int64
           summary: Page number
-          description: >
+          description: |
             Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
             The first page is number 1.
         limit:
           type: integer
           format: int64
           summary: Desired number of results per page
-          description: >
+          description: |
             Pagination. Specifies the maximum number of results per page.
             Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
 
