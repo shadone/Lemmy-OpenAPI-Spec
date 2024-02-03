@@ -23,6 +23,8 @@ tags:
     description: Operations on posts.
   - name: Comments
     description: Operations on comments.
+  - name: Misc
+    description: Miscellaneous operations.
 
 paths:
   /user:
@@ -336,6 +338,60 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
+  /search:
+    get:
+      tags:
+        - Misc
+      summary: Search
+      description: Search through Lemmy
+      operationId: search
+      security:
+        - BearerAuth: []
+        - {}
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+        - in: query
+          name: community_name
+          schema:
+            type: string
+        - in: query
+          name: creator_id
+          schema:
+            $ref: '#/components/schemas/PersonID'
+        - in: query
+          name: type_
+          schema:
+            $ref: '#/components/schemas/SearchType'
+        - in: query
+          name: sort
+          schema:
+            $ref: '#/components/schemas/SortType'
+        - in: query
+          name: listing_type
+          schema:
+            $ref: '#/components/schemas/ListingType'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
   /post:
     get:
       tags:
@@ -567,6 +623,8 @@ paths:
 
   /resolve_object:
     get:
+      tags:
+        - Misc
       summary: Resolve Object
       description: |
         Resolves an ActivityPub object.
@@ -1160,6 +1218,18 @@ components:
         - AdminPurgeCommunity
         - AdminPurgePost
         - AdminPurgeComment
+
+    SearchType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      description: The type of content returned from a search.
+      enum:
+        - All
+        - Comments
+        - Posts
+        - Communities
+        - Users
+        - Url
 
     Language:
       type: object
@@ -3300,3 +3370,31 @@ components:
         hidden:
           type: boolean
 
+    SearchResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The search response, containing lists of the return type possibilities.
+      required:
+        - type_
+        - comments
+        - posts
+        - users
+      properties:
+        type_:
+          $ref: '#/components/schemas/SearchType'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentView'
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostView'
+        communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityView'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonView'
