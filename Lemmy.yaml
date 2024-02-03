@@ -47,6 +47,27 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/mentions:
+    get:
+      tags:
+        - User
+      summary: Get Person Mentions
+      operationId: getPersonMentions
+      parameters:
+        - in: query
+          name: GetPersonMentions
+          schema:
+            $ref: '#/components/schemas/GetPersonMentionsRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonMentionsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/login:
     post:
       tags:
@@ -137,6 +158,22 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /site:
+    get:
+      tags:
+        - Site
+      summary: Get Site
+      operationId: getSite
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSiteResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
 components:
   responses:
     ErrorResponse:
@@ -203,6 +240,46 @@ components:
       type: integer
       format: int32
       summary: Instance identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    PersonMentionID:
+      type: integer
+      format: int32
+      summary: Person Mention identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    SiteID:
+      type: integer
+      format: int32
+      summary: Site identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    LocalSiteID:
+      type: integer
+      format: int32
+      summary: Local Site identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    LocalUserID:
+      type: integer
+      format: int32
+      summary: Local User identifier
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    CustomEmojiID:
+      type: integer
+      format: int32
+      summary: Custom Emoji identifier
       description: The identifier is local to this instance.
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
@@ -600,6 +677,36 @@ components:
         - NotSubscribed
         - Pending
 
+    RegistrationMode:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      enum:
+        - Closed
+        - RequireApplication
+        - Open
+
+    Language:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/language.rs
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/LanguageID'
+        code:
+          type: string
+          description: <
+            Language code.
+
+            Two letter ISO639-1 language code.
+
+            Or an additional value `und` for Undefined language.
+          example: sv
+        name:
+          type: string
+          description: Language name.
+          example: Svenska
+
     CommunityView:
       type: object
       required:
@@ -716,6 +823,27 @@ components:
         - Controversial
         - Scaled
 
+    CommentSortType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      enum:
+        - Hot
+        - Top
+        - New
+        - Old
+        - Controversial
+
+    PostListingMode:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      enum:
+        # A compact, list-type view.
+        - List
+        # A larger card-type view.
+        - Card
+        # A smaller card-type view, usually with images as thumbnails
+        - SmallCard
+
     GetPostsRequest:
       type: object
       properties:
@@ -805,7 +933,7 @@ components:
           description: The post identifier to fetch comments from.
           $ref: '#/components/schemas/PostID'
         parent_id:
-          $ref: '#/components/schemas/ParentID'
+          $ref: '#/components/schemas/CommentID'
         saved_only:
           type: boolean
           description: Whether to fetch only saved comments.
@@ -1058,3 +1186,707 @@ components:
         comment_count:
           type: integer
           format: int64
+
+    GetPersonMentionsRequest:
+      type: object
+      properties:
+        sort:
+          $ref: '#/components/schemas/CommentSortType'
+        unread_only:
+          type: boolean
+        comment_count:
+          type: integer
+          format: int64
+        page:
+          type: integer
+          format: int64
+          summary: Page number
+          description: >
+            Pagination. The page number to fetch the results. This allows to fetch large data sets one page at a time.
+            The first page is number 1.
+        limit:
+          type: integer
+          format: int64
+          summary: Desired number of results per page
+          description: >
+            Pagination. Specifies the maximum number of results per page.
+            Note: This is server specific but in regular Lemmy install the default value is 10 and max is 50.
+
+    GetPersonMentionsResponse:
+      type: object
+      required:
+        - mentions
+      properties:
+        mentions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonMentionView'
+
+    PersonMentionView:
+      type: object
+      required:
+        - person_mention
+        - comment
+        - creator
+        - post
+        - community
+        - recipient
+        - counts
+        - creator_banned_from_community
+        - creator_is_moderator
+        - creator_is_admin
+        - subscribed
+        - saved
+        - creator_blocked
+      properties:
+        person_mention:
+          $ref: '#/components/schemas/PersonMention'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        creator:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+        recipient:
+          $ref: '#/components/schemas/Person'
+        counts:
+          $ref: '#/components/schemas/CommentAggregates'
+        creator_banned_from_community:
+          type: boolean
+        creator_is_moderator:
+          type: boolean
+        creator_is_admin:
+          type: boolean
+        subscribed:
+          $ref: '#/components/schemas/SubscribedType'
+        saved:
+          type: boolean
+        creator_blocked:
+          type: boolean
+        my_vote:
+          type: integer
+          format: int32 # int16
+          minimum: -32768
+          maximum: 32767
+          description: Users' vote status.
+
+    PersonMention:
+      type: object
+      required:
+        - id
+        - recipient_id
+        - comment_id
+        - read
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/PersonMentionID'
+        recipient_id:
+          $ref: '#/components/schemas/PersonID'
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        read:
+          type: boolean
+        published:
+          type: string
+          format: date-time
+
+    GetSiteResponse:
+      type: object
+      required:
+        - site_view
+        - admins
+        - version
+        - all_languages
+        - discussion_languages
+      properties:
+        site_view:
+          $ref: '#/components/schemas/SiteView'
+        admins:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonView'
+        version:
+          type: string
+        my_user:
+          $ref: '#/components/schemas/MyUserInfo'
+        all_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+        taglines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tagline'
+        custom_emojis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomEmojiView'
+
+    SiteView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      required:
+        - site
+        - local_site
+        - local_site_rate_limit
+        - counts
+      properties:
+        site:
+          $ref: '#/components/schemas/Site'
+        local_site:
+          $ref: '#/components/schemas/LocalSite'
+        local_site_rate_limit:
+          $ref: '#/components/schemas/LocalSiteRateLimit'
+        counts:
+          $ref: '#/components/schemas/SiteAggregates'
+
+    Site:
+      type: object
+      required:
+        - id
+        - name
+        - published
+        - actor_id
+        - last_refreshed_at
+        - inbox_url
+        - public_key
+        - instance_id
+      properties:
+        id:
+          $ref: '#/components/schemas/SiteID'
+        name:
+          type: string
+        sidebar:
+          type: string
+        published:
+          type: string
+          format: date-time
+          description: The date site info was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this site info was last updated.
+        icon:
+          type: string
+          format: uri
+        banner:
+          type: string
+          format: uri
+        description:
+          type: string
+        actor_id:
+          type: string
+          format: uri
+          description: The federated actor_id.
+          example: https://discuss.tchncs.de/
+        last_refreshed_at:
+          type: string
+          format: date-time
+        inbox_url:
+          type: string
+          format: uri
+        public_key:
+          type: string
+        instance_id:
+          $ref: '#/components/schemas/InstanceID'
+
+    LocalSite:
+      type: object
+      required:
+        - id
+        - site_id
+        - site_setup
+        - enable_downvotes
+        - enable_nsfw
+        - community_creation_admin_only
+        - require_email_verification
+        - private_instance
+        - default_theme
+        - default_post_listing_type
+        - hide_modlog_mod_names
+        - application_email_admins
+        - actor_name_max_length
+        - federation_enabled
+        - captcha_enabled
+        - captcha_difficulty
+        - published
+        - registration_mode
+        - reports_email_admins
+        - federation_signed_fetch
+      properties:
+        id:
+          $ref: '#/components/schemas/LocalSiteID'
+        site_id:
+          $ref: '#/components/schemas/SiteID'
+        site_setup:
+          type: boolean
+          description: True if the site is set up.
+        enable_downvotes:
+          type: boolean
+          description: Whether downvotes are enabled.
+        enable_nsfw:
+          type: boolean
+          description: Whether NSFW is enabled.
+        community_creation_admin_only:
+          type: boolean
+          description: Whether only admins can create communities.
+        require_email_verification:
+          type: boolean
+          description: Whether emails are required.
+        application_question:
+          type: boolean
+          description: An optional registration application questionnaire in markdown.
+        private_instance:
+          type: boolean
+          description: Whether the instance is private or public.
+        default_theme:
+          type: boolean
+          description: The default front-end theme.
+        default_post_listing_type:
+          $ref: '#/components/schemas/ListingType'
+        legal_information:
+          type: boolean
+          description: An optional legal disclaimer page.
+        hide_modlog_mod_names:
+          type: boolean
+        application_email_admins:
+          type: boolean
+        slur_filter_regex:
+          type: string
+          description: An optional regex to filter words.
+        actor_name_max_length:
+          type: integer
+          format: int32
+          description: The max actor name length.
+        federation_enabled:
+          type: boolean
+          description: Whether federation is enabled.
+        captcha_enabled:
+          type: boolean
+          description: Whether captcha is enabled.
+        captcha_difficulty:
+          type: string
+          description: The captcha difficulty.
+        published:
+          type: string
+          format: date-time
+          description: The date this site info was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this site info was last updated.
+        registration_mode:
+          $ref: '#/components/schemas/RegistrationMode'
+        reports_email_admins:
+          type: boolean
+          description: Whether to email admins on new reports.
+        federation_signed_fetch:
+          type: boolean
+          description: Whether to sign outgoing Activitypub fetches with private key of local instance. Some Fediverse instances and platforms require this.
+
+    LocalSiteRateLimit:
+      type: object
+      description: Rate limits for your site. Given in count / length of time.
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_site_rate_limit.rs
+      required:
+        - local_site_id
+        - message
+        - message_per_second
+        - post
+        - post_per_second
+        - register
+        - register_per_second
+        - image
+        - image_per_second
+        - comment
+        - comment_per_second
+        - search
+        - search_per_second
+        - published
+        - import_user_settings
+        - import_user_settings_per_second
+      properties:
+        local_site_id:
+          $ref: '#/components/schemas/LocalSiteID'
+        message:
+          type: integer
+          format: int32
+        message_per_second:
+          type: integer
+          format: int32
+        post:
+          type: integer
+          format: int32
+        post_per_second:
+          type: integer
+          format: int32
+        register:
+          type: integer
+          format: int32
+        register_per_second:
+          type: integer
+          format: int32
+        image:
+          type: integer
+          format: int32
+        image_per_second:
+          type: integer
+          format: int32
+        comment:
+          type: integer
+          format: int32
+        comment_per_second:
+          type: integer
+          format: int32
+        search:
+          type: integer
+          format: int32
+        search_per_second:
+          type: integer
+          format: int32
+        published:
+          type: string
+          format: date-time
+          description: The date this site info was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this site info was last updated.
+        import_user_settings:
+          type: integer
+          format: int32
+        import_user_settings_per_second:
+          type: integer
+          format: int32
+
+    SiteAggregates:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
+      required:
+        - site_id
+        - users
+        - posts
+        - comments
+        - communities
+        - users_active_day
+        - users_active_week
+        - users_active_month
+        - users_active_half_year
+      properties:
+        site_id:
+          $ref: '#/components/schemas/SiteID'
+        users:
+          type: integer
+          format: int64
+        posts:
+          type: integer
+          format: int64
+        comments:
+          type: integer
+          format: int64
+        communities:
+          type: integer
+          format: int64
+        users_active_day:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last day.
+        users_active_week:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last week.
+        users_active_month:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last month.
+        users_active_half_year:
+          type: integer
+          format: int64
+          description: The number of users with any activity in the last half year.
+
+    MyUserInfo:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      required:
+        - local_user_view
+        - follows
+        - moderates
+        - community_blocks
+        - person_blocks
+        - discussion_languages
+      properties:
+        local_user_view:
+          $ref: '#/components/schemas/LocalUserView'
+        follows:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityFollowerView'
+        moderates:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
+        community_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityBlockView'
+        person_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonBlockView'
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+
+    LocalUserView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      required:
+        - local_user
+        - person
+        - counts
+      properties:
+        local_user:
+          $ref: '#/components/schemas/LocalUser'
+      person:
+        local_user:
+          $ref: '#/components/schemas/Person'
+      counts:
+        local_user:
+          $ref: '#/components/schemas/PersonAggregates'
+
+    LocalUser:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_user.rs
+      required:
+        - id
+        - person_id
+        - show_nsfw
+        - theme
+        - default_sort_type
+        - default_listing_type
+        - interface_language
+        - show_avatars
+        - send_notifications_to_email
+        - show_scores
+        - show_bot_accounts
+        - show_read_posts
+        - email_verified
+        - accepted_application
+        - open_links_in_new_tab
+        - blur_nsfw
+        - auto_expand
+        - infinite_scroll_enabled
+        - admin
+        - post_listing_mode
+        - totp_2fa_enabled
+        - enable_keyboard_navigation
+        - enable_animated_images
+        - collapse_bot_comments
+      properties:
+        id:
+          $ref: '#/components/schemas/LocalUserID'
+        person_id:
+          description: The person_id for the local user.
+          $ref: '#/components/schemas/PersonID'
+        email:
+          type: string
+          format: email
+          description: User's email address.
+        show_nsfw:
+          type: boolean
+          description: Whether to show NSFW content.
+        theme:
+          type: string
+          description: User's theme. e.g. "browser".
+        default_sort_type:
+          $ref: '#/components/schemas/SortType'
+          description: The default sort type for the user.
+        default_listing_type:
+          $ref: '#/components/schemas/ListingType'
+          description: The default listing type.
+        interface_language:
+          type: string
+          description: The language of the Lemmy interface.
+        show_avatars:
+          type: boolean
+          description: Whether to show avatars.
+        send_notifications_to_email:
+          type: boolean
+          description: Whether to send notifications to users email address.
+        show_scores:
+          type: boolean
+          description: Whether to show comment / post scores.
+        show_bot_accounts:
+          type: boolean
+          description: Whether to show bot accounts.
+        show_read_posts:
+          type: boolean
+          description: Whether to show read posts.
+        email_verified:
+          type: boolean
+          description: Whether their email has been verified.
+        accepted_application:
+          type: boolean
+          description: Whether their registration application has been accepted.
+        open_links_in_new_tab:
+          type: boolean
+          description: Open links in a new tab.
+        blur_nsfw:
+          type: boolean
+        auto_expand:
+          type: boolean
+        infinite_scroll_enabled:
+          type: boolean
+          description: Whether infinite scroll is enabled.
+        admin:
+          type: boolean
+          description: Whether the person is an admin.
+        post_listing_mode:
+          $ref: '#/components/schemas/PostListingMode'
+        totp_2fa_enabled:
+          type: boolean
+        enable_keyboard_navigation:
+          type: boolean
+          description: Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
+        enable_animated_images:
+          type: boolean
+          description: Whether user avatars and inline images in the UI that are gifs should be allowed to play or should be paused
+        collapse_bot_comments:
+          type: boolean
+          description: Whether to auto-collapse bot comments.
+
+    Tagline:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/tagline.rs
+      description: A tagline, shown at the top of your site.
+      required:
+        - id
+        - local_site_id
+        - content
+        - published
+      properties:
+        id:
+          type: integer
+          format: int32
+        local_site_id:
+          $ref: '#/components/schemas/LocalSiteID'
+        content:
+          type: string
+        published:
+          type: string
+          format: date-time
+          description: The date this tagline was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this tagline was last updated.
+
+    CustomEmojiView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A custom emoji view.
+      required:
+        - custom_emoji
+        - keywords
+      properties:
+        custom_emoji:
+          $ref: '#/components/schemas/CustomEmoji'
+        keywords:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomEmojiKeyword'
+
+    CustomEmoji:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji.rs
+      description: A custom emoji.
+      required:
+        - id
+        - local_site_id
+        - shortcode
+        - image_url
+        - alt_text
+        - category
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/CustomEmojiID'
+        local_site_id:
+          $ref: '#/components/schemas/LocalSiteID'
+        shortcode:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+        category:
+          type: string
+        published:
+          type: string
+          format: date-time
+          description: The date this emoji was published.
+        updated:
+          type: string
+          format: date-time
+          description: The date this emoji was last updated.
+
+    CustomEmojiKeyword:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji_keyword.rs
+      description: A custom keyword for an emoji.
+      required:
+        - custom_emoji_id
+        - keyword
+      properties:
+        custom_emoji_id:
+          $ref: '#/components/schemas/CustomEmojiID'
+        keyword:
+          type: string
+
+    CommunityFollowerView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      description: A community follower.
+      required:
+        - community
+        - follower
+      properties:
+        community:
+          $ref: '#/components/schemas/Community'
+        follower:
+          $ref: '#/components/schemas/Person'
+
+    CommunityBlockView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      description: A community block.
+      required:
+        - person
+        - community
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+        community:
+          $ref: '#/components/schemas/Community'
+
+    PersonBlockView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      description: A person block.
+      required:
+        - person
+        - target
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+        target:
+          $ref: '#/components/schemas/Person'
