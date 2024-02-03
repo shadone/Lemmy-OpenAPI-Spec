@@ -1165,6 +1165,186 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Comment
+      summary: Edit Comment
+      description: Edit a comment.
+      operationId: editComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Edit Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/delete:
+    post:
+      tags:
+        - Comment
+      summary: Delete Comment
+      description: Delete a comment.
+      operationId: deleteComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/remove:
+    post:
+      tags:
+        - Mod
+      summary: Remove Comment
+      description: A moderator remove for a comment.
+      operationId: removeComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Remove Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/mark_as_read:
+    post:
+      tags:
+        - Comment
+      summary: Mark Comment as Read
+      description: Mark a comment as read.
+      operationId: markCommentReplyAsRead
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Mark Comment as Read
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkCommentReplyAsRead'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentReplyResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/like:
+    post:
+      tags:
+        - Comment
+      summary: Like Comment
+      description: Like / vote on a comment.
+      operationId: likeComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Like Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentLike'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/save:
+    put:
+      tags:
+        - Comment
+      summary: Save Comment
+      description: Save a comment.
+      operationId: saveComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Save Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/distinguish:
+    post:
+      tags:
+        - Mod
+      summary: Distinguish Comment
+      description: Distinguishes a comment (speak as moderator)
+      operationId: distinguishComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Distinguish Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DistinguishComment'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
 
   /comment/list:
     get:
@@ -1516,6 +1696,13 @@ components:
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
+    CommentReplyID:
+      type: integer
+      format: int32
+      summary: The comment reply id.
+      description: The identifier is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     LoginRequest:
       type: object
@@ -4719,3 +4906,178 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LocalUserID'
+
+    EditComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Edit a comment.
+      required:
+        - comment_id
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        content:
+          type: string
+        language_id:
+          $ref: '#/components/schemas/LanguageID'
+
+    DeleteComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Delete a comment.
+      required:
+        - comment_id
+        - deleted
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        deleted:
+          type: boolean
+
+    RemoveComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Remove a comment (only doable by mods).
+      required:
+        - comment_id
+        - removed
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        removed:
+          type: boolean
+        reason:
+          type: string
+
+    MarkCommentReplyAsRead:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Mark a comment reply as read.
+      required:
+        - comment_reply_id
+        - read
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentReplyID'
+        read:
+          type: boolean
+
+    CommentReplyResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: The response for a comment reply action.
+      required:
+        - comment_reply_view
+      properties:
+        comment_reply_view:
+          $ref: '#/components/schemas/CommentReplyView'
+
+    CommentReplyView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      description: A comment reply view.
+      required:
+        - comment_reply
+        - comment
+        - creator
+        - post
+        - community
+        - recipient
+        - counts
+        - creator_banned_from_community
+        - creator_is_moderator
+        - creator_is_admin
+        - subscribed
+        - saved
+        - creator_blocked
+      properties:
+        comment_reply:
+          $ref: '#/components/schemas/CommentReply'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        creator:
+          $ref: '#/components/schemas/Person'
+        post:
+          $ref: '#/components/schemas/Post'
+        community:
+          $ref: '#/components/schemas/Community'
+        recipient:
+          $ref: '#/components/schemas/Person'
+        counts:
+          $ref: '#/components/schemas/CommentAggregates'
+        creator_banned_from_community:
+          type: boolean
+        creator_is_moderator:
+          type: boolean
+        creator_is_admin:
+          type: boolean
+        subscribed:
+          $ref: '#/components/schemas/SubscribedType'
+        saved:
+          type: boolean
+        creator_blocked:
+          type: boolean
+        my_vote:
+          $ref: '#/components/schemas/MyVote'
+
+    CommentReply:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_reply.rs
+      description: A comment reply.
+      required:
+        - id
+        - recipient_id
+        - comment_id
+        - read
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/CommentReplyID'
+        recipient_id:
+          $ref: '#/components/schemas/PersonID'
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        read:
+          type: boolean
+        published:
+          type: string
+          format: date-time
+
+    CreateCommentLike:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Like a comment.
+      required:
+        - comment_id
+        - score
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        score:
+          $ref: '#/components/schemas/MyVote'
+
+    SaveComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Save / bookmark a comment.
+      required:
+        - comment_id
+        - save
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        save:
+          type: boolean
+
+    DistinguishComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      description: Distinguish a comment (i.e. speak as moderator).
+      required:
+        - comment_id
+        - distinguished
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        distinguished:
+          type: boolean
