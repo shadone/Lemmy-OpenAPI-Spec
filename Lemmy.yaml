@@ -718,6 +718,30 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 
   /post:
+    post:
+      tags:
+        - Post
+      summary: Create Post
+      description: Create a post.
+      operationId: createPost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Create Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
         - Post
@@ -746,13 +770,163 @@ paths:
                 $ref: '#/components/schemas/GetPostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Post
+      summary: Edit Post
+      description: Edit a post.
+      operationId: editPost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Edit Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditPost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/delete:
+    post:
+      tags:
+        - Post
+      summary: Delete Post
+      description: Delete a post.
+      operationId: deletePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletePost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/remove:
+    post:
+      tags:
+        - Mod
+      summary: Remove Post
+      description: A moderator remove for a post.
+      operationId: removePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Remove Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemovePost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/mark_as_read:
+    post:
+      tags:
+        - Post
+      summary: Mark Post as Read
+      description: Mark a post as read.
+      operationId: markPostAsRead
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Mark Post as Read
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkPostAsRead'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/lock:
+    post:
+      tags:
+        - Mod
+      summary: Lock Post
+      description: A moderator can lock a post (i.e. disable new comments).
+      operationId: lockPost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Mark Post as Read
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockPost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /post/feature:
+    post:
+      tags:
+        - Mod
+      summary: Feature Post
+      description: A moderator can feature a community post (i.e. stick it to the top of a community).
+      operationId: featurePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Feature Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeaturePost'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
 
   /post/list:
     get:
       tags:
         - Post
       summary: Get Posts
-      description: Fetch a collection of posts.
+      description: List posts with various filters.
       operationId: getPosts
       security:
         - BearerAuth: []
@@ -1180,6 +1354,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PostView'
+          description: A list of cross-posts, or other times / communities this link has been posted to.
 
     PostView:
       type: object
@@ -1460,6 +1635,7 @@ components:
         matrix_user_id:
           type: string
           description: A matrix id, usually given an @person:matrix.org
+          example: '@person:matrix.org'
         bot_account:
           type: boolean
           description: Whether the person is a bot account.
@@ -1555,6 +1731,16 @@ components:
         - Communities
         - Users
         - Url
+
+    PostFeatureType:
+      type: string
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      description: The feature type for a post
+      enum:
+        # Features to the top of your site.
+        - Local
+        # Features to the top of the community.
+        - Community
 
     Language:
       type: object
@@ -3997,3 +4183,133 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommunityModeratorView'
+
+    CreatePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Create a post.
+      required:
+        - name
+        - community_id
+      properties:
+        name:
+          type: string
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        url:
+          type: string
+          format: uri
+        body:
+          type: string
+          description: An optional body for the post in markdown
+        honeypot:
+          type: string
+        nsfw:
+          type: boolean
+        language_id:
+          $ref: '#/components/schemas/LanguageID'
+
+    PostResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      required:
+        - post_view
+      properties:
+        post_view:
+          $ref: '#/components/schemas/PostView'
+
+    EditPost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Edit a post.
+      required:
+        - post_id
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        body:
+          type: string
+          description: An optional body for the post in markdown
+        nsfw:
+          type: boolean
+        language_id:
+          $ref: '#/components/schemas/LanguageID'
+
+    DeletePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Delete a post.
+      required:
+        - post_id
+        - deleted
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        deleted:
+          type: boolean
+
+    RemovePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Remove a post (only doable by mods).
+      required:
+        - post_id
+        - removed
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        removed:
+          type: boolean
+        reason:
+          type: string
+
+    MarkPostAsRead:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Mark a post as read.
+      required:
+        - read
+      properties:
+        post_id:
+          deprecated: true
+          $ref: '#/components/schemas/PostID'
+        post_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostID'
+        read:
+          type: boolean
+
+    LockPost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Lock a post (prevent new comments).
+      required:
+        - post_id
+        - locked
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        locked:
+          type: boolean
+
+    FeaturePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: Feature a post (stickies / pins to the top).
+      required:
+        - post_id
+        - featured
+        - feature_type
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        featured:
+          type: boolean
+        feature_type:
+          $ref: '#/components/schemas/PostFeatureType'
