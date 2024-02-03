@@ -1115,6 +1115,31 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /post/site_metadata:
+    get:
+      tags:
+        - Post
+      summary: Get Site Metadata
+      description: Fetch metadata for any given site.
+      operationId: getSiteMetadata
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: url
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSiteMetadataResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /comment/list:
     get:
       tags:
@@ -4607,3 +4632,28 @@ components:
           items:
             $ref: '#/components/schemas/PostReportView'
 
+    GetSiteMetadataResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: The site metadata response.
+      required:
+        - metadata
+      properties:
+        metadata:
+          $ref: '#/components/schemas/SiteMetadata'
+
+    SiteMetadata:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
+      description: The site metadata.
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        embed_video_url:
+          type: string
+          format: uri
