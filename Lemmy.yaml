@@ -32,6 +32,9 @@ paths:
       summary: Get Person Details
       description: Fetch a person by their id.
       operationId: getPersonDetails
+      security:
+        - BearerAuth: []
+        - {}
       parameters:
         - in: query
           name: person_id
@@ -66,12 +69,14 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/mentions:
+  /user/mention:
     get:
       tags:
         - User
       summary: Get Person Mentions
       operationId: getPersonMentions
+      security:
+        - BearerAuth: []
       parameters:
         - in: query
           name: sort
@@ -131,6 +136,8 @@ paths:
       summary: Leave Admin
       description: Leave the Site admins.
       operationId: leaveAdmin
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Successful operation
@@ -152,6 +159,8 @@ paths:
 
         Afterwards you need to call `/user/totp/update` with a valid token to enable it.
       operationId: generateTotpSecret
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Successful operation
@@ -170,6 +179,8 @@ paths:
       summary: Export Settings
       description: Export a backup of your user settings, including your saved content, followed communities, and blocks.
       operationId: exportSettings
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Successful operation
@@ -190,6 +201,8 @@ paths:
       summary: Import Settings
       description: Import a backup of your user settings.
       operationId: importSettings
+      security:
+        - BearerAuth: []
       requestBody:
         description: Settings
         required: true
@@ -213,6 +226,8 @@ paths:
       summary: List Logins
       description: List login tokens for your user.
       operationId: listLogins
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Successful operation
@@ -235,6 +250,8 @@ paths:
       summary: Validate Auth
       description: Returns an error message if your auth token is invalid
       operationId: validateAuth
+      security:
+        - BearerAuth: []
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -250,6 +267,9 @@ paths:
       summary: Get Post
       description: Fetch a post by its id.
       operationId: getPost
+      security:
+        - BearerAuth: []
+        - {}
       parameters:
         - in: query
           name: id
@@ -277,6 +297,9 @@ paths:
       summary: Get Posts
       description: Fetch a collection of posts.
       operationId: getPosts
+      security:
+        - BearerAuth: []
+        - {}
       parameters:
         - in: query
           name: type_
@@ -333,6 +356,9 @@ paths:
         - Comments
       summary: Get Comments
       operationId: getComments
+      security:
+        - BearerAuth: []
+        - {}
       parameters:
         - in: query
           name: type_
@@ -402,6 +428,9 @@ paths:
       summary: Get Site
       description: Gets the site, and your user data.
       operationId: getSite
+      security:
+        - BearerAuth: []
+        - {}
       responses:
         '200':
           description: Successful operation
@@ -417,6 +446,8 @@ paths:
       summary: Create Site
       description: Create your site
       operationId: createSite
+      security:
+        - BearerAuth: []
       requestBody:
         description: Create Site
         required: true
@@ -439,6 +470,8 @@ paths:
       summary: Edit Site
       description: Edit your site
       operationId: editSite
+      security:
+        - BearerAuth: []
       requestBody:
         description: Edit Site
         required: true
@@ -459,13 +492,21 @@ paths:
   /resolve_object:
     get:
       summary: Resolve Object
+      description: |
+        Resolves an ActivityPub object.
+
+        If user is authenticated, remote lookups are allowed, else only allows local search.
       operationId: resolveObject
+      security:
+        - BearerAuth: []
+        - {}
       parameters:
         - in: query
           name: q
           schema:
             type: string
             description: Search query.
+            example: '@Ruud@lemmy.world'
       responses:
         '200':
           description: Successful operation
@@ -477,6 +518,12 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   responses:
     ErrorResponse:
       description: An error has occurred.
