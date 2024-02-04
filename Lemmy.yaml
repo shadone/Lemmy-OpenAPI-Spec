@@ -504,6 +504,32 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /admin/registration_application/approve:
+    put:
+      tags:
+        - Admin
+      summary: Approve Registration Application
+      description: Approve a registration application.
+      operationId: approveRegistrationApplication
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Approve Registration Application
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveRegistrationApplication'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationApplicationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -6694,3 +6720,29 @@ components:
         published:
           type: string
           format: date-time
+
+    ApproveRegistrationApplication:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Approves a registration application.
+      required:
+        - id
+        - approve
+      properties:
+        id:
+          type: integer
+          format: int32
+        approve:
+          type: boolean
+        deny_reason:
+          type: string
+
+    RegistrationApplicationResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The response of an action done to a registration application.
+      required:
+        - registration_application
+      properties:
+        registration_application:
+          $ref: '#/components/schemas/RegistrationApplicationView'
