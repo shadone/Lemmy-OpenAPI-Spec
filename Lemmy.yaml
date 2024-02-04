@@ -530,6 +530,166 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /admin/purge/person:
+    post:
+      tags:
+        - Admin
+      summary: Purge Person
+      description: Purge / Delete a person from the database.
+      operationId: purgePerson
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Purge Person
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurgePerson'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /admin/purge/community:
+    post:
+      tags:
+        - Admin
+      summary: Purge Community
+      description: Purge / Delete a community from the database.
+      operationId: purgeCommunity
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Purge Community
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurgeCommunity'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /admin/purge/post:
+    post:
+      tags:
+        - Admin
+      summary: Purge Post
+      description: Purge / Delete a post from the database.
+      operationId: purgePost
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Purge Post
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurgePost'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /admin/purge/comment:
+    post:
+      tags:
+        - Admin
+      summary: Purge Comment
+      description: Purge / Delete a comment from the database.
+      operationId: purgeComment
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Purge Comment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurgeComment'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /custom_emoji:
+    post:
+      tags:
+        - Admin
+      summary: Create Custom Emoji
+      description: Create a new custom emoji
+      operationId: createCustomEmoji
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Create Custom Emoji
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomEmoji'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomEmojiResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Admin
+      summary: Edit Custom Emoji
+      description: Edit a new custom emoji
+      operationId: editCustomEmoji
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Edit Custom Emoji
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditCustomEmoji'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomEmojiResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /custom_emoji/delete:
+    post:
+      tags:
+        - Admin
+      summary: Delete Custom Emoji
+      description: Delete a new custom emoji
+      operationId: deleteCustomEmoji
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Custom Emoji
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCustomEmoji'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -6746,3 +6906,121 @@ components:
       properties:
         registration_application:
           $ref: '#/components/schemas/RegistrationApplicationView'
+
+    PurgePerson:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Purges a person from the database. This will delete all content attached to that person.
+      required:
+        - person_id
+      properties:
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        reason:
+          type: string
+
+    PurgeCommunity:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Purges a community from the database. This will delete all content attached to that community.
+      required:
+        - community_id
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        reason:
+          type: string
+
+    PurgePost:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Purges a post from the database. This will delete all content attached to that post.
+      required:
+        - post_id
+      properties:
+        post_id:
+          $ref: '#/components/schemas/PostID'
+        reason:
+          type: string
+
+    PurgeComment:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Purges a comment from the database. This will delete all content attached to that comment.
+      required:
+        - comment_id
+      properties:
+        comment_id:
+          $ref: '#/components/schemas/CommentID'
+        reason:
+          type: string
+
+    CreateCustomEmoji:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
+      description: Create a custom emoji.
+      required:
+        - category
+        - shortcode
+        - image_url
+        - alt_text
+        - keywords
+      properties:
+        category:
+          type: string
+        shortcode:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+
+    CustomEmojiResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
+      description: A response for a custom emoji.
+      required:
+        - custom_emoji
+      properties:
+        custom_emoji:
+          $ref: '#/components/schemas/CustomEmojiView'
+
+    EditCustomEmoji:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
+      description: Edit a custom emoji.
+      required:
+        - id
+        - category
+        - image_url
+        - alt_text
+        - keywords
+      properties:
+        id:
+          $ref: '#/components/schemas/CustomEmojiID'
+        category:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+        keywords:
+          type: array
+          items:
+            type: string
+
+    DeleteCustomEmoji:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
+      description: Delete a custom emoji.
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/CustomEmojiID'
