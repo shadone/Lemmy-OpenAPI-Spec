@@ -1521,6 +1521,216 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /private_message/list:
+    get:
+      tags:
+        - Private Message
+      summary: Get Private Messages
+      description: Get / fetch private messages
+      operationId: getPrivateMessages
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: unread_only
+          schema:
+            type: boolean
+        - in: query
+          name: creator_id
+          schema:
+            $ref: '#/components/schemas/PersonID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessagesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message:
+    post:
+      tags:
+        - Private Message
+      summary: Create Private Message
+      description: Create a private message.
+      operationId: createPrivateMessage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Create Private Message
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrivateMessage'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      tags:
+        - Private Message
+      summary: Edit Private Message
+      description: Edit a private message.
+      operationId: editPrivateMessage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Edit Private Message
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditPrivateMessage'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message/delete:
+    post:
+      tags:
+        - Private Message
+      summary: Delete Private Message
+      description: Delete a private message.
+      operationId: deletePrivateMessage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Private Message
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletePrivateMessage'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message/mark_as_read:
+    post:
+      tags:
+        - Private Message
+      summary: Mark Private Message as Read
+      description: Mark a private message as read.
+      operationId: markPrivateMessageAsRead
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Mark Private Message as Read
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkPrivateMessageAsRead'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message/report:
+    post:
+      tags:
+        - Private Message
+      summary: Report Private Message
+      description: Create a report for a private message.
+      operationId: reportPrivateMessage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Report Private Message
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrivateMessageReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message/report/resolve:
+    put:
+      tags:
+        - Mod
+      summary: Resolve Private Message Report
+      description: Resolve a report for a private message
+      operationId: resolvePrivateMessageReport
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Resolve Private Message Report
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolvePrivateMessageReport'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateMessageReportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /private_message/report/list:
+    get:
+      tags:
+        - Mod
+      summary: List Private Message Reports
+      description: List private message reports
+      operationId: listPrivateMessageReports
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: unresolved_only
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPrivateMessageReportsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /site:
     get:
       tags:
@@ -1816,6 +2026,22 @@ components:
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
+    PrivateMessageID:
+      type: integer
+      format: int32
+      summary: The private message id.
+      description: The identifer is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    PrivateMessageReportID:
+      type: integer
+      format: int32
+      summary: The private message report id.
+      description: The identifer is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
     LoginRequest:
       type: object
       required:
@@ -1831,7 +2057,7 @@ components:
           example: 'mys3cur3p4$$w0rd'
         totp_2fa_token:
           type: string
-    
+
     LoginResponse:
       type: object
       required:
@@ -5310,3 +5536,237 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommentReportView'
+
+    PrivateMessagesResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
+      description: The private messages response.
+      required:
+        - private_messages
+      properties:
+        private_messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivateMessageView'
+
+    PrivateMessageView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A private message view.
+      required:
+        - private_message
+        - creator
+        - recipient
+      properties:
+        private_message:
+          $ref: '#/components/schemas/PrivateMessage'
+        creator:
+          $ref: '#/components/schemas/Person'
+        recipient:
+          $ref: '#/components/schemas/Person'
+
+    PrivateMessage:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: A private message.
+      required:
+        - id
+        - creator_id
+        - recipient_id
+        - content
+        - deleted
+        - read
+        - published
+        - ap_id
+        - local
+      properties:
+        id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        creator_id:
+          $ref: '#/components/schemas/PersonID'
+        recipient_id:
+          $ref: '#/components/schemas/PersonID'
+        content:
+          type: string
+        deleted:
+          type: boolean
+        read:
+          type: boolean
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        ap_id:
+          type: string
+          format: uri
+          description: The federated activity id / ap_id.
+        local:
+          type: boolean
+
+    CreatePrivateMessage:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Create a private message.
+      required:
+        - content
+        - recipient_id
+      properties:
+        content:
+          type: string
+        recipient_id:
+          $ref: '#/components/schemas/PersonID'
+
+    PrivateMessageResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: A single private message response.
+      required:
+        - private_message_view
+      properties:
+        private_message_view:
+          $ref: '#/components/schemas/PrivateMessageView'
+
+    EditPrivateMessage:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Edit a private message.
+      required:
+        - private_message_id
+        - content
+      properties:
+        private_message_id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        content:
+          type: string
+
+    DeletePrivateMessage:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Delete a private message.
+      required:
+        - private_message_id
+        - deleted
+      properties:
+        private_message_id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        deleted:
+          type: boolean
+
+    MarkPrivateMessageAsRead:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Mark a private message as read.
+      required:
+        - private_message_id
+        - read
+      properties:
+        private_message_id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        read:
+          type: boolean
+
+    CreatePrivateMessageReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Create a report for a private message.
+      required:
+        - private_message_id
+        - reason
+      properties:
+        private_message_id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        reason:
+          type: string
+
+    PrivateMessageReportResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: A private message report response.
+      required:
+        - private_message_id
+      properties:
+        private_message_report_view:
+          $ref: '#/components/schemas/PrivateMessageReportView'
+
+    PrivateMessageReportView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A private message report view.
+      required:
+        - private_message_report
+        - private_message
+        - private_message_creator
+        - creator
+      properties:
+        private_message_report:
+          $ref: '#/components/schemas/PrivateMessageReport'
+        private_message:
+          $ref: '#/components/schemas/PrivateMessage'
+        private_message_creator:
+          $ref: '#/components/schemas/Person'
+        creator:
+          $ref: '#/components/schemas/Person'
+        resolver:
+          $ref: '#/components/schemas/Person'
+
+    PrivateMessageReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: A private message report.
+      required:
+        - id
+        - creator_id
+        - private_message_id
+        - original_pm_text
+        - reason
+        - resolved
+        - resolver_id
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/PrivateMessageReportID'
+        creator_id:
+          $ref: '#/components/schemas/PersonID'
+        private_message_id:
+          $ref: '#/components/schemas/PrivateMessageID'
+        original_pm_text:
+          type: string
+        reason:
+          type: string
+        resolved:
+          type: boolean
+        resolver_id:
+          $ref: '#/components/schemas/PersonID'
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    ResolvePrivateMessageReport:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: Resolve a private message report
+      required:
+        - report_id
+        - resolved
+      properties:
+        report_id:
+          $ref: '#/components/schemas/PrivateMessageReportID'
+        resolved:
+          type: boolean
+
+    ListPrivateMessageReportsResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      description: The response for list private message reports
+      required:
+        - private_message_reports
+      properties:
+        private_message_reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrivateMessageReportView'
