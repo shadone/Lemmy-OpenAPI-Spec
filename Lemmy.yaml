@@ -690,6 +690,51 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /federated_instances:
+    get:
+      tags:
+        - Misc
+      summary: Get Federated Instances
+      description: Fetch federated instances.
+      operationId: getFederatedInstances
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFederatedInstancesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /site/block:
+    post:
+      tags:
+        - Misc
+      summary: Block Instance
+      description: Block an instance.
+      operationId: blockInstance
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Block Instance
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockInstance'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockInstanceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -2688,6 +2733,13 @@ components:
       format: int32
       summary: The private message report id.
       description: The identifer is local to this instance.
+      example: 1234
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
+
+    ActivityID:
+      type: integer
+      format: int64
+      summary: Activity id
       example: 1234
       externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
@@ -7024,3 +7076,111 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/CustomEmojiID'
+
+    GetFederatedInstancesResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: A response of federated instances.
+      required:
+        - federated_instances
+      properties:
+        federated_instances:
+          $ref: '#/components/schemas/FederatedInstances'
+
+    FederatedInstances:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: A list of federated instances.
+      required:
+        - linked
+        - allowed
+        - blocked
+      properties:
+        linked:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceWithFederationState'
+        allowed:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceWithFederationState'
+        blocked:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceWithFederationState'
+
+    InstanceWithFederationState:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      required:
+        - id
+        - domain
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/InstanceID'
+        domain:
+          type: string
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        software:
+          type: string
+        version:
+          type: string
+        federation_state:
+          $ref: '#/components/schemas/ReadableFederationState'
+          description: if federation to this instance is or was active, show state of outgoing federation to this instance
+
+    ReadableFederationState:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      required:
+        - instance_id
+        - fail_count
+      properties:
+        instance_id:
+          $ref: '#/components/schemas/InstanceID'
+        last_successful_id:
+          $ref: '#/components/schemas/ActivityID'
+          description: the last successfully sent activity id
+        last_successful_published_time:
+          type: string
+          format: date-time
+        fail_count:
+          type: integer
+          format: int32
+          description: how many failed attempts have been made to send the next activity.
+        last_retry:
+          type: string
+          format: date-time
+          description: timestamp of the last retry attempt (when the last failing activity was resent)
+        next_retry:
+          type: string
+          format: date-time
+          description: timestamp of the next retry attempt (null if fail count is 0)
+
+    BlockInstance:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: Block an instance as user
+      required:
+        - instance_id
+        - block
+      properties:
+        instance_id:
+          $ref: '#/components/schemas/InstanceID'
+        block:
+          type: boolean
+
+    BlockInstanceResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      required:
+        - blocked
+      properties:
+        blocked:
+          type: boolean
