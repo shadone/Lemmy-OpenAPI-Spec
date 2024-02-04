@@ -301,6 +301,138 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/mark_all_as_read:
+    post:
+      tags:
+        - User
+      summary: Mark All as Read
+      description: Mark all replies as read.
+      operationId: markAllAsRead
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRepliesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/save_user_settings:
+    put:
+      tags:
+        - User
+      summary: Save User Settings
+      description: Save your user settings.
+      operationId: saveUserSettings
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Save User Settings
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveUserSettings'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/change_password:
+    put:
+      tags:
+        - User
+      summary: Change Password
+      description: Change your user password.
+      operationId: changePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Change Password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/report_count:
+    get:
+      tags:
+        - User
+      summary: Get Report Count
+      description: Get counts for your reports.
+      operationId: getReportCount
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: community_id
+          schema:
+            $ref: '#/components/schemas/CommunityID'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReportCountResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/unread_count:
+    get:
+      tags:
+        - User
+      summary: Get Unread Count
+      description: Get your unread counts.
+      operationId: getUnreadCount
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUnreadCountResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/verify_email:
+    post:
+      tags:
+        - User
+      summary: Verify Email
+      description: Verify your email
+      operationId: verifyEmail
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Verify Email
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -6245,5 +6377,158 @@ components:
           type: string
           format: password
         password_verify:
+          type: string
+          format: password
+
+    SaveUserSettings:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Saves settings for your user.
+      properties:
+        show_nsfw:
+          type: boolean
+          description: Whether to show NSFW content.
+        blur_nsfw:
+          type: boolean
+        auto_expand:
+          type: boolean
+        show_scores:
+          type: boolean
+          description: Show post and comment scores.
+        theme:
+          type: string
+          description: Your user's theme.
+        default_sort_type:
+          $ref: '#/components/schemas/SortType'
+        default_listing_type:
+          $ref: '#/components/schemas/ListingType'
+        interface_language:
+          type: string
+          description: The language of the lemmy interface
+        avatar:
+          type: string
+          format: uri
+          description: A URL for your avatar.
+        banner:
+          type: string
+          format: uri
+          description: A URL for your banner.
+        display_name:
+          type: string
+          description: Your display name, which can contain strange characters, and does not need to be unique.
+        email:
+          type: string
+          format: email
+          description: Your email.
+        bio:
+          type: string
+          description: Your bio / info, in markdown.
+        matrix_user_id:
+          type: string
+          description: Your matrix user id.
+          example: '@my_user:matrix.org'
+        show_avatars:
+          type: boolean
+          description: Whether to show or hide avatars.
+        send_notifications_to_email:
+          type: boolean
+          description: Sends notifications to your email.
+        bot_account:
+          type: boolean
+          description: Whether this account is a bot account. Users can hide these accounts easily if they wish.
+        show_bot_accounts:
+          type: boolean
+          description: Whether to show bot accounts.
+        show_read_posts:
+          type: boolean
+          description: Whether to show read posts.
+        discussion_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageID'
+        open_links_in_new_tab:
+          type: boolean
+          description: Open links in a new tab.
+        infinite_scroll_enabled:
+          type: boolean
+          description: Enable infinite scroll
+        post_listing_mode:
+          $ref: '#/components/schemas/PostListingMode'
+        enable_keyboard_navigation:
+          type: boolean
+          description: Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
+        enable_animated_images:
+          type: boolean
+          description: Whether user avatars or inline images in the UI that are gifs should be allowed to play or should be paused.
+        collapse_bot_comments:
+          type: boolean
+          description: Whether to auto-collapse bot comments.
+
+    ChangePassword:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Changes your account password.
+      required:
+        - new_password
+        - new_password_verify
+        - old_password
+      properties:
+        new_password:
+          type: string
+          format: password
+        new_password_verify:
+          type: string
+          format: password
+        old_password:
+          type: string
+          format: password
+
+    GetReportCountResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: A response for the number of reports.
+      required:
+        - comment_reports
+        - post_reports
+      properties:
+        community_id:
+          $ref: '#/components/schemas/CommunityID'
+        comment_reports:
+          type: integer
+          format: int64
+        post_reports:
+          type: integer
+          format: int64
+        private_message_reports:
+          type: integer
+          format: int64
+
+    GetUnreadCountResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: A response containing counts for your notifications.
+      required:
+        - replies
+        - mentions
+        - private_messages
+      properties:
+        replies:
+          type: integer
+          format: int64
+        mentions:
+          type: integer
+          format: int64
+        private_messages:
+          type: integer
+          format: int64
+
+    VerifyEmail:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Verify your email.
+      required:
+        - token
+      properties:
+        token:
           type: string
           format: password
