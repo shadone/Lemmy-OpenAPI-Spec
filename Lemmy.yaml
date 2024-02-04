@@ -433,6 +433,77 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /admin/add:
+    post:
+      tags:
+        - Admin
+      summary: Add Admin
+      description: Add an admin to your site.
+      operationId: addAdmin
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Add Admin
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAdmin'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddAdminResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /admin/registration_application/count:
+    get:
+      tags:
+        - Admin
+      summary: Get Unread Registration Application Count
+      description: Get the unread registration applications count.
+      operationId: getUnreadRegistrationApplicationCount
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUnreadRegistrationApplicationCountResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /admin/registration_application/list:
+    get:
+      tags:
+        - Admin
+      summary: List Registration Applications
+      description: List the registration applications
+      operationId: getUnreadRegistrationApplicationCount
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: unread_only
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRegistrationApplicationsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -6532,3 +6603,94 @@ components:
         token:
           type: string
           format: password
+
+    AddAdmin:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Adds an admin to a site.
+      required:
+        - person_id
+        - added
+      properties:
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        added:
+          type: boolean
+
+    AddAdminResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: The response of current admins.
+      required:
+        - admins
+      properties:
+        admins:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonView'
+
+    GetUnreadRegistrationApplicationCountResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The count of unread registration applications.
+      required:
+        - registration_applications
+      properties:
+        registration_applications:
+          type: integer
+          format: int64
+
+    ListRegistrationApplicationsResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
+      description: The response of current admins.
+      required:
+        - registration_applications
+      properties:
+        registration_applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistrationApplicationView'
+
+    RegistrationApplicationView:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      description: A registration application view.
+      required:
+        - registration_application
+        - creator_local_user
+        - creator
+      properties:
+        registration_application:
+          $ref: '#/components/schemas/RegistrationApplication'
+        creator_local_user:
+          $ref: '#/components/schemas/LocalUser'
+        creator:
+          $ref: '#/components/schemas/Person'
+        admin:
+          $ref: '#/components/schemas/Person'
+
+    RegistrationApplication:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/registration_application.rs
+      description: A registration application.
+      required:
+        - id
+        - local_user_id
+        - answer
+        - published
+      properties:
+        id:
+          type: integer
+          format: int32
+        local_user_id:
+          $ref: '#/components/schemas/LocalUserID'
+        answer:
+          type: string
+        admin_id:
+          $ref: '#/components/schemas/PersonID'
+        deny_reason:
+          type: string
+        published:
+          type: string
+          format: date-time
