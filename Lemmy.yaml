@@ -2410,6 +2410,8 @@ paths:
                 $ref: '#/components/schemas/LoginResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /user/logout:
     post:
@@ -2540,10 +2542,26 @@ components:
   responses:
     ErrorResponse:
       description: An error has occurred.
-      content: 
+      content:
         application/json:
-          schema: 
+          schema:
             $ref: '#/components/schemas/ErrorResponse'
+
+    UnauthorizedResponse:
+      description: And authorization error has occurred.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+            properties:
+              error:
+                type: string
+                enum:
+                  - incorrect_login
+              message:
+                type: string
 
     SuccessResponse:
       description: Successful operation.
@@ -2771,7 +2789,7 @@ components:
           type: boolean
         verify_email_sent:
           type: boolean
-    
+
     GetPostResponse:
       type: object
       required:
