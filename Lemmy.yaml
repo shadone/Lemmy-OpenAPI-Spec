@@ -78,6 +78,7 @@ paths:
       tags:
         - User
       summary: Get Person Mentions
+      description: Get mentions for your user.
       operationId: getPersonMentions
       security:
         - BearerAuth: []
@@ -106,6 +107,25 @@ paths:
                 $ref: '#/components/schemas/GetPersonMentionsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+
+  /user/mention/mark_as_read:
+    post:
+      tags:
+        - User
+      summary: Mark Person Mention as Read
+      description: Mark a person mention as read
+      operationId: markPersonMentionAsRead
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkPersonMentionAsRead'
+        '400':
+          $ref: '#/components/responses/PersonMentionResponse'
 
   /user/leave_admin:
     post:
@@ -5847,3 +5867,25 @@ components:
           type: string
           description: An answer is mandatory if require application is enabled on the server.
 
+    MarkPersonMentionAsRead:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Mark a person mention as read.
+      required:
+        - person_mention_id
+        - read
+      properties:
+        person_mention_id:
+          $ref: '#/components/schemas/PersonMentionID'
+        read:
+          type: boolean
+
+    PersonMentionResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: The response for a person mention action.
+      required:
+        - person_mention_view
+      properties:
+        person_mention_id:
+          $ref: '#/components/schemas/PersonMentionView'
