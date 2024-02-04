@@ -107,31 +107,6 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/login:
-    post:
-      tags:
-        - Account
-        - User
-      summary: Login
-      description: Login with a user account.
-      operationId: login
-      requestBody:
-        description: User credential
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-
   /user/leave_admin:
     post:
       tags:
@@ -1728,6 +1703,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListPrivateMessageReportsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /register:
+    post:
+      tags:
+        - Account
+      summary: Register
+      description: Register a new user.
+      operationId: register
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Register
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/login:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Login
+      description: Login with a user account.
+      operationId: login
+      requestBody:
+        description: User credential
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/logout:
+    post:
+      tags:
+        - Account
+        - User
+      summary: Logout
+      description: Logout from a user account.
+      operationId: logout
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
@@ -5770,3 +5810,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PrivateMessageReportView'
+
+    Register:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Register / Sign up to Lemmy.
+      required:
+        - username
+        - password
+        - password_verify
+        - show_nsfw
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        password_verify:
+          type: string
+          format: password
+        show_nsfw:
+          type: boolean
+        email:
+          type: string
+          format: email
+          description: email is mandatory if email verification is enabled on the server.
+        captcha_uuid:
+          type: string
+          description: The UUID of the captcha item.
+        captcha_answer:
+          type: string
+          description: Your captcha answer.
+        honeypot:
+          type: string
+        answer:
+          type: string
+          description: An answer is mandatory if require application is enabled on the server.
+
