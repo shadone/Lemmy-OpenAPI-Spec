@@ -484,7 +484,7 @@ paths:
         - Admin
       summary: List Registration Applications
       description: List the registration applications
-      operationId: getUnreadRegistrationApplicationCount
+      operationId: listRegistrationApplications
       security:
         - BearerAuth: []
       parameters:
