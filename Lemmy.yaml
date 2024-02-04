@@ -2511,10 +2511,10 @@ paths:
       parameters:
         - in: query
           name: q
+          description: Search query.
+          required: true
           schema:
             type: string
-            description: Search query.
-            required: true
           examples:
             LemmyUserSyntax:
               value: '@ruud@lemmy.world'
@@ -4016,11 +4016,9 @@ components:
       properties:
         local_user:
           $ref: '#/components/schemas/LocalUser'
-      person:
-        local_user:
+        person:
           $ref: '#/components/schemas/Person'
-      counts:
-        local_user:
+        counts:
           $ref: '#/components/schemas/PersonAggregates'
 
     LocalUser:
