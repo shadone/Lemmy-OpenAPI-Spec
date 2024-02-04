@@ -27,6 +27,8 @@ tags:
     description: Miscellaneous operations.
   - name: Mod
     description: Moderator operations.
+  - name: Admin
+    description: Administrative operations.
 
 paths:
   /user:
@@ -108,6 +110,112 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/replies:
+    get:
+      tags:
+        - User
+      summary: Get Replies
+      description: Get comment replies.
+      operationId: getReplies
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            $ref: '#/components/schemas/CommentSortType'
+        - in: query
+          name: unread_only
+          schema:
+            type: boolean
+        - in: query
+          name: comment_count
+          schema:
+            type: integer
+            format: int64
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRepliesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/ban:
+    post:
+      tags:
+        - Admin
+      summary: Ban Person
+      description: Ban a person from your site.
+      operationId: banPerson
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Ban Person
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BanPerson'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanPersonResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/banned:
+    get:
+      tags:
+        - User
+      summary: Get Banned Persons
+      description: Get a list of banned users
+      operationId: getBannedPersons
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BannedPersonsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/block:
+    post:
+      tags:
+        - User
+      summary: Block Person
+      description: Block a person
+      operationId: blockPerson
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Block Person
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockPerson'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockPersonResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -117,15 +225,22 @@ paths:
       operationId: markPersonMentionAsRead
       security:
         - BearerAuth: []
+      requestBody:
+        description: Mark Person Mention as Read
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkPersonMentionAsRead'
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarkPersonMentionAsRead'
+                $ref: '#/components/schemas/PersonMentionResponse'
         '400':
-          $ref: '#/components/responses/PersonMentionResponse'
+          $ref: '#/components/responses/ErrorResponse'
 
   /user/leave_admin:
     post:
@@ -5889,3 +6004,88 @@ components:
       properties:
         person_mention_id:
           $ref: '#/components/schemas/PersonMentionView'
+
+    GetRepliesResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Fetches your replies
+      required:
+        - replies
+      properties:
+        replies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentReplyView'
+
+    BanPerson:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Ban a person from the site.
+      required:
+        - person_id
+        - ban
+      properties:
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        ban:
+          type: boolean
+        remove_data:
+          type: boolean
+          description: Optionally remove all their data. Useful for new troll accounts.
+        reason:
+          type: string
+        expires:
+          type: integer
+          format: int64
+          description: A time that the ban will expire, in unix epoch seconds.
+
+    BanPersonResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: A response for a banned person.
+      required:
+        - person_view
+        - banned
+      properties:
+        person_view:
+          $ref: '#/components/schemas/PersonView'
+        banned:
+          type: boolean
+
+    BannedPersonsResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: The list of banned persons.
+      required:
+        - banned
+      properties:
+        banned:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonView'
+
+    BlockPerson:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Block a person.
+      required:
+        - person_id
+        - block
+      properties:
+        person_id:
+          $ref: '#/components/schemas/PersonID'
+        block:
+          type: boolean
+
+    BlockPersonResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: The response for a person block.
+      required:
+        - person_view
+        - blocked
+      properties:
+        person_view:
+          $ref: '#/components/schemas/PersonView'
+        blocked:
+          type: boolean
