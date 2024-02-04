@@ -2627,139 +2627,139 @@ components:
       example: 1
 
     PostID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Post identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     CommentID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Comment identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     PersonID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Person identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     CommunityID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Community identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     LanguageID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Language identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     InstanceID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Instance identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     PersonMentionID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Person Mention identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     SiteID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Site identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     LocalSiteID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Local Site identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     LocalUserID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Local User identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     CustomEmojiID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: Custom Emoji identifier
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     PostReportID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: The post report id.
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     CommentReplyID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: The comment reply id.
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     CommentReportID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: The comment report id.
       description: The identifier is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     PrivateMessageID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: The private message id.
       description: The identifer is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     PrivateMessageReportID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int32
       summary: The private message report id.
       description: The identifer is local to this instance.
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     ActivityID:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
       type: integer
       format: int64
       summary: Activity id
       example: 1234
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/newtypes.rs
 
     LoginRequest:
       type: object
@@ -2813,6 +2813,7 @@ components:
           description: A list of cross-posts, or other times / communities this link has been posted to.
 
     PostView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
       required:
         - post
@@ -2827,7 +2828,6 @@ components:
         - read
         - creator_blocked
         - unread_comments
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       properties:
         post:
           description: The post content.
@@ -2956,6 +2956,7 @@ components:
           description: Whether the post is featured to its site.
 
     Community:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/community.rs
       type: object
       required:
         - id
@@ -2970,7 +2971,6 @@ components:
         - hidden
         - posting_restricted_to_mods
         - instance_id
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/community.rs
       properties:
         id:
           description: Community identifier
@@ -3029,6 +3029,7 @@ components:
           $ref: '#/components/schemas/InstanceID'
 
     Person:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/person.rs
       type: object
       required:
         - id
@@ -3039,7 +3040,6 @@ components:
         - local
         - deleted
         - bot_account
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/person.rs
       properties:
         id:
           description: Person identifier
@@ -3100,6 +3100,7 @@ components:
           $ref: '#/components/schemas/InstanceID'
 
     PostAggregates:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       type: object
       required:
         - post_id
@@ -3108,7 +3109,6 @@ components:
         - upvotes
         - downvotes
         - published
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       properties:
         post_id:
           $ref: '#/components/schemas/PostID'
@@ -3134,8 +3134,8 @@ components:
           description: The timestamp when the post was published.
 
     SubscribedType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       description: A type / status for a community subscribe.
       enum:
         - Subscribed
@@ -3143,16 +3143,16 @@ components:
         - Pending
 
     RegistrationMode:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       enum:
         - Closed
         - RequireApplication
         - Open
 
     ModlogActionType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       description: A list of possible types for the various modlog actions.
       enum:
         - All
@@ -3173,8 +3173,8 @@ components:
         - AdminPurgeComment
 
     SearchType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       description: The type of content returned from a search.
       enum:
         - All
@@ -3185,8 +3185,8 @@ components:
         - Url
 
     PostFeatureType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       description: The feature type for a post
       enum:
         # Features to the top of your site.
@@ -3195,8 +3195,8 @@ components:
         - Community
 
     Language:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/language.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/language.rs
       required:
         - id
       properties:
@@ -3217,12 +3217,12 @@ components:
           example: Svenska
 
     CommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
       required:
         - community
         - subscribed
         - blocked
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       properties:
         community:
           $ref: '#/components/schemas/Community'
@@ -3234,6 +3234,7 @@ components:
           $ref: '#/components/schemas/CommunityAggregates'
 
     CommunityAggregates:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       type: object
       required:
         - community_id
@@ -3245,7 +3246,6 @@ components:
         - users_active_week
         - users_active_month
         - users_active_half_year
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       description: Aggregate data for a community.
       properties:
         community_id:
@@ -3280,11 +3280,11 @@ components:
           description: The number of users with any activity in the last 6 months.
 
     CommunityModeratorView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
       required:
         - community
         - moderator
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       description: A community moderator.
       properties:
         community:
@@ -3293,12 +3293,12 @@ components:
           $ref: '#/components/schemas/Person'
 
     PaginationCursor:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
 
     ListingType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       enum:
         # Content from your own site, as well as all connected / federated sites.
         - All
@@ -3310,8 +3310,8 @@ components:
         - ModeratorView
 
     SortType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       enum:
         - Active
         - Hot
@@ -3333,8 +3333,8 @@ components:
         - Scaled
 
     CommentSortType:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       enum:
         - Hot
         - Top
@@ -3343,8 +3343,8 @@ components:
         - Controversial
 
     PostListingMode:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       type: string
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
       enum:
         # A compact, list-type view.
         - List
@@ -3376,8 +3376,8 @@ components:
             $ref: '#/components/schemas/CommentView'
 
     CommentView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       required:
         - comment
         - creator
@@ -3425,8 +3425,8 @@ components:
           $ref: '#/components/schemas/MyVote'
 
     Comment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment.rs
       required:
         - id
         - creator_id
@@ -3488,6 +3488,7 @@ components:
           $ref: '#/components/schemas/LanguageID'
 
     CommentAggregates:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       type: object
       required:
         - comment_id
@@ -3496,7 +3497,6 @@ components:
         - downvotes
         - published
         - child_count
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       properties:
         comment_id:
           $ref: '#/components/schemas/CommentID'
@@ -3545,12 +3545,12 @@ components:
             $ref: '#/components/schemas/CommunityModeratorView'
 
     PersonView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
       required:
         - person
         - counts
         - is_admin
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       properties:
         person:
           $ref: '#/components/schemas/Person'
@@ -3561,12 +3561,12 @@ components:
           description: Whether the person is an admin.
 
     PersonAggregates:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       type: object
       required:
         - person_id
         - post_count
         - comment_count
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       properties:
         person_id:
           $ref: '#/components/schemas/PersonID'
@@ -3691,8 +3691,8 @@ components:
             $ref: '#/components/schemas/CustomEmojiView'
 
     SiteView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       required:
         - site
         - local_site
@@ -3853,9 +3853,9 @@ components:
           description: Whether to sign outgoing Activitypub fetches with private key of local instance. Some Fediverse instances and platforms require this.
 
     LocalSiteRateLimit:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_site_rate_limit.rs
       type: object
       description: Rate limits for your site. Given in count / length of time.
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_site_rate_limit.rs
       required:
         - local_site_id
         - message
@@ -3928,8 +3928,8 @@ components:
           format: int32
 
     SiteAggregates:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/aggregates/structs.rs
       required:
         - site_id
         - users
@@ -3973,8 +3973,8 @@ components:
           description: The number of users with any activity in the last half year.
 
     MyUserInfo:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       required:
         - local_user_view
         - follows
@@ -4007,8 +4007,8 @@ components:
             $ref: '#/components/schemas/LanguageID'
 
     LocalUserView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       required:
         - local_user
         - person
@@ -4024,8 +4024,8 @@ components:
           $ref: '#/components/schemas/PersonAggregates'
 
     LocalUser:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_user.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/local_user.rs
       required:
         - id
         - person_id
@@ -4125,8 +4125,8 @@ components:
           description: Whether to auto-collapse bot comments.
 
     Tagline:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/tagline.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/tagline.rs
       description: A tagline, shown at the top of your site.
       required:
         - id
@@ -4151,8 +4151,8 @@ components:
           description: The date this tagline was last updated.
 
     CustomEmojiView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A custom emoji view.
       required:
         - custom_emoji
@@ -4166,8 +4166,8 @@ components:
             $ref: '#/components/schemas/CustomEmojiKeyword'
 
     CustomEmoji:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji.rs
       description: A custom emoji.
       required:
         - id
@@ -4201,8 +4201,8 @@ components:
           description: The date this emoji was last updated.
 
     CustomEmojiKeyword:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji_keyword.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/custom_emoji_keyword.rs
       description: A custom keyword for an emoji.
       required:
         - custom_emoji_id
@@ -4214,8 +4214,8 @@ components:
           type: string
 
     CommunityFollowerView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       description: A community follower.
       required:
         - community
@@ -4227,8 +4227,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     CommunityBlockView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       description: A community block.
       required:
         - person
@@ -4240,8 +4240,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     PersonBlockView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       description: A person block.
       required:
         - person
@@ -4253,8 +4253,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ResolveObjectResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The response of an apub object fetch.
       properties:
         comment:
@@ -4267,8 +4267,8 @@ components:
           $ref: '#/components/schemas/PersonView'
 
     CreateSite:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       summary: Creates a site
       description: Should be done after first running Lemmy.
       required:
@@ -4410,8 +4410,8 @@ components:
           $ref: '#/components/schemas/RegistrationMode'
 
     EditSite:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       summary: Edits a site
       properties:
         name:
@@ -4553,8 +4553,8 @@ components:
           description: Whether to email admins for new reports.
 
     SiteResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The response for a site.
       required:
         - site_view
@@ -4568,8 +4568,8 @@ components:
             $ref: '#/components/schemas/Tagline'
 
     GenerateTotpSecretResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       required:
         - totp_secret_url
       properties:
@@ -4577,8 +4577,8 @@ components:
           type: string
 
     LoginToken:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/login_token.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/login_token.rs
       required:
         - user_id
         - published
@@ -4598,8 +4598,8 @@ components:
           type: string
 
     UpdateTotp:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       required:
         - totp_token
         - enabled
@@ -4618,8 +4618,8 @@ components:
           type: boolean
 
     GetModlogResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       required:
         - removed_posts
         - locked_posts
@@ -4699,8 +4699,8 @@ components:
             $ref: '#/components/schemas/ModHideCommunityView'
 
     ModRemovePostView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator removes a post.
       required:
         - mod_remove_post
@@ -4717,8 +4717,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModRemovePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator removes a post.
       required:
         - id
@@ -4743,8 +4743,8 @@ components:
           format: date-time
 
     ModLockPostView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator locks a post (prevents new comments being made).
       required:
         - mod_lock_post
@@ -4761,8 +4761,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModLockPost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator locks a post (prevents new comments being made).
       required:
         - id
@@ -4785,8 +4785,8 @@ components:
           format: date-time
 
     ModFeaturePostView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator locks a post (prevents new comments being made).
       required:
         - mod_feature_post
@@ -4803,8 +4803,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModFeaturePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator locks a post (prevents new comments being made).
       required:
         - id
@@ -4830,8 +4830,8 @@ components:
           type: boolean
 
     ModRemoveCommentView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator removes a comment.
       required:
         - mod_remove_comment
@@ -4854,8 +4854,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModRemoveComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator removes a comment.
       required:
         - id
@@ -4880,8 +4880,8 @@ components:
           format: date-time
 
     ModRemoveCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator removes a community.
       required:
         - mod_remove_community
@@ -4895,8 +4895,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModRemoveCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator removes a community.
       required:
         - id
@@ -4921,8 +4921,8 @@ components:
           format: date-time
 
     ModBanFromCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When someone is banned from a community.
       required:
         - mod_ban_from_community
@@ -4939,8 +4939,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ModBanFromCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When someone is banned from a community.
       required:
         - id
@@ -4971,8 +4971,8 @@ components:
           format: date-time
 
     ModBanView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When someone is banned from the site.
       required:
         - mod_ban
@@ -4986,8 +4986,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ModBan:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When someone is banned from the site.
       required:
         - id
@@ -5018,8 +5018,8 @@ components:
           format: date-time
 
     ModAddCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When someone is added as a community moderator.
       required:
         - mod_add_community
@@ -5036,8 +5036,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ModAddCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When someone is added as a community moderator.
       required:
         - id
@@ -5065,8 +5065,8 @@ components:
           format: date-time
 
     ModTransferCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a moderator transfers a community to a new owner.
       required:
         - mod_transfer_community
@@ -5083,8 +5083,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ModTransferCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a moderator transfers a community to a new owner.
       required:
         - id
@@ -5107,8 +5107,8 @@ components:
           format: date-time
 
     ModAddView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When someone is added as a site moderator.
       required:
         - mod_add
@@ -5122,8 +5122,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     ModAdd:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When someone is added as a site moderator.
       required:
         - id
@@ -5145,8 +5145,8 @@ components:
           format: date-time
 
     AdminPurgePersonView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When an admin purges a person.
       required:
         - admin_purge_person
@@ -5157,8 +5157,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     AdminPurgePerson:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When an admin purges a person.
       required:
         - id
@@ -5177,8 +5177,8 @@ components:
           format: date-time
 
     AdminPurgeCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When an admin purges a community.
       required:
         - admin_purge_community
@@ -5189,8 +5189,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     AdminPurgeCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When an admin purges a community.
       required:
         - id
@@ -5209,8 +5209,8 @@ components:
           format: date-time
 
     AdminPurgePostView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When an admin purges a post.
       required:
         - admin_purge_post
@@ -5224,8 +5224,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     AdminPurgePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When an admin purges a post.
       required:
         - id
@@ -5247,8 +5247,8 @@ components:
           format: date-time
 
     AdminPurgeCommentView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When an admin purges a comment.
       required:
         - admin_purge_comment
@@ -5262,8 +5262,8 @@ components:
           $ref: '#/components/schemas/Post'
 
     AdminPurgeComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When an admin purges a comment.
       required:
         - id
@@ -5285,8 +5285,8 @@ components:
           format: date-time
 
     ModHideCommunityView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_moderator/src/structs.rs
       description: When a community is hidden from public view.
       required:
         - mod_hide_community
@@ -5300,8 +5300,8 @@ components:
           $ref: '#/components/schemas/Community'
 
     ModHideCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/moderator.rs
       description: When a community is hidden from public view.
       required:
         - id
@@ -5326,8 +5326,8 @@ components:
           type: boolean
 
     SearchResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The search response, containing lists of the return type possibilities.
       required:
         - type_
@@ -5355,8 +5355,8 @@ components:
             $ref: '#/components/schemas/PersonView'
 
     CreateCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Create a community.
       required:
         - name
@@ -5391,8 +5391,8 @@ components:
             $ref: '#/components/schemas/LanguageID'
 
     CommunityResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: A simple community response.
       required:
         - community_view
@@ -5406,8 +5406,8 @@ components:
             $ref: '#/components/schemas/LanguageID'
 
     GetCommunityResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: The community response.
       required:
         - community_view
@@ -5424,8 +5424,8 @@ components:
             $ref: '#/components/schemas/LanguageID'
 
     EditCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Edit a community.
       required:
         - community_id
@@ -5458,8 +5458,8 @@ components:
             $ref: '#/components/schemas/LanguageID'
 
     ListCommunitiesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: The response for listing communities.
       required:
         - communities
@@ -5470,8 +5470,8 @@ components:
             $ref: '#/components/schemas/CommunityView'
 
     FollowCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Follow / subscribe to a community.
       required:
         - community_id
@@ -5483,8 +5483,8 @@ components:
           type: boolean
 
     BlockCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Block a community.
       required:
         - community_id
@@ -5496,8 +5496,8 @@ components:
           type: boolean
 
     BlockCommunityResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: The block community response.
       required:
         - community_view
@@ -5509,8 +5509,8 @@ components:
           type: boolean
 
     DeleteCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Delete your own community.
       required:
         - community_id
@@ -5522,8 +5522,8 @@ components:
           type: boolean
 
     HideCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Hide a community from the main view.
       required:
         - community_id
@@ -5537,8 +5537,8 @@ components:
           type: string
 
     RemoveCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Remove a community (only doable by moderators).
       required:
         - community_id
@@ -5552,8 +5552,8 @@ components:
           type: string
 
     TransferCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Transfer a community to a new owner.
       required:
         - community_id
@@ -5565,8 +5565,8 @@ components:
           $ref: '#/components/schemas/PersonID'
 
     BanFromCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Ban a user from a community.
       required:
         - community_id
@@ -5588,8 +5588,8 @@ components:
           format: int64
 
     BanFromCommunityResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: The response for banning a user from a community.
       required:
         - person_view
@@ -5601,8 +5601,8 @@ components:
           type: boolean
 
     AddModToCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: Add a moderator to a community.
       required:
         - community_id
@@ -5617,8 +5617,8 @@ components:
           type: boolean
 
     AddModToCommunityResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
       description: The response of adding a moderator to a community.
       required:
         - moderators
@@ -5629,8 +5629,8 @@ components:
             $ref: '#/components/schemas/CommunityModeratorView'
 
     CreatePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Create a post.
       required:
         - name
@@ -5654,8 +5654,8 @@ components:
           $ref: '#/components/schemas/LanguageID'
 
     PostResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       required:
         - post_view
       properties:
@@ -5663,8 +5663,8 @@ components:
           $ref: '#/components/schemas/PostView'
 
     EditPost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Edit a post.
       required:
         - post_id
@@ -5685,8 +5685,8 @@ components:
           $ref: '#/components/schemas/LanguageID'
 
     DeletePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Delete a post.
       required:
         - post_id
@@ -5698,8 +5698,8 @@ components:
           type: boolean
 
     RemovePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Remove a post (only doable by mods).
       required:
         - post_id
@@ -5713,8 +5713,8 @@ components:
           type: string
 
     MarkPostAsRead:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Mark a post as read.
       required:
         - read
@@ -5730,8 +5730,8 @@ components:
           type: boolean
 
     LockPost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Lock a post (prevent new comments).
       required:
         - post_id
@@ -5743,8 +5743,8 @@ components:
           type: boolean
 
     FeaturePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Feature a post (stickies / pins to the top).
       required:
         - post_id
@@ -5759,8 +5759,8 @@ components:
           $ref: '#/components/schemas/PostFeatureType'
 
     CreatePostLike:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Like a post.
       required:
         - post_id
@@ -5772,8 +5772,8 @@ components:
           $ref: '#/components/schemas/MyVote'
 
     SavePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Save / bookmark a post.
       required:
         - post_id
@@ -5785,8 +5785,8 @@ components:
           type: boolean
 
     CreatePostReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Create a post report.
       required:
         - post_id
@@ -5798,8 +5798,8 @@ components:
           type: string
 
     PostReportResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: The post report response.
       required:
         - post_report_view
@@ -5808,8 +5808,8 @@ components:
           $ref: '#/components/schemas/PostReportView'
 
     PostReportView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A post report view.
       required:
         - post_report
@@ -5840,8 +5840,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     PostReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/post_report.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/post_report.rs
       description: A post report.
       required:
         - id
@@ -5882,8 +5882,8 @@ components:
           format: date-time
 
     ResolvePostReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: Resolve a post report (mods only).
       required:
         - report_id
@@ -5895,8 +5895,8 @@ components:
           type: boolean
 
     ListPostReportsResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: The post reports response.
       required:
         - post_reports
@@ -5907,8 +5907,8 @@ components:
             $ref: '#/components/schemas/PostReportView'
 
     GetSiteMetadataResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: The site metadata response.
       required:
         - metadata
@@ -5917,8 +5917,8 @@ components:
           $ref: '#/components/schemas/SiteMetadata'
 
     SiteMetadata:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/post.rs
       description: The site metadata.
       properties:
         title:
@@ -5933,8 +5933,8 @@ components:
           format: uri
 
     CreateComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Create a comment.
       required:
         - content
@@ -5950,8 +5950,8 @@ components:
           $ref: '#/components/schemas/LanguageID'
 
     CommentResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: A comment response.
       required:
         - comment_view
@@ -5965,8 +5965,8 @@ components:
             $ref: '#/components/schemas/LocalUserID'
 
     EditComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Edit a comment.
       required:
         - comment_id
@@ -5979,8 +5979,8 @@ components:
           $ref: '#/components/schemas/LanguageID'
 
     DeleteComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Delete a comment.
       required:
         - comment_id
@@ -5992,8 +5992,8 @@ components:
           type: boolean
 
     RemoveComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Remove a comment (only doable by mods).
       required:
         - comment_id
@@ -6007,8 +6007,8 @@ components:
           type: string
 
     MarkCommentReplyAsRead:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Mark a comment reply as read.
       required:
         - comment_reply_id
@@ -6020,8 +6020,8 @@ components:
           type: boolean
 
     CommentReplyResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: The response for a comment reply action.
       required:
         - comment_reply_view
@@ -6030,8 +6030,8 @@ components:
           $ref: '#/components/schemas/CommentReplyView'
 
     CommentReplyView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
       description: A comment reply view.
       required:
         - comment_reply
@@ -6078,8 +6078,8 @@ components:
           $ref: '#/components/schemas/MyVote'
 
     CommentReply:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_reply.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_reply.rs
       description: A comment reply.
       required:
         - id
@@ -6101,8 +6101,8 @@ components:
           format: date-time
 
     CreateCommentLike:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Like a comment.
       required:
         - comment_id
@@ -6114,8 +6114,8 @@ components:
           $ref: '#/components/schemas/MyVote'
 
     SaveComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Save / bookmark a comment.
       required:
         - comment_id
@@ -6127,8 +6127,8 @@ components:
           type: boolean
 
     DistinguishComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Distinguish a comment (i.e. speak as moderator).
       required:
         - comment_id
@@ -6140,8 +6140,8 @@ components:
           type: boolean
 
     CreateCommentReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Report a comment.
       required:
         - comment_id
@@ -6153,8 +6153,8 @@ components:
           type: string
 
     CommentReportResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: The comment report response.
       required:
         - comment_report_view
@@ -6163,8 +6163,8 @@ components:
           $ref: '#/components/schemas/CommentReportView'
 
     CommentReportView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A comment report view.
       required:
         - comment_report
@@ -6198,8 +6198,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     CommentReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_report.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/comment_report.rs
       description: A comment report.
       required:
         - id
@@ -6232,8 +6232,8 @@ components:
           format: date-time
 
     ResolveCommentReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: Resolve a comment report (only doable by mods).
       required:
         - report_id
@@ -6245,8 +6245,8 @@ components:
           type: boolean
 
     ListCommentReportsResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
       description: The comment report list response.
       required:
         - comment_reports
@@ -6257,8 +6257,8 @@ components:
             $ref: '#/components/schemas/CommentReportView'
 
     PrivateMessagesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
       description: The private messages response.
       required:
         - private_messages
@@ -6269,8 +6269,8 @@ components:
             $ref: '#/components/schemas/PrivateMessageView'
 
     PrivateMessageView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A private message view.
       required:
         - private_message
@@ -6285,8 +6285,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     PrivateMessage:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: A private message.
       required:
         - id
@@ -6325,8 +6325,8 @@ components:
           type: boolean
 
     CreatePrivateMessage:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Create a private message.
       required:
         - content
@@ -6338,8 +6338,8 @@ components:
           $ref: '#/components/schemas/PersonID'
 
     PrivateMessageResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: A single private message response.
       required:
         - private_message_view
@@ -6348,8 +6348,8 @@ components:
           $ref: '#/components/schemas/PrivateMessageView'
 
     EditPrivateMessage:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Edit a private message.
       required:
         - private_message_id
@@ -6361,8 +6361,8 @@ components:
           type: string
 
     DeletePrivateMessage:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Delete a private message.
       required:
         - private_message_id
@@ -6374,8 +6374,8 @@ components:
           type: boolean
 
     MarkPrivateMessageAsRead:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Mark a private message as read.
       required:
         - private_message_id
@@ -6387,8 +6387,8 @@ components:
           type: boolean
 
     CreatePrivateMessageReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Create a report for a private message.
       required:
         - private_message_id
@@ -6400,8 +6400,8 @@ components:
           type: string
 
     PrivateMessageReportResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: A private message report response.
       required:
         - private_message_id
@@ -6410,8 +6410,8 @@ components:
           $ref: '#/components/schemas/PrivateMessageReportView'
 
     PrivateMessageReportView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A private message report view.
       required:
         - private_message_report
@@ -6431,8 +6431,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     PrivateMessageReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: A private message report.
       required:
         - id
@@ -6466,8 +6466,8 @@ components:
           format: date-time
 
     ResolvePrivateMessageReport:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: Resolve a private message report
       required:
         - report_id
@@ -6479,8 +6479,8 @@ components:
           type: boolean
 
     ListPrivateMessageReportsResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
       description: The response for list private message reports
       required:
         - private_message_reports
@@ -6491,8 +6491,8 @@ components:
             $ref: '#/components/schemas/PrivateMessageReportView'
 
     Register:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Register / Sign up to Lemmy.
       required:
         - username
@@ -6527,8 +6527,8 @@ components:
           description: An answer is mandatory if require application is enabled on the server.
 
     MarkPersonMentionAsRead:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Mark a person mention as read.
       required:
         - person_mention_id
@@ -6540,8 +6540,8 @@ components:
           type: boolean
 
     PersonMentionResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: The response for a person mention action.
       required:
         - person_mention_view
@@ -6550,8 +6550,8 @@ components:
           $ref: '#/components/schemas/PersonMentionView'
 
     GetRepliesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Fetches your replies
       required:
         - replies
@@ -6562,8 +6562,8 @@ components:
             $ref: '#/components/schemas/CommentReplyView'
 
     BanPerson:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Ban a person from the site.
       required:
         - person_id
@@ -6584,8 +6584,8 @@ components:
           description: A time that the ban will expire, in unix epoch seconds.
 
     BanPersonResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: A response for a banned person.
       required:
         - person_view
@@ -6597,8 +6597,8 @@ components:
           type: boolean
 
     BannedPersonsResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: The list of banned persons.
       required:
         - banned
@@ -6609,8 +6609,8 @@ components:
             $ref: '#/components/schemas/PersonView'
 
     BlockPerson:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Block a person.
       required:
         - person_id
@@ -6622,8 +6622,8 @@ components:
           type: boolean
 
     BlockPersonResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: The response for a person block.
       required:
         - person_view
@@ -6635,8 +6635,8 @@ components:
           type: boolean
 
     GetCaptchaResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: A wrapper for the captcha response.
       properties:
         ok:
@@ -6644,8 +6644,8 @@ components:
           description: Will be None if captchas are disabled.
 
     CaptchaResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: A captcha response.
       required:
         - png
@@ -6663,8 +6663,8 @@ components:
           description: The UUID for the captcha item.
 
     DeleteAccount:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Delete your account.
       required:
         - password
@@ -6678,8 +6678,8 @@ components:
           description: Will be None if captchas are disabled.
 
     PasswordReset:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Reset your password via email.
       required:
         - email
@@ -6689,8 +6689,8 @@ components:
           format: email
 
     PasswordChangeAfterReset:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Change your password after receiving a reset request.
       required:
         - token
@@ -6708,8 +6708,8 @@ components:
           format: password
 
     SaveUserSettings:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Saves settings for your user.
       properties:
         show_nsfw:
@@ -6792,8 +6792,8 @@ components:
           description: Whether to auto-collapse bot comments.
 
     ChangePassword:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Changes your account password.
       required:
         - new_password
@@ -6811,8 +6811,8 @@ components:
           format: password
 
     GetReportCountResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: A response for the number of reports.
       required:
         - comment_reports
@@ -6831,8 +6831,8 @@ components:
           format: int64
 
     GetUnreadCountResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: A response containing counts for your notifications.
       required:
         - replies
@@ -6850,8 +6850,8 @@ components:
           format: int64
 
     VerifyEmail:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Verify your email.
       required:
         - token
@@ -6861,8 +6861,8 @@ components:
           format: password
 
     AddAdmin:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: Adds an admin to a site.
       required:
         - person_id
@@ -6874,8 +6874,8 @@ components:
           type: boolean
 
     AddAdminResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
       description: The response of current admins.
       required:
         - admins
@@ -6886,8 +6886,8 @@ components:
             $ref: '#/components/schemas/PersonView'
 
     GetUnreadRegistrationApplicationCountResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The count of unread registration applications.
       required:
         - registration_applications
@@ -6897,8 +6897,8 @@ components:
           format: int64
 
     ListRegistrationApplicationsResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The response of current admins.
       required:
         - registration_applications
@@ -6909,8 +6909,8 @@ components:
             $ref: '#/components/schemas/RegistrationApplicationView'
 
     RegistrationApplicationView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
       description: A registration application view.
       required:
         - registration_application
@@ -6927,8 +6927,8 @@ components:
           $ref: '#/components/schemas/Person'
 
     RegistrationApplication:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/registration_application.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/registration_application.rs
       description: A registration application.
       required:
         - id
@@ -6952,8 +6952,8 @@ components:
           format: date-time
 
     ApproveRegistrationApplication:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Approves a registration application.
       required:
         - id
@@ -6968,8 +6968,8 @@ components:
           type: string
 
     RegistrationApplicationResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: The response of an action done to a registration application.
       required:
         - registration_application
@@ -6978,8 +6978,8 @@ components:
           $ref: '#/components/schemas/RegistrationApplicationView'
 
     PurgePerson:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Purges a person from the database. This will delete all content attached to that person.
       required:
         - person_id
@@ -6990,8 +6990,8 @@ components:
           type: string
 
     PurgeCommunity:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Purges a community from the database. This will delete all content attached to that community.
       required:
         - community_id
@@ -7002,8 +7002,8 @@ components:
           type: string
 
     PurgePost:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Purges a post from the database. This will delete all content attached to that post.
       required:
         - post_id
@@ -7014,8 +7014,8 @@ components:
           type: string
 
     PurgeComment:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Purges a comment from the database. This will delete all content attached to that comment.
       required:
         - comment_id
@@ -7026,8 +7026,8 @@ components:
           type: string
 
     CreateCustomEmoji:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       description: Create a custom emoji.
       required:
         - category
@@ -7051,8 +7051,8 @@ components:
             type: string
 
     CustomEmojiResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       description: A response for a custom emoji.
       required:
         - custom_emoji
@@ -7061,8 +7061,8 @@ components:
           $ref: '#/components/schemas/CustomEmojiView'
 
     EditCustomEmoji:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       description: Edit a custom emoji.
       required:
         - id
@@ -7086,8 +7086,8 @@ components:
             type: string
 
     DeleteCustomEmoji:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/custom_emoji.rs
       description: Delete a custom emoji.
       required:
         - id
@@ -7096,8 +7096,8 @@ components:
           $ref: '#/components/schemas/CustomEmojiID'
 
     GetFederatedInstancesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: A response of federated instances.
       required:
         - federated_instances
@@ -7106,8 +7106,8 @@ components:
           $ref: '#/components/schemas/FederatedInstances'
 
     FederatedInstances:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: A list of federated instances.
       required:
         - linked
@@ -7128,8 +7128,8 @@ components:
             $ref: '#/components/schemas/InstanceWithFederationState'
 
     InstanceWithFederationState:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       required:
         - id
         - domain
@@ -7154,8 +7154,8 @@ components:
           description: if federation to this instance is or was active, show state of outgoing federation to this instance
 
     ReadableFederationState:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       required:
         - instance_id
         - fail_count
@@ -7182,8 +7182,8 @@ components:
           description: timestamp of the next retry attempt (null if fail count is 0)
 
     BlockInstance:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       description: Block an instance as user
       required:
         - instance_id
@@ -7195,8 +7195,8 @@ components:
           type: boolean
 
     BlockInstanceResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
-      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       required:
         - blocked
       properties:
