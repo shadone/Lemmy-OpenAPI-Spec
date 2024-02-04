@@ -5,6 +5,9 @@ The OpenAPI spec for [Lemmy](https://join-lemmy.org) client API. This spec conta
 
 The OpenAPI spec was created manually with added documentation where possible.
 
+You can read the Lemmy Client api docs:
+ - [Lemmy Client api docs](https://shadone.github.io/Lemmy-OpenAPI-Spec/) (redoc) hosted at Github Pages
+ - [Lemmy Client api docs](https://lemmy-client-api.redoc.ly) (redoc) hosted at Redoc.ly
 
 ### Alternatives
 
