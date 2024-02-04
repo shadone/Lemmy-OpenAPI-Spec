@@ -216,6 +216,91 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /user/get_captcha:
+    get:
+      tags:
+        - User
+      summary: Get Captcha
+      description: Fetch a Captcha
+      operationId: getCaptcha
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCaptchaResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/delete_account:
+    post:
+      tags:
+        - User
+      summary: Delete Account
+      description: Delete your account.
+      operationId: deleteAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAccount'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/password_reset:
+    post:
+      tags:
+        - User
+      summary: Password Reset
+      description: Reset your password.
+      operationId: passwordReset
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Password Reset
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /user/password_change:
+    post:
+      tags:
+        - User
+      summary: Password Change After Reset
+      description: Change your password from an email / token based reset.
+      operationId: passwordChangeAfterReset
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Password Change After Reset
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeAfterReset'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /user/mention/mark_as_read:
     post:
       tags:
@@ -6089,3 +6174,76 @@ components:
           $ref: '#/components/schemas/PersonView'
         blocked:
           type: boolean
+
+    GetCaptchaResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: A wrapper for the captcha response.
+      properties:
+        ok:
+          $ref: '#/components/schemas/CaptchaResponse'
+          description: Will be None if captchas are disabled.
+
+    CaptchaResponse:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: A captcha response.
+      required:
+        - png
+        - wav
+        - uuid
+      properties:
+        png:
+          type: string
+          description: A Base64 encoded png.
+        wav:
+          type: string
+          description: A Base64 encoded wav audio.
+        uuid:
+          type: string
+          description: The UUID for the captcha item.
+
+    DeleteAccount:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Delete your account.
+      required:
+        - password
+        - delete_content
+      properties:
+        password:
+          type: string
+          format: password
+        delete_content:
+          type: boolean
+          description: Will be None if captchas are disabled.
+
+    PasswordReset:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Reset your password via email.
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+    PasswordChangeAfterReset:
+      type: object
+      externalLink: https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/person.rs
+      description: Change your password after receiving a reset request.
+      required:
+        - token
+        - password
+        - password_verify
+      properties:
+        token:
+          type: string
+          format: password
+        password:
+          type: string
+          format: password
+        password_verify:
+          type: string
+          format: password
