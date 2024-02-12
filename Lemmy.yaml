@@ -1,7 +1,7 @@
 openapi: '3.1.0'
 info:
   title: Lemmy client API
-  description: This is an unofficial OpenAPI spec for Lemmy client API.
+  description: (unofficial) OpenAPI spec for Lemmy client API.
   contact:
     url: https://github.com/shadone/Lemmy-OpenAPI-Spec
     email: denis@ddenis.info
@@ -2551,6 +2551,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Bearer access token passed in Authorization header.
     AdminAuth:
       type: http
       scheme: bearer
