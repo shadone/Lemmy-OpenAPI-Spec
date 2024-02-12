@@ -154,12 +154,13 @@ paths:
   /user/ban:
     post:
       tags:
+        - User
         - Admin
       summary: Ban Person
       description: Ban a person from your site.
       operationId: banPerson
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Ban Person
         required: true
@@ -447,7 +448,7 @@ paths:
       description: Add an admin to your site.
       operationId: addAdmin
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Add Admin
         required: true
@@ -473,7 +474,7 @@ paths:
       description: Get the unread registration applications count.
       operationId: getUnreadRegistrationApplicationCount
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       responses:
         '200':
           description: Successful operation
@@ -492,7 +493,7 @@ paths:
       description: List the registration applications
       operationId: listRegistrationApplications
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       parameters:
         - in: query
           name: unread_only
@@ -518,7 +519,7 @@ paths:
       description: Approve a registration application.
       operationId: approveRegistrationApplication
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Approve Registration Application
         required: true
@@ -544,7 +545,7 @@ paths:
       description: Purge / Delete a person from the database.
       operationId: purgePerson
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Person
         required: true
@@ -566,7 +567,7 @@ paths:
       description: Purge / Delete a community from the database.
       operationId: purgeCommunity
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Community
         required: true
@@ -588,7 +589,7 @@ paths:
       description: Purge / Delete a post from the database.
       operationId: purgePost
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Post
         required: true
@@ -610,7 +611,7 @@ paths:
       description: Purge / Delete a comment from the database.
       operationId: purgeComment
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Comment
         required: true
@@ -632,7 +633,7 @@ paths:
       description: Create a new custom emoji
       operationId: createCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Create Custom Emoji
         required: true
@@ -656,7 +657,7 @@ paths:
       description: Edit a new custom emoji
       operationId: editCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Edit Custom Emoji
         required: true
@@ -682,7 +683,7 @@ paths:
       description: Delete a new custom emoji
       operationId: deleteCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Delete Custom Emoji
         required: true
@@ -776,7 +777,7 @@ paths:
       description: Leave the Site admins.
       operationId: leaveAdmin
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       responses:
         '200':
           description: Successful operation
@@ -1230,7 +1231,7 @@ paths:
       description: Hide a community from public / "All" view. Admins only.
       operationId: hideCommunity
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Hide Community
         required: true
@@ -2459,11 +2460,12 @@ paths:
     post:
       tags:
         - Site
+        - Admin
       summary: Create Site
       description: Create your site
       operationId: createSite
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Create Site
         required: true
@@ -2483,11 +2485,12 @@ paths:
     put:
       tags:
         - Site
+        - Admin
       summary: Edit Site
       description: Edit your site
       operationId: editSite
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Edit Site
         required: true
@@ -2548,6 +2551,11 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: The user with the bearer token needs to be a site Administrator.
 
   responses:
     ErrorResponse:
