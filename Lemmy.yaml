@@ -5181,7 +5181,7 @@ components:
       required:
         - admin_purge_community
       properties:
-        admin_purge_person:
+        admin_purge_community:
           $ref: '#/components/schemas/AdminPurgeCommunity'
         admin:
           $ref: '#/components/schemas/Person'
@@ -5416,6 +5416,10 @@ components:
           $ref: '#/components/schemas/CommunityView'
         site:
           $ref: '#/components/schemas/Site'
+        moderators:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
         discussion_languages:
           type: array
           items:
@@ -6012,7 +6016,7 @@ components:
         - comment_reply_id
         - read
       properties:
-        comment_id:
+        comment_reply_id:
           $ref: '#/components/schemas/CommentReplyID'
         read:
           type: boolean
@@ -6398,7 +6402,7 @@ components:
           type: string
 
     PrivateMessageReportResponse:
-      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
       type: object
       description: A private message report response.
       required:
