@@ -1,7 +1,7 @@
 openapi: '3.1.0'
 info:
   title: Lemmy client API
-  description: This is an unofficial OpenAPI spec for Lemmy client API.
+  description: (unofficial) OpenAPI spec for Lemmy client API.
   contact:
     url: https://github.com/shadone/Lemmy-OpenAPI-Spec
     email: denis@ddenis.info
@@ -21,7 +21,9 @@ tags:
     description: Operations on users.
   - name: Post
     description: Operations on posts.
-  - name: Comments
+  - name: Community
+    description: Operations on communities.
+  - name: Comment
     description: Operations on comments.
   - name: Misc
     description: Miscellaneous operations.
@@ -29,6 +31,10 @@ tags:
     description: Moderator operations.
   - name: Admin
     description: Administrative operations.
+  - name: Site
+    description: Operations on Site.
+  - name: Private Message
+    description: Operations on Private Messages.
 
 paths:
   /user:
@@ -148,12 +154,13 @@ paths:
   /user/ban:
     post:
       tags:
+        - User
         - Admin
       summary: Ban Person
       description: Ban a person from your site.
       operationId: banPerson
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Ban Person
         required: true
@@ -441,7 +448,7 @@ paths:
       description: Add an admin to your site.
       operationId: addAdmin
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Add Admin
         required: true
@@ -467,7 +474,7 @@ paths:
       description: Get the unread registration applications count.
       operationId: getUnreadRegistrationApplicationCount
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       responses:
         '200':
           description: Successful operation
@@ -486,7 +493,7 @@ paths:
       description: List the registration applications
       operationId: listRegistrationApplications
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       parameters:
         - in: query
           name: unread_only
@@ -512,7 +519,7 @@ paths:
       description: Approve a registration application.
       operationId: approveRegistrationApplication
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Approve Registration Application
         required: true
@@ -538,7 +545,7 @@ paths:
       description: Purge / Delete a person from the database.
       operationId: purgePerson
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Person
         required: true
@@ -560,7 +567,7 @@ paths:
       description: Purge / Delete a community from the database.
       operationId: purgeCommunity
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Community
         required: true
@@ -582,7 +589,7 @@ paths:
       description: Purge / Delete a post from the database.
       operationId: purgePost
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Post
         required: true
@@ -604,7 +611,7 @@ paths:
       description: Purge / Delete a comment from the database.
       operationId: purgeComment
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Purge Comment
         required: true
@@ -626,7 +633,7 @@ paths:
       description: Create a new custom emoji
       operationId: createCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Create Custom Emoji
         required: true
@@ -650,7 +657,7 @@ paths:
       description: Edit a new custom emoji
       operationId: editCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Edit Custom Emoji
         required: true
@@ -676,7 +683,7 @@ paths:
       description: Delete a new custom emoji
       operationId: deleteCustomEmoji
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Delete Custom Emoji
         required: true
@@ -698,7 +705,7 @@ paths:
       description: Fetch federated instances.
       operationId: getFederatedInstances
       security:
-        - BearerAuth: []
+        - {}
       responses:
         '200':
           description: Successful operation
@@ -770,7 +777,7 @@ paths:
       description: Leave the Site admins.
       operationId: leaveAdmin
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       responses:
         '200':
           description: Successful operation
@@ -1224,7 +1231,7 @@ paths:
       description: Hide a community from public / "All" view. Admins only.
       operationId: hideCommunity
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Hide Community
         required: true
@@ -1846,7 +1853,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
-        - Comments
+        - Comment
       summary: Get Comment
       description: Get / fetch comment.
       operationId: getComment
@@ -2053,7 +2060,7 @@ paths:
   /comment/list:
     get:
       tags:
-        - Comments
+        - Comment
       summary: Get Comments
       description: Get / fetch comments.
       operationId: getComments
@@ -2125,7 +2132,7 @@ paths:
   /comment/report:
     post:
       tags:
-        - Comments
+        - Comment
       summary: Report Comment
       description: Report a comment.
       operationId: reportComment
@@ -2446,6 +2453,8 @@ paths:
       summary: Login
       description: Login with a user account.
       operationId: login
+      security:
+        - {}
       requestBody:
         description: User credential
         required: true
@@ -2473,6 +2482,8 @@ paths:
       summary: Logout
       description: Logout from a user account.
       operationId: logout
+      security:
+        - BearerAuth: []
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -2501,11 +2512,12 @@ paths:
     post:
       tags:
         - Site
+        - Admin
       summary: Create Site
       description: Create your site
       operationId: createSite
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Create Site
         required: true
@@ -2525,11 +2537,12 @@ paths:
     put:
       tags:
         - Site
+        - Admin
       summary: Edit Site
       description: Edit your site
       operationId: editSite
       security:
-        - BearerAuth: []
+        - AdminAuth: []
       requestBody:
         description: Edit Site
         required: true
@@ -2590,6 +2603,12 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Bearer access token passed in Authorization header.
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: The user with the bearer token needs to be a site Administrator.
 
   responses:
     ErrorResponse:
@@ -5233,7 +5252,7 @@ components:
       required:
         - admin_purge_community
       properties:
-        admin_purge_person:
+        admin_purge_community:
           $ref: '#/components/schemas/AdminPurgeCommunity'
         admin:
           $ref: '#/components/schemas/Person'
@@ -5468,6 +5487,10 @@ components:
           $ref: '#/components/schemas/CommunityView'
         site:
           $ref: '#/components/schemas/Site'
+        moderators:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
         discussion_languages:
           type: array
           items:
@@ -6064,7 +6087,7 @@ components:
         - comment_reply_id
         - read
       properties:
-        comment_id:
+        comment_reply_id:
           $ref: '#/components/schemas/CommentReplyID'
         read:
           type: boolean
@@ -6450,11 +6473,11 @@ components:
           type: string
 
     PrivateMessageReportResponse:
-      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
       type: object
       description: A private message report response.
       required:
-        - private_message_id
+        - private_message_report_view
       properties:
         private_message_report_view:
           $ref: '#/components/schemas/PrivateMessageReportView'
@@ -6596,7 +6619,7 @@ components:
       required:
         - person_mention_view
       properties:
-        person_mention_id:
+        person_mention_view:
           $ref: '#/components/schemas/PersonMentionView'
 
     GetRepliesResponse:
