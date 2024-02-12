@@ -2394,6 +2394,8 @@ paths:
       summary: Login
       description: Login with a user account.
       operationId: login
+      security:
+        - {}
       requestBody:
         description: User credential
         required: true
@@ -2421,6 +2423,8 @@ paths:
       summary: Logout
       description: Logout from a user account.
       operationId: logout
+      security:
+        - BearerAuth: []
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -5181,7 +5185,7 @@ components:
       required:
         - admin_purge_community
       properties:
-        admin_purge_person:
+        admin_purge_community:
           $ref: '#/components/schemas/AdminPurgeCommunity'
         admin:
           $ref: '#/components/schemas/Person'
@@ -5416,6 +5420,10 @@ components:
           $ref: '#/components/schemas/CommunityView'
         site:
           $ref: '#/components/schemas/Site'
+        moderators:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommunityModeratorView'
         discussion_languages:
           type: array
           items:
@@ -6012,7 +6020,7 @@ components:
         - comment_reply_id
         - read
       properties:
-        comment_id:
+        comment_reply_id:
           $ref: '#/components/schemas/CommentReplyID'
         read:
           type: boolean
@@ -6398,11 +6406,11 @@ components:
           type: string
 
     PrivateMessageReportResponse:
-      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/private_message.rs
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/private_message.rs
       type: object
       description: A private message report response.
       required:
-        - private_message_id
+        - private_message_report_view
       properties:
         private_message_report_view:
           $ref: '#/components/schemas/PrivateMessageReportView'
@@ -6544,7 +6552,7 @@ components:
       required:
         - person_mention_view
       properties:
-        person_mention_id:
+        person_mention_view:
           $ref: '#/components/schemas/PersonMentionView'
 
     GetRepliesResponse:
