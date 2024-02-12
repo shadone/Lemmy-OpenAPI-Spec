@@ -21,7 +21,9 @@ tags:
     description: Operations on users.
   - name: Post
     description: Operations on posts.
-  - name: Comments
+  - name: Community
+    description: Operations on communities.
+  - name: Comment
     description: Operations on comments.
   - name: Misc
     description: Miscellaneous operations.
@@ -29,6 +31,10 @@ tags:
     description: Moderator operations.
   - name: Admin
     description: Administrative operations.
+  - name: Site
+    description: Operations on Site.
+  - name: Private Message
+    description: Operations on Private Messages.
 
 paths:
   /user:
@@ -1820,7 +1826,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
-        - Comments
+        - Comment
       summary: Get Comment
       description: Get / fetch comment.
       operationId: getComment
@@ -2001,7 +2007,7 @@ paths:
   /comment/list:
     get:
       tags:
-        - Comments
+        - Comment
       summary: Get Comments
       description: Get / fetch comments.
       operationId: getComments
@@ -2073,7 +2079,7 @@ paths:
   /comment/report:
     post:
       tags:
-        - Comments
+        - Comment
       summary: Report Comment
       description: Report a comment.
       operationId: reportComment
