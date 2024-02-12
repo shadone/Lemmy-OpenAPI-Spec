@@ -705,7 +705,7 @@ paths:
       description: Fetch federated instances.
       operationId: getFederatedInstances
       security:
-        - BearerAuth: []
+        - {}
       responses:
         '200':
           description: Successful operation
