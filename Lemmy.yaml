@@ -2630,6 +2630,33 @@ paths:
           required: true
           description: The name of the image to fetch.
           example: 'lkWZDRvugm.jpg'
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum:
+              - apng
+              - avif
+              - gif
+              - jpg
+              - jxl
+              - png
+              - webp
+          description: |
+            The desired image format.
+
+            Note that while `avif` and `webp` will work for both animated & non-animated images,
+            some formats like `apng` and `gif` are only used to serve animations while others like
+            `jpg`, `jxl` and `png` are only used to serve still images.
+          example: 'png'
+        - in: query
+          name: thumbnail
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          description: Fetch and image suitable to be used as a thumbnail of the image fitting inside an {int} by {int} square.
+          example: 256
       responses:
         '200':
           description: Successful operation
