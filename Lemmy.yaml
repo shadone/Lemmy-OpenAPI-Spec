@@ -11,8 +11,8 @@ info:
   version: '0.19.0+1'
 
 servers:
-  - url: https://discuss.tchncs.de/api/v3
-  - url: https://lemmy-0-19-1.ddenis.info/api/v3
+  - url: https://discuss.tchncs.de
+  - url: https://lemmy-0-19-1.ddenis.info
 
 tags:
   - name: Account
@@ -37,7 +37,7 @@ tags:
     description: Operations on Private Messages.
 
 paths:
-  /user:
+  /api/v3/user:
     get:
       tags:
         - User
@@ -81,7 +81,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/mention:
+  /api/v3/user/mention:
     get:
       tags:
         - User
@@ -116,7 +116,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/replies:
+  /api/v3/user/replies:
     get:
       tags:
         - User
@@ -151,7 +151,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/ban:
+  /api/v3/user/ban:
     post:
       tags:
         - User
@@ -178,7 +178,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/banned:
+  /api/v3/user/banned:
     get:
       tags:
         - User
@@ -197,7 +197,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/block:
+  /api/v3/user/block:
     post:
       tags:
         - User
@@ -223,7 +223,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/get_captcha:
+  /api/v3/user/get_captcha:
     get:
       tags:
         - User
@@ -242,7 +242,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/delete_account:
+  /api/v3/user/delete_account:
     post:
       tags:
         - User
@@ -264,7 +264,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/password_reset:
+  /api/v3/user/password_reset:
     post:
       tags:
         - User
@@ -286,7 +286,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/password_change:
+  /api/v3/user/password_change:
     post:
       tags:
         - User
@@ -308,7 +308,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/mark_all_as_read:
+  /api/v3/user/mark_all_as_read:
     post:
       tags:
         - User
@@ -327,7 +327,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/save_user_settings:
+  /api/v3/user/save_user_settings:
     put:
       tags:
         - User
@@ -349,7 +349,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/change_password:
+  /api/v3/user/change_password:
     put:
       tags:
         - User
@@ -375,7 +375,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/report_count:
+  /api/v3/user/report_count:
     get:
       tags:
         - User
@@ -399,7 +399,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/unread_count:
+  /api/v3/user/unread_count:
     get:
       tags:
         - User
@@ -418,7 +418,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/verify_email:
+  /api/v3/user/verify_email:
     post:
       tags:
         - User
@@ -440,7 +440,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/add:
+  /api/v3/admin/add:
     post:
       tags:
         - Admin
@@ -466,7 +466,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/registration_application/count:
+  /api/v3/admin/registration_application/count:
     get:
       tags:
         - Admin
@@ -485,7 +485,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/registration_application/list:
+  /api/v3/admin/registration_application/list:
     get:
       tags:
         - Admin
@@ -511,7 +511,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/registration_application/approve:
+  /api/v3/admin/registration_application/approve:
     put:
       tags:
         - Admin
@@ -537,7 +537,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/purge/person:
+  /api/v3/admin/purge/person:
     post:
       tags:
         - Admin
@@ -559,7 +559,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/purge/community:
+  /api/v3/admin/purge/community:
     post:
       tags:
         - Admin
@@ -581,7 +581,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/purge/post:
+  /api/v3/admin/purge/post:
     post:
       tags:
         - Admin
@@ -603,7 +603,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /admin/purge/comment:
+  /api/v3/admin/purge/comment:
     post:
       tags:
         - Admin
@@ -625,7 +625,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /custom_emoji:
+  /api/v3/custom_emoji:
     post:
       tags:
         - Admin
@@ -675,7 +675,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /custom_emoji/delete:
+  /api/v3/custom_emoji/delete:
     post:
       tags:
         - Admin
@@ -697,7 +697,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /federated_instances:
+  /api/v3/federated_instances:
     get:
       tags:
         - Misc
@@ -716,7 +716,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /site/block:
+  /api/v3/site/block:
     post:
       tags:
         - Misc
@@ -742,7 +742,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/mention/mark_as_read:
+  /api/v3/user/mention/mark_as_read:
     post:
       tags:
         - User
@@ -768,7 +768,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/leave_admin:
+  /api/v3/user/leave_admin:
     post:
       tags:
         - Account
@@ -788,7 +788,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/totp/generate:
+  /api/v3/user/totp/generate:
     post:
       tags:
         - Account
@@ -811,7 +811,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/export_settings:
+  /api/v3/user/export_settings:
     get:
       tags:
         - Account
@@ -833,7 +833,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/import_settings:
+  /api/v3/user/import_settings:
     post:
       tags:
         - Account
@@ -858,7 +858,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/list_logins:
+  /api/v3/user/list_logins:
     get:
       tags:
         - Account
@@ -882,7 +882,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/validate_auth:
+  /api/v3/user/validate_auth:
     get:
       tags:
         - Account
@@ -900,7 +900,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/totp/update:
+  /api/v3/user/totp/update:
     post:
       tags:
         - Account
@@ -934,7 +934,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /modlog:
+  /api/v3/modlog:
     get:
       tags:
         - Mod
@@ -974,7 +974,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /search:
+  /api/v3/search:
     get:
       tags:
         - Misc
@@ -1028,7 +1028,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community:
+  /api/v3/community:
     post:
       tags:
         - Community
@@ -1109,7 +1109,7 @@ paths:
         '401':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/list:
+  /api/v3/community/list:
     get:
       tags:
         - Community
@@ -1144,7 +1144,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/follow:
+  /api/v3/community/follow:
     post:
       tags:
         - Community
@@ -1170,7 +1170,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/block:
+  /api/v3/community/block:
     post:
       tags:
         - Community
@@ -1196,7 +1196,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/delete:
+  /api/v3/community/delete:
     post:
       tags:
         - Community
@@ -1222,7 +1222,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/hide:
+  /api/v3/community/hide:
     put:
       tags:
         - Community
@@ -1245,7 +1245,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/remove:
+  /api/v3/community/remove:
     post:
       tags:
         - Community
@@ -1272,7 +1272,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/transfer:
+  /api/v3/community/transfer:
     post:
       tags:
         - Community
@@ -1299,7 +1299,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/ban_user:
+  /api/v3/community/ban_user:
     post:
       tags:
         - Community
@@ -1326,7 +1326,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /community/mod:
+  /api/v3/community/mod:
     post:
       tags:
         - Community
@@ -1353,7 +1353,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post:
+  /api/v3/post:
     post:
       tags:
         - Post
@@ -1431,7 +1431,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/delete:
+  /api/v3/post/delete:
     post:
       tags:
         - Post
@@ -1457,7 +1457,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/remove:
+  /api/v3/post/remove:
     post:
       tags:
         - Mod
@@ -1483,7 +1483,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/mark_as_read:
+  /api/v3/post/mark_as_read:
     post:
       tags:
         - Post
@@ -1505,7 +1505,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/lock:
+  /api/v3/post/lock:
     post:
       tags:
         - Mod
@@ -1531,7 +1531,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/feature:
+  /api/v3/post/feature:
     post:
       tags:
         - Mod
@@ -1557,7 +1557,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/list:
+  /api/v3/post/list:
     get:
       tags:
         - Post
@@ -1617,7 +1617,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/like:
+  /api/v3/post/like:
     post:
       tags:
         - Post
@@ -1643,7 +1643,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/save:
+  /api/v3/post/save:
     put:
       tags:
         - Post
@@ -1669,7 +1669,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/report:
+  /api/v3/post/report:
     put:
       tags:
         - Post
@@ -1695,7 +1695,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/report/resolve:
+  /api/v3/post/report/resolve:
     put:
       tags:
         - Mod
@@ -1721,7 +1721,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/report/list:
+  /api/v3/post/report/list:
     get:
       tags:
         - Mod
@@ -1751,7 +1751,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /post/site_metadata:
+  /api/v3/post/site_metadata:
     get:
       tags:
         - Post
@@ -1776,7 +1776,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment:
+  /api/v3/comment:
     post:
       tags:
         - Comment
@@ -1849,7 +1849,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/delete:
+  /api/v3/comment/delete:
     post:
       tags:
         - Comment
@@ -1875,7 +1875,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/remove:
+  /api/v3/comment/remove:
     post:
       tags:
         - Mod
@@ -1901,7 +1901,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/mark_as_read:
+  /api/v3/comment/mark_as_read:
     post:
       tags:
         - Comment
@@ -1927,7 +1927,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/like:
+  /api/v3/comment/like:
     post:
       tags:
         - Comment
@@ -1953,7 +1953,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/save:
+  /api/v3/comment/save:
     put:
       tags:
         - Comment
@@ -1979,7 +1979,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/distinguish:
+  /api/v3/comment/distinguish:
     post:
       tags:
         - Mod
@@ -2005,7 +2005,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/list:
+  /api/v3/comment/list:
     get:
       tags:
         - Comment
@@ -2077,7 +2077,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/report:
+  /api/v3/comment/report:
     post:
       tags:
         - Comment
@@ -2127,7 +2127,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /comment/report/list:
+  /api/v3/comment/report/list:
     get:
       tags:
         - Mod
@@ -2157,7 +2157,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/list:
+  /api/v3/private_message/list:
     get:
       tags:
         - Private Message
@@ -2187,7 +2187,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message:
+  /api/v3/private_message:
     post:
       tags:
         - Private Message
@@ -2237,7 +2237,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/delete:
+  /api/v3/private_message/delete:
     post:
       tags:
         - Private Message
@@ -2263,7 +2263,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/mark_as_read:
+  /api/v3/private_message/mark_as_read:
     post:
       tags:
         - Private Message
@@ -2289,7 +2289,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/report:
+  /api/v3/private_message/report:
     post:
       tags:
         - Private Message
@@ -2315,7 +2315,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/report/resolve:
+  /api/v3/private_message/report/resolve:
     put:
       tags:
         - Mod
@@ -2341,7 +2341,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /private_message/report/list:
+  /api/v3/private_message/report/list:
     get:
       tags:
         - Mod
@@ -2367,7 +2367,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /register:
+  /api/v3/register:
     post:
       tags:
         - Account
@@ -2393,7 +2393,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /user/login:
+  /api/v3/user/login:
     post:
       tags:
         - Account
@@ -2422,7 +2422,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /user/logout:
+  /api/v3/user/logout:
     post:
       tags:
         - Account
@@ -2438,7 +2438,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /site:
+  /api/v3/site:
     get:
       tags:
         - Site
@@ -2508,7 +2508,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
-  /resolve_object:
+  /api/v3/resolve_object:
     get:
       tags:
         - Misc
