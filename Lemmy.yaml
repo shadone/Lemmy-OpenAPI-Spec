@@ -54,25 +54,17 @@ paths:
           name: person_id
           schema:
             $ref: '#/components/schemas/PersonID'
+          example: 1234
         - in: query
           name: username
           schema:
             type: string
-        - in: query
-          name: sort
-          schema:
-            $ref: '#/components/schemas/SortType'
+          example: 'ruud'
+        - $ref: '#/components/parameters/Sort'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
-        - in: query
-          name: saved_only
-          description: Whether to fetch only saved posts.
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/CommunityID'
+        - $ref: '#/components/parameters/SavedOnly'
       responses:
         '200':
           description: Successful operation
@@ -93,19 +85,8 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: sort
-          schema:
-            $ref: '#/components/schemas/CommentSortType'
-        - in: query
-          name: unread_only
-          schema:
-            type: boolean
-        - in: query
-          name: comment_count
-          schema:
-            type: integer
-            format: int64
+        - $ref: '#/components/parameters/CommentSort'
+        - $ref: '#/components/parameters/UnreadOnly'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -128,19 +109,8 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: sort
-          schema:
-            $ref: '#/components/schemas/CommentSortType'
-        - in: query
-          name: unread_only
-          schema:
-            type: boolean
-        - in: query
-          name: comment_count
-          schema:
-            type: integer
-            format: int64
+        - $ref: '#/components/parameters/CommentSort'
+        - $ref: '#/components/parameters/UnreadOnly'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -387,10 +357,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/CommunityID'
       responses:
         '200':
           description: Successful operation
@@ -497,10 +464,7 @@ paths:
       security:
         - AdminAuth: []
       parameters:
-        - in: query
-          name: unread_only
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/UnreadOnly'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -950,10 +914,7 @@ paths:
           name: mod_person_id
           schema:
             $ref: '#/components/schemas/PersonID'
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/CommunityID'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
         - in: query
@@ -992,14 +953,8 @@ paths:
           required: true
           schema:
             type: string
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
-        - in: query
-          name: community_name
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CommunityID'
+        - $ref: '#/components/parameters/CommunityName'
         - in: query
           name: creator_id
           schema:
@@ -1008,10 +963,7 @@ paths:
           name: type_
           schema:
             $ref: '#/components/schemas/SearchType'
-        - in: query
-          name: sort
-          schema:
-            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/Sort'
         - in: query
           name: listing_type
           schema:
@@ -1069,12 +1021,22 @@ paths:
       parameters:
         - in: query
           name: id
+          description: The community identifier to fetch info.
           schema:
             $ref: '#/components/schemas/CommunityID'
+          example: 1234
         - in: query
           name: name
+          description: The community name to fetch info.
           schema:
             type: string
+          examples:
+            LocalCommunity:
+              value: 'gnome'
+              summary: Community name that is local to this instance.
+            RemoteCommunity:
+              value: 'worldnews@lemmy.world'
+              summary: Fully qualified community name.
       responses:
         '200':
           description: Successful operation
@@ -1122,14 +1084,8 @@ paths:
         - BearerAuth: []
         - {}
       parameters:
-        - in: query
-          name: type_
-          schema:
-            $ref: '#/components/schemas/ListingType'
-        - in: query
-          name: sort
-          schema:
-            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/Type_'
+        - $ref: '#/components/parameters/Sort'
         - in: query
           name: show_nsfw
           schema:
@@ -1570,41 +1526,15 @@ paths:
         - BearerAuth: []
         - {}
       parameters:
-        - in: query
-          name: type_
-          description: The type of listing to fetch.
-          schema:
-            $ref: '#/components/schemas/ListingType'
-        - in: query
-          name: sort
-          description: Specifies how the posts in response should be ordered.
-          schema:
-            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/Type_'
+        - $ref: '#/components/parameters/Sort'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - in: query
-          name: community_id
-          description: The community identifier to fetch posts from.
-          schema:
-            $ref: '#/components/schemas/CommunityID'
-        - in: query
-          name: community_name
-          description: The community name to fetch posts from.
-          schema:
-            type: string
-        - in: query
-          name: saved_only
-          description: Whether to fetch only saved posts.
-          schema:
-            type: boolean
-        - in: query
-          name: liked_only
-          schema:
-            type: boolean
-        - in: query
-          name: disliked_only
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/CommunityID'
+        - $ref: '#/components/parameters/CommunityName'
+        - $ref: '#/components/parameters/SavedOnly'
+        - $ref: '#/components/parameters/LikedOnly'
+        - $ref: '#/components/parameters/DislikedOnly'
         - in: query
           name: page_cursor
           schema:
@@ -1733,14 +1663,8 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: unresolved_only
-          schema:
-            type: boolean
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/UnresolvedOnly'
+        - $ref: '#/components/parameters/CommunityID'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -2018,18 +1942,8 @@ paths:
         - BearerAuth: []
         - {}
       parameters:
-        - in: query
-          name: type_
-          description: |
-            Specify the type of listing to fetch all comments in a given listing.
-            E.g. fetch all comments for Subscribed communities.
-          schema:
-            $ref: '#/components/schemas/ListingType'
-        - in: query
-          name: sort
-          description: Specifies how the comments in response should be ordered.
-          schema:
-            $ref: '#/components/schemas/SortType'
+        - $ref: '#/components/parameters/Type_'
+        - $ref: '#/components/parameters/Sort'
         - in: query
           name: max_depth
           schema:
@@ -2037,16 +1951,8 @@ paths:
             format: int32
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - in: query
-          name: community_id
-          description: The community identifier to fetch comments from.
-          schema:
-            $ref: '#/components/schemas/CommunityID'
-        - in: query
-          name: community_name
-          description: The community name to fetch comments from.
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CommunityID'
+        - $ref: '#/components/parameters/CommunityName'
         - in: query
           name: post_id
           description: The post identifier to fetch comments from.
@@ -2056,19 +1962,9 @@ paths:
           name: parent_id
           schema:
             $ref: '#/components/schemas/CommentID'
-        - in: query
-          name: saved_only
-          description: Whether to fetch only saved comments.
-          schema:
-            type: boolean
-        - in: query
-          name: liked_only
-          schema:
-            type: boolean
-        - in: query
-          name: disliked_only
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/SavedOnly'
+        - $ref: '#/components/parameters/LikedOnly'
+        - $ref: '#/components/parameters/DislikedOnly'
       responses:
         '200':
           description: Successful operation
@@ -2139,14 +2035,8 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: unresolved_only
-          schema:
-            type: boolean
-        - in: query
-          name: community_id
-          schema:
-            $ref: '#/components/schemas/CommunityID'
+        - $ref: '#/components/parameters/UnresolvedOnly'
+        - $ref: '#/components/parameters/CommunityID'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -2169,10 +2059,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: unread_only
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/UnreadOnly'
         - in: query
           name: creator_id
           schema:
@@ -2353,10 +2240,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - in: query
-          name: unresolved_only
-          schema:
-            type: boolean
+        - $ref: '#/components/parameters/UnresolvedOnly'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
       responses:
@@ -2743,6 +2627,76 @@ components:
       schema:
         type: integer
         format: int64
+    Type_:
+      in: query
+      name: type_
+      description: |
+        Specify the type of listing to fetch all elements.
+        E.g. fetch all comments for Subscribed communities.
+      schema:
+        $ref: '#/components/schemas/ListingType'
+    Sort:
+      in: query
+      name: sort
+      description: Specifies how the elements in response should be ordered.
+      schema:
+        $ref: '#/components/schemas/SortType'
+    CommentSort:
+      in: query
+      name: sort
+      description: Specifies how the elements in response should be ordered.
+      schema:
+        $ref: '#/components/schemas/CommentSortType'
+    SavedOnly:
+      in: query
+      name: saved_only
+      description: Specifies whether to fetch only saved elements.
+      schema:
+        type: boolean
+    LikedOnly:
+      in: query
+      name: liked_only
+      description: Specifies whether to fetch only liked elements.
+      schema:
+        type: boolean
+    DislikedOnly:
+      in: query
+      name: disliked_only
+      description: Specifies whether to fetch only disliked elements.
+      schema:
+        type: boolean
+    CommunityID:
+      in: query
+      name: community_id
+      description: Specified the filter on the results to match the given community identifier.
+      schema:
+        $ref: '#/components/schemas/CommunityID'
+      example: 1234
+    CommunityName:
+      in: query
+      name: community_name
+      description: Specified the filter on the results to match the given community name.
+      schema:
+        type: string
+      examples:
+        LocalCommunity:
+          value: 'gnome'
+          summary: Community name that is local to this instance.
+        RemoteCommunity:
+          value: 'worldnews@lemmy.world'
+          summary: Fully qualified community name.
+    UnreadOnly:
+      in: query
+      name: unread_only
+      description: Specified the filter on the results to return only unread elements.
+      schema:
+        type: boolean
+    UnresolvedOnly:
+      in: query
+      name: unresolved_only
+      description: Specified the filter on the results to return only unresolved elements.
+      schema:
+        type: boolean
 
   schemas:
     ErrorResponse:
