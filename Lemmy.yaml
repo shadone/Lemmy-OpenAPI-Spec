@@ -8,7 +8,7 @@ info:
   license:
     name: BSD 2-Clause
     identifier: BSD-2-Clause
-  version: '0.19.0+1'
+  version: '0.19.2+1'
 
 servers:
   - url: https://discuss.tchncs.de/api/v3
@@ -1643,6 +1643,32 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /post/like/list:
+    get:
+      tags:
+        - Admin
+      summary: List a post likes
+      description: List a post likes. Admin-only.
+      operationId: listPostLikes
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: post_id
+          schema:
+            $ref: '#/components/schemas/PostID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPostLikesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
   /post/save:
     put:
       tags:
@@ -1950,6 +1976,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /comment/like/list:
+    get:
+      tags:
+        - Admin
+      summary: List a comment likes
+      description: List a comment likes. Admin-only.
+      operationId: listCommentLikes
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: comment_id
+          schema:
+            $ref: '#/components/schemas/CommentID'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCommentLikesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
@@ -7223,3 +7275,43 @@ components:
       properties:
         blocked:
           type: boolean
+
+    ListCommentLikesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      type: object
+      description: The comment likes response
+      required:
+        - comment_likes
+      properties:
+        comment_likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoteView'
+
+    ListPostLikesResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/comment.rs
+      type: object
+      description: The post likes response
+      required:
+        - post_likes
+      properties:
+        post_likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoteView'
+
+    VoteView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views/src/structs.rs
+      type: object
+      description: A vote view for checking a post or comments votes.
+      required:
+        - creator
+        - score
+      properties:
+        creator:
+          $ref: '#/components/schemas/Person'
+        score:
+          type: integer
+          format: int32 # int16
+          minimum: -32768
+          maximum: 32767
