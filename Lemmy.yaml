@@ -35,6 +35,8 @@ tags:
     description: Operations on Site.
   - name: Private Message
     description: Operations on Private Messages.
+  - name: Image
+    description: Operations on images.
 
 paths:
   /api/v3/user:
@@ -2545,6 +2547,100 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 
+  /pictrs/image:
+    post:
+      tags:
+        - Image
+      summary: Upload Image
+      description: Upload an image to the server.
+      operationId: uploadImage
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Upload Image
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                'images[]':
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageUploadResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '413':
+          $ref: '#/components/responses/TooLargeErrorResponse'
+
+  /pictrs/image/delete/{delete_token}/{filename}:
+    get:
+      tags:
+        - Image
+      summary: Delete Image
+      description: Delete a pictrs image.
+      operationId: deleteImage
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: delete_token
+          schema:
+            type: string
+          required: true
+          description: The delete token as a proof of ownership of the given file.
+          example: '0eac5362-779f-4b35-827d-73dfb244c48e'
+        - in: path
+          name: filename
+          schema:
+            type: string
+          required: true
+          description: The name of the image to delete.
+          example: 'lkWZDRvugm.jpg'
+      responses:
+        '204':
+          description: Image deleted.
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/PictrsErrorResponse'
+
+  /pictrs/image/{filename}:
+    get:
+      tags:
+        - Image
+      summary: Fetch Image
+      description: Get the image content.
+      operationId: getImage
+      security:
+        - {}
+      parameters:
+        - in: path
+          name: filename
+          schema:
+            type: string
+          required: true
+          description: The name of the image to fetch.
+          example: 'lkWZDRvugm.jpg'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: The specified image was not found.
+
 components:
   securitySchemes:
     BearerAuth:
@@ -2589,6 +2685,16 @@ components:
           schema:
             $ref: '#/components/schemas/SuccessResponse'
 
+    PictrsErrorResponse:
+      description: Error from pictrs service.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PictrsErrorResponse'
+
+    TooLargeErrorResponse:
+      description: Uploaded content is too large.
+
   parameters:
     page:
       in: query
@@ -2629,6 +2735,14 @@ components:
       properties:
         success:
           type: boolean
+
+    PictrsErrorResponse:
+      type: object
+      required:
+        - msg
+      properties:
+        error:
+          type: string
 
     MyVote:
       type: integer
@@ -7223,3 +7337,33 @@ components:
       properties:
         blocked:
           type: boolean
+
+    Image:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/routes/src/images.rs
+      type: object
+      required:
+        - delete_token
+        - file
+      properties:
+        delete_token:
+          type: string
+          example: '0eac5362-779f-4b35-827d-73dfb244c48e'
+        file:
+          type: string
+          example: 'lkWZDRvugm.jpg'
+
+    ImageUploadResponse:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/routes/src/images.rs
+      type: object
+      required:
+        - files
+        - msg
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        msg:
+          type: string
+          enum:
+            - ok
