@@ -2820,7 +2820,7 @@ components:
       required:
         - msg
       properties:
-        error:
+        msg:
           type: string
 
     MyVote:
