@@ -62,8 +62,8 @@ paths:
           name: sort
           schema:
             $ref: '#/components/schemas/SortType'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
         - in: query
           name: community_id
           schema:
@@ -106,8 +106,8 @@ paths:
           schema:
             type: integer
             format: int64
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -141,8 +141,8 @@ paths:
           schema:
             type: integer
             format: int64
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -501,8 +501,8 @@ paths:
           name: unread_only
           schema:
             type: boolean
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -954,8 +954,8 @@ paths:
           name: community_id
           schema:
             $ref: '#/components/schemas/CommunityID'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
         - in: query
           name: type_
           schema:
@@ -1016,8 +1016,8 @@ paths:
           name: listing_type
           schema:
             $ref: '#/components/schemas/ListingType'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -1134,8 +1134,8 @@ paths:
           name: show_nsfw
           schema:
             type: boolean
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -1580,8 +1580,8 @@ paths:
           description: Specifies how the posts in response should be ordered.
           schema:
             $ref: '#/components/schemas/SortType'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
         - in: query
           name: community_id
           description: The community identifier to fetch posts from.
@@ -1741,8 +1741,8 @@ paths:
           name: community_id
           schema:
             $ref: '#/components/schemas/CommunityID'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -2035,8 +2035,8 @@ paths:
           schema:
             type: integer
             format: int32
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
         - in: query
           name: community_id
           description: The community identifier to fetch comments from.
@@ -2147,8 +2147,8 @@ paths:
           name: community_id
           schema:
             $ref: '#/components/schemas/CommunityID'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -2177,8 +2177,8 @@ paths:
           name: creator_id
           schema:
             $ref: '#/components/schemas/PersonID'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -2357,8 +2357,8 @@ paths:
           name: unresolved_only
           schema:
             type: boolean
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Successful operation
@@ -2723,7 +2723,7 @@ components:
       description: Uploaded content is too large.
 
   parameters:
-    page:
+    Page:
       in: query
       name: page
       description: |
@@ -2733,7 +2733,7 @@ components:
       schema:
         type: integer
         format: int64
-    limit:
+    Limit:
       in: query
       name: limit
       description: |
