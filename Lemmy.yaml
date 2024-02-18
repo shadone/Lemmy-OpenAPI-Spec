@@ -59,7 +59,13 @@ paths:
           name: username
           schema:
             type: string
-          example: 'ruud'
+          examples:
+            LocalUser:
+              value: 'milan'
+              summary: Person name that is local to this instance.
+            RemoteUser:
+              value: 'ruud@lemmy.world'
+              summary: Fully qualified person name.
         - $ref: '#/components/parameters/Sort'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
@@ -6618,6 +6624,7 @@ components:
       properties:
         username:
           type: string
+          description: Username (aka nickname aka short users' name).
         password:
           type: string
           format: password
@@ -6629,7 +6636,10 @@ components:
         email:
           type: string
           format: email
-          description: email is mandatory if email verification is enabled on the server.
+          description: |
+            Email address.
+
+            Email is mandatory if email verification is enabled on the server.
         captcha_uuid:
           type: string
           description: The UUID of the captcha item.
