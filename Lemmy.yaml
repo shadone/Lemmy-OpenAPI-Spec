@@ -80,6 +80,8 @@ paths:
                 $ref: '#/components/schemas/GetPersonDetailsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/mention:
     get:
@@ -104,6 +106,8 @@ paths:
                 $ref: '#/components/schemas/GetPersonMentionsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/replies:
     get:
@@ -128,6 +132,8 @@ paths:
                 $ref: '#/components/schemas/GetRepliesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/ban:
     post:
@@ -155,6 +161,8 @@ paths:
                 $ref: '#/components/schemas/BanPersonResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/banned:
     get:
@@ -174,6 +182,8 @@ paths:
                 $ref: '#/components/schemas/BannedPersonsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/block:
     post:
@@ -200,6 +210,8 @@ paths:
                 $ref: '#/components/schemas/BlockPersonResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/get_captcha:
     get:
@@ -219,6 +231,8 @@ paths:
                 $ref: '#/components/schemas/GetCaptchaResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/delete_account:
     post:
@@ -241,6 +255,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/password_reset:
     post:
@@ -263,6 +279,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/password_change:
     post:
@@ -285,6 +303,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/mark_all_as_read:
     post:
@@ -326,6 +346,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/change_password:
     put:
@@ -352,6 +374,8 @@ paths:
                 $ref: '#/components/schemas/LoginResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/report_count:
     get:
@@ -373,6 +397,8 @@ paths:
                 $ref: '#/components/schemas/GetReportCountResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/unread_count:
     get:
@@ -392,6 +418,8 @@ paths:
                 $ref: '#/components/schemas/GetUnreadCountResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/verify_email:
     post:
@@ -414,6 +442,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/add:
     post:
@@ -440,6 +470,8 @@ paths:
                 $ref: '#/components/schemas/AddAdminResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/registration_application/count:
     get:
@@ -459,6 +491,8 @@ paths:
                 $ref: '#/components/schemas/GetUnreadRegistrationApplicationCountResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/registration_application/list:
     get:
@@ -482,6 +516,8 @@ paths:
                 $ref: '#/components/schemas/ListRegistrationApplicationsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/registration_application/approve:
     put:
@@ -508,6 +544,8 @@ paths:
                 $ref: '#/components/schemas/RegistrationApplicationResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/purge/person:
     post:
@@ -530,6 +568,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/purge/community:
     post:
@@ -552,6 +592,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/purge/post:
     post:
@@ -574,6 +616,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/admin/purge/comment:
     post:
@@ -596,6 +640,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/custom_emoji:
     post:
@@ -622,6 +668,8 @@ paths:
                 $ref: '#/components/schemas/CustomEmojiResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Admin
@@ -646,6 +694,8 @@ paths:
                 $ref: '#/components/schemas/CustomEmojiResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/custom_emoji/delete:
     post:
@@ -668,6 +718,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/federated_instances:
     get:
@@ -713,6 +765,8 @@ paths:
                 $ref: '#/components/schemas/BlockInstanceResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/mention/mark_as_read:
     post:
@@ -739,6 +793,8 @@ paths:
                 $ref: '#/components/schemas/PersonMentionResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/leave_admin:
     post:
@@ -759,6 +815,8 @@ paths:
                 $ref: '#/components/schemas/GetSiteResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/totp/generate:
     post:
@@ -782,6 +840,8 @@ paths:
                 $ref: '#/components/schemas/GenerateTotpSecretResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/export_settings:
     get:
@@ -803,7 +863,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/import_settings:
     post:
@@ -828,7 +888,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/list_logins:
     get:
@@ -852,7 +912,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/validate_auth:
     get:
@@ -870,7 +930,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/totp/update:
     post:
@@ -904,7 +964,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/modlog:
     get:
@@ -941,7 +1001,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/search:
     get:
@@ -986,7 +1046,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community:
     post:
@@ -1014,7 +1074,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
     get:
       tags:
         - Community
@@ -1052,6 +1112,8 @@ paths:
                 $ref: '#/components/schemas/GetCommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Community
@@ -1077,7 +1139,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/list:
     get:
@@ -1107,6 +1169,8 @@ paths:
                 $ref: '#/components/schemas/ListCommunitiesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/follow:
     post:
@@ -1133,6 +1197,8 @@ paths:
                 $ref: '#/components/schemas/CommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/block:
     post:
@@ -1159,6 +1225,8 @@ paths:
                 $ref: '#/components/schemas/BlockCommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/delete:
     post:
@@ -1185,6 +1253,8 @@ paths:
                 $ref: '#/components/schemas/CommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/hide:
     put:
@@ -1208,6 +1278,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/remove:
     post:
@@ -1235,6 +1307,8 @@ paths:
                 $ref: '#/components/schemas/CommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/transfer:
     post:
@@ -1262,6 +1336,8 @@ paths:
                 $ref: '#/components/schemas/GetCommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/ban_user:
     post:
@@ -1289,6 +1365,8 @@ paths:
                 $ref: '#/components/schemas/BanFromCommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/mod:
     post:
@@ -1316,6 +1394,8 @@ paths:
                 $ref: '#/components/schemas/AddModToCommunityResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post:
     post:
@@ -1342,6 +1422,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     get:
       tags:
         - Post
@@ -1370,6 +1452,8 @@ paths:
                 $ref: '#/components/schemas/GetPostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Post
@@ -1394,6 +1478,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/delete:
     post:
@@ -1420,6 +1506,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/remove:
     post:
@@ -1446,6 +1534,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/mark_as_read:
     post:
@@ -1468,6 +1558,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/lock:
     post:
@@ -1494,6 +1586,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/feature:
     post:
@@ -1520,6 +1614,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/list:
     get:
@@ -1554,6 +1650,8 @@ paths:
                 $ref: '#/components/schemas/GetPostsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/like:
     post:
@@ -1580,6 +1678,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/like/list:
     get:
@@ -1606,6 +1706,8 @@ paths:
                 $ref: '#/components/schemas/ListPostLikesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/save:
     put:
@@ -1632,6 +1734,8 @@ paths:
                 $ref: '#/components/schemas/PostResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/report:
     put:
@@ -1658,6 +1762,8 @@ paths:
                 $ref: '#/components/schemas/PostReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/report/resolve:
     put:
@@ -1684,6 +1790,8 @@ paths:
                 $ref: '#/components/schemas/PostReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/report/list:
     get:
@@ -1708,6 +1816,8 @@ paths:
                 $ref: '#/components/schemas/ListPostReportsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/site_metadata:
     get:
@@ -1733,6 +1843,8 @@ paths:
                 $ref: '#/components/schemas/GetSiteMetadataResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment:
     post:
@@ -1759,6 +1871,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Comment
@@ -1783,6 +1897,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     get:
       tags:
         - Comment
@@ -1806,6 +1922,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/delete:
     post:
@@ -1832,6 +1950,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/remove:
     post:
@@ -1858,6 +1978,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/mark_as_read:
     post:
@@ -1884,6 +2006,8 @@ paths:
                 $ref: '#/components/schemas/CommentReplyResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/like:
     post:
@@ -1910,6 +2034,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/like/list:
     get:
@@ -1936,6 +2062,8 @@ paths:
                 $ref: '#/components/schemas/ListCommentLikesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/save:
     put:
@@ -1962,6 +2090,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/distinguish:
     post:
@@ -1988,6 +2118,8 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/list:
     get:
@@ -2032,6 +2164,8 @@ paths:
                 $ref: '#/components/schemas/GetCommentsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/report:
     post:
@@ -2058,6 +2192,8 @@ paths:
                 $ref: '#/components/schemas/CommentReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Mod
@@ -2082,6 +2218,8 @@ paths:
                 $ref: '#/components/schemas/CommentReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/comment/report/list:
     get:
@@ -2106,6 +2244,8 @@ paths:
                 $ref: '#/components/schemas/ListCommentReportsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/list:
     get:
@@ -2133,6 +2273,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessagesResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message:
     post:
@@ -2159,6 +2301,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Private Message
@@ -2183,6 +2327,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/delete:
     post:
@@ -2209,6 +2355,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/mark_as_read:
     post:
@@ -2235,6 +2383,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/report:
     post:
@@ -2261,6 +2411,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/report/resolve:
     put:
@@ -2287,6 +2439,8 @@ paths:
                 $ref: '#/components/schemas/PrivateMessageReportResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/private_message/report/list:
     get:
@@ -2310,6 +2464,8 @@ paths:
                 $ref: '#/components/schemas/ListPrivateMessageReportsResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/register:
     post:
@@ -2336,6 +2492,8 @@ paths:
                 $ref: '#/components/schemas/LoginResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/login:
     post:
@@ -2381,6 +2539,8 @@ paths:
           $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/site:
     get:
@@ -2401,6 +2561,8 @@ paths:
                 $ref: '#/components/schemas/GetSiteResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     post:
       tags:
         - Site
@@ -2426,6 +2588,8 @@ paths:
                 $ref: '#/components/schemas/SiteResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
     put:
       tags:
         - Site
@@ -2451,6 +2615,8 @@ paths:
                 $ref: '#/components/schemas/SiteResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/resolve_object:
     get:
@@ -2488,6 +2654,8 @@ paths:
                 $ref: '#/components/schemas/ResolveObjectResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /pictrs/image:
     post:
