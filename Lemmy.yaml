@@ -803,7 +803,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/import_settings:
     post:
@@ -828,7 +828,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/list_logins:
     get:
@@ -852,7 +852,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/validate_auth:
     get:
@@ -870,7 +870,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/user/totp/update:
     post:
@@ -904,7 +904,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/modlog:
     get:
@@ -941,7 +941,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/search:
     get:
@@ -986,7 +986,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community:
     post:
@@ -1014,7 +1014,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
     get:
       tags:
         - Community
@@ -1077,7 +1077,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/community/list:
     get:
