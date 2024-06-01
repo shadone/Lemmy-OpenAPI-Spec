@@ -2748,16 +2748,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - error
-            properties:
-              error:
-                type: string
-                enum:
-                  - incorrect_login
-              message:
-                type: string
+            $ref: '#/components/schemas/UnauthorizedResponse'
 
     SuccessResponse:
       description: Successful operation.
@@ -2876,6 +2867,18 @@ components:
       properties:
         error:
           type: string
+        message:
+          type: string
+
+    UnauthorizedResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - incorrect_login
         message:
           type: string
 
