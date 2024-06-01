@@ -3311,6 +3311,8 @@ components:
         - hidden
         - posting_restricted_to_mods
         - instance_id
+        - only_followers_can_vote
+        - visibility
       properties:
         id:
           description: Community identifier
@@ -3367,6 +3369,18 @@ components:
           description: Whether posting is restricted to mods only.
         instance_id:
           $ref: '#/components/schemas/InstanceID'
+        visibility:
+          $ref: '#/components/schemas/CommunityVisibility'
+
+    CommunityVisibility:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
+      type: string
+      description: Defines who can browse and interact with content in a community.
+      enum:
+        # Public community, any local or federated user can interact.
+        - Public
+        # Unfederated community, only local users can interact.
+        - LocalOnly
 
     Person:
       # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/person.rs
@@ -3618,6 +3632,9 @@ components:
           type: integer
           format: int64
           description: The number of users with any activity in the last 6 months.
+        subscribers_local:
+          type: integer
+          format: int64
 
     CommunityModeratorView:
       # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
@@ -5727,6 +5744,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LanguageID'
+        visibility:
+          $ref: '#/components/schemas/CommunityVisibility'
 
     CommunityResponse:
       # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/community.rs
