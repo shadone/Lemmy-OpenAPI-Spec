@@ -2133,7 +2133,7 @@ paths:
         - {}
       parameters:
         - $ref: '#/components/parameters/Type_'
-        - $ref: '#/components/parameters/CommentSortType'
+        - $ref: '#/components/parameters/CommentSort'
         - in: query
           name: max_depth
           schema:
