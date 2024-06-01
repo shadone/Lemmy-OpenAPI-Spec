@@ -3563,6 +3563,7 @@ components:
         - community
         - subscribed
         - blocked
+        - counts
       properties:
         community:
           $ref: '#/components/schemas/Community'
