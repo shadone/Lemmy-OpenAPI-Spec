@@ -12,6 +12,7 @@ You can read the Lemmy Client api docs:
 ### Alternatives
 
  - [lemmy-js-client](https://github.com/LemmyNet/lemmy-js-client) - official JavaScript / TypeScript client API.
+ - [MV-GH/lemmy_openapi_spec](https://github.com/MV-GH/lemmy_openapi_spec) - Unofficial Lemmy OpenAPI documentation by Maarten Vercruysse.
 
 Also see list of API libraries at https://join-lemmy.org/apps
 
