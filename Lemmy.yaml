@@ -4097,7 +4097,7 @@ components:
         default_post_listing_type:
           $ref: '#/components/schemas/ListingType'
         legal_information:
-          type: boolean
+          type: string
           description: An optional legal disclaimer page.
         hide_modlog_mod_names:
           type: boolean
