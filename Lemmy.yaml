@@ -2800,20 +2800,11 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
 
     UnauthorizedResponse:
-      description: And authorization error has occurred.
+      description: An authorization error has occurred.
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - error
-            properties:
-              error:
-                type: string
-                enum:
-                  - incorrect_login
-              message:
-                type: string
+            $ref: '#/components/schemas/UnauthorizedResponse'
 
     SuccessResponse:
       description: Successful operation.
@@ -2932,6 +2923,18 @@ components:
       properties:
         error:
           type: string
+        message:
+          type: string
+
+    UnauthorizedResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - incorrect_login
         message:
           type: string
 
@@ -4143,13 +4146,13 @@ components:
           type: boolean
           description: Whether emails are required.
         application_question:
-          type: boolean
+          type: string
           description: An optional registration application questionnaire in markdown.
         private_instance:
           type: boolean
           description: Whether the instance is private or public.
         default_theme:
-          type: boolean
+          type: string
           description: The default front-end theme.
         default_post_listing_type:
           $ref: '#/components/schemas/ListingType'
