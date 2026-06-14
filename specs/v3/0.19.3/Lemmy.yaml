@@ -3352,7 +3352,6 @@ components:
         - hidden
         - posting_restricted_to_mods
         - instance_id
-        - only_followers_can_vote
         - visibility
       properties:
         id:
