@@ -27,14 +27,22 @@ is no longer the right approach.
    no `tsoa.json`. Upstream does **not commit** the generated spec — `pnpm tsoa`
    produces it on demand, so we would generate-and-vendor it ourselves per tag.
 
-3. **API surfaces map to server eras.**
-   - `0.19.x` servers mount **only `/api/v3`** (client `VERSION = "v3"`).
-   - `1.0` servers mount **both `/api/v3` and `/api/v4`**. The server keeps a
-     dedicated `routes_v3` crate full of `*_v3` compat handlers (`login_v3`,
-     `get_site_v3`, …) specifically so existing v3 clients keep working. v4 was
-     introduced during the 1.0 cycle (server PR #6031).
-   - Therefore **v3 is a universal baseline** (reaches every live instance,
-     0.19.x and 1.0), and **v4 is an additive, 1.0-only feature layer**.
+3. **v3 and v4 are two distinct APIs — v4 is a rewrite, not an additive layer.**
+   - `0.19.x` servers mount **only `/api/v3`** (client `VERSION = "v3"`). This is
+     the real, full API for the majority of today's fediverse.
+   - `1.0` servers mount `/api/v4` (the real 1.0 API — a **rewrite** with renamed
+     and reshaped endpoints/types) **plus a thin, incomplete `/api/v3` compat
+     shim**. The `routes_v3` crate re-exposes only a subset of v3: core feed/auth
+     actions — `get_site`; post get·list·like·save·report·delete·update; comment
+     list·like·save·report·delete·update; community get·list·follow·block;
+     user logout·unread_count·block; login. Profile reads (`/user`), community
+     create/edit, `/modlog`, `/federated_instances`, honored search params, and
+     much else are **absent or broken** on 1.0's v3. v4 was introduced during the
+     1.0 cycle (server PR #6031).
+   - Therefore a client **cannot** treat v3 as a universal baseline. To support
+     1.0 instances properly it must speak **v4**; v3 remains the API for 0.19.x
+     instances. "Support both" means implementing two real surfaces — not using
+     v3 everywhere with v4 as a bonus.
 
 4. **The v3 delta since 0.19.4 is small and additive.** e.g. `0.19.4 → 0.19.6`
    is ~10 files / 43 lines (ImageDetails, RegistrationApplication, Search,
@@ -55,17 +63,20 @@ is no longer the right approach.
   `description:` fields (see "Docs flow").
 - **v3 scope:** extend the handwritten spec from `0.19.4` to `0.19.11` by
   type-diffing the official client, then freeze the v3 line.
-- **LemmyKit target:** support **both** v3 (universal baseline) and v4 (1.0
-  feature layer); runtime `GetSite` version selects the surface.
+- **LemmyKit target:** support **both** surfaces as distinct APIs — v3 for
+  0.19.x instances, v4 for 1.0 instances — routed at runtime by `GetSite`
+  version. (Not "v3 everywhere + v4 extras": 1.0's v3 compat shim is partial.)
 - **Archive key:** API-surface-first (`v3/`, `v4/`), server version beneath.
 - **First v4 base:** pin to `lemmy-js-client` tag `v1.0.16`, folder labelled
   `1.0.0` (the contract is stable across the 1.0.x patch line).
 
 ## Non-goals
 
-- Migrating LemmyKit/Spud off v3. v3 stays the compatibility floor.
-- Building a generator that synthesizes v3 OpenAPI from `http.ts` + types. v3 is
-  a dead line; hand-extending to 0.19.11 then freezing is cheaper.
+- Reworking LemmyKit's client architecture. Adding the v4 surface to LemmyKit
+  (required to support 1.0 instances, since 1.0's v3 shim is partial) is real
+  work, but it is a LemmyKit concern tracked separately from this repo.
+- Building a generator that synthesizes v3 OpenAPI from `http.ts` + types. The
+  0.19.x line is closed; hand-extending to 0.19.11 then freezing is cheaper.
 - $ref-splitting the monolithic file as a primary goal. Under the mirror model we
   stop hand-editing large files (the v4 base is never hand-edited; only the small
   overlay is), so splitting becomes optional rather than necessary.
@@ -104,10 +115,9 @@ finalized in the implementation plan; the structure above is the intent.)
 - **v3 (handwritten):** the only OpenAPI that will ever exist for this surface.
   Extend `0.19.4 → 0.19.11` by diffing `src/types/*.ts` and `src/http.ts`
   between the closest clean js-client tags (`0.19.6`, `0.19.9`,
-  `0.19.11-beta.0`) and hand-applying the deltas. Then freeze — 1.0 keeps v3
-  backward-compatible, so v3@0.19.11 is effectively v3@1.0. (If drift between
-  v3@0.19.x and v3@1.0 is ever discovered, capture it as a separate snapshot
-  under `v3/1.0.0/`.)
+  `0.19.11-beta.0`) and hand-applying the deltas. Then freeze — the 0.19.x line
+  is closed. v3@0.19.11 is the canonical *full* v3; do **not** treat 1.0's
+  partial v3 compat shim as equivalent.
 
 - **v4 (vendored):** `base.yaml` is generated from the official client and
   vendored verbatim. `pnpm tsoa` reads only `http.ts` + `src/types/` already in
@@ -175,9 +185,11 @@ design is a LemmyKit concern tracked separately.
   base and run it through swift-openapi-generator. Validation step: generate
   `v4/1.0.0/base.yaml` and do a trial LemmyKit codegen before committing to the
   approach at scale.
-- **v3@1.0 drift.** Assumed negligible (compat shims preserve v3 shapes). Verify
-  by diffing a v3 response from a 1.0 instance against the frozen v3 spec; snapshot
-  separately only if it diverges.
+- **1.0's v3 compat shim is partial** (profile/community-create/modlog/
+  federated_instances/search-params absent or broken). Not a problem for the
+  archive — we spec full v3 at 0.19.11 and the real v4 separately — but LemmyKit
+  must not assume a v3 call works against a 1.0 instance; it must route to v4
+  there. Tracked as a LemmyKit concern.
 - **Overlay tooling maturity.** Confirm the chosen overlay tool round-trips
   3.1.0 cleanly and is reproducible in CI.
 - **js-client v3 tag fidelity.** The client did not tag every server point
