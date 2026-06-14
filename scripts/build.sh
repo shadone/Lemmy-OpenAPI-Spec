@@ -29,9 +29,9 @@ build_one() {
   #    bump-cli doesn't prompt to overwrite (which would hang non-interactively).
   rm -f "$out"
   if [ -f "$overlay" ]; then
-    CI=1 npx -y bump-cli overlay "$norm" "$overlay" -o "$out" >/dev/null 2>&1 < /dev/null
+    CI=1 npx -y bump-cli@2.10.0 overlay "$norm" "$overlay" -o "$out" >/dev/null 2>&1 < /dev/null
   else
-    npx -y @redocly/cli@latest bundle "$norm" -o "$out"
+    npx -y @redocly/cli@2.32.2 bundle "$norm" -o "$out"
   fi
   rm -f "$norm"
   echo "built $out"

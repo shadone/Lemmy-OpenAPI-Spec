@@ -15,6 +15,6 @@ for f in specs/v3/*/Lemmy.yaml specs/v4/*/Lemmy.yaml; do
   [ -f "$f" ] || continue
   echo "== lint $f =="
   # shellcheck disable=SC2086
-  npx -y @redocly/cli@latest lint $SKIP "$f" || status=1
+  npx -y @redocly/cli@2.32.2 lint $SKIP "$f" || status=1
 done
 exit $status

@@ -20,7 +20,7 @@ git -C "$client" worktree add --detach "$wt" "$ref" >&2
 ver="$(grep -m1 'VERSION' "$wt/src/other_types.ts" | sed 's/.*= *//; s/[";]//g')"
 [ "$ver" = "v4" ] || { echo "ref $ref is client VERSION=$ver, not v4" >&2; exit 1; }
 
-( cd "$wt" && npx -y pnpm@10 install >&2 && ./node_modules/.bin/tsoa spec-and-routes >&2 )
+( cd "$wt" && npx -y pnpm@10.33.2 install >&2 && ./node_modules/.bin/tsoa spec-and-routes >&2 )
 
 mkdir -p "$(dirname "$out")"
 cp "$wt/tsoa_build/swagger.json" "$out"
