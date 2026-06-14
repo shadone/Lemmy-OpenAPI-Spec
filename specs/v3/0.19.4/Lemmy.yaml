@@ -1795,7 +1795,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
 
   /api/v3/post/report:
-    put:
+    post:
       tags:
         - Post
       summary: Report Post
@@ -1828,7 +1828,7 @@ paths:
         - Mod
       summary: Resolve Post Report
       description: Resolve a post report. Only a mod can do this.
-      operationId: resolvePortReport
+      operationId: resolvePostReport
       security:
         - BearerAuth: []
       requestBody:
@@ -1856,7 +1856,7 @@ paths:
         - Mod
       summary: List Post Reports
       description: List post reports.
-      operationId: listPortReports
+      operationId: listPostReports
       security:
         - BearerAuth: []
       parameters:
@@ -2252,6 +2252,8 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
+
+  /api/v3/comment/report/resolve:
     put:
       tags:
         - Mod
@@ -2526,7 +2528,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedResponse'
 
-  /api/v3/register:
+  /api/v3/user/register:
     post:
       tags:
         - Account
@@ -3504,6 +3506,7 @@ components:
         - local
         - deleted
         - bot_account
+        - instance_id
       properties:
         id:
           description: Person identifier
@@ -3573,6 +3576,7 @@ components:
         - upvotes
         - downvotes
         - published
+        - newest_comment_time
       properties:
         post_id:
           $ref: '#/components/schemas/PostID'
@@ -3596,6 +3600,9 @@ components:
           type: string
           format: date-time
           description: The timestamp when the post was published.
+        newest_comment_time:
+          type: string
+          format: date-time
 
     SubscribedType:
       # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/lib.rs
@@ -3663,6 +3670,8 @@ components:
       type: object
       required:
         - id
+        - code
+        - name
       properties:
         id:
           $ref: '#/components/schemas/LanguageID'
@@ -3714,6 +3723,7 @@ components:
         - users_active_week
         - users_active_month
         - users_active_half_year
+        - subscribers_local
       description: Aggregate data for a community.
       properties:
         community_id:
@@ -4141,6 +4151,8 @@ components:
         - version
         - all_languages
         - discussion_languages
+        - taglines
+        - custom_emojis
         - blocked_urls
       properties:
         site_view:
@@ -4201,6 +4213,7 @@ components:
         - actor_id
         - last_refreshed_at
         - inbox_url
+        - public_key
         - instance_id
       properties:
         id:
@@ -4236,10 +4249,49 @@ components:
         inbox_url:
           type: string
           format: uri
+        public_key:
+          type: string
         instance_id:
           $ref: '#/components/schemas/InstanceID'
         content_warning:
           type: string
+
+    Instance:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_schema/src/source/instance.rs
+      type: object
+      required:
+        - id
+        - domain
+        - published
+      properties:
+        id:
+          $ref: '#/components/schemas/InstanceID'
+        domain:
+          type: string
+        published:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        software:
+          type: string
+        version:
+          type: string
+
+    InstanceBlockView:
+      # https://github.com/LemmyNet/lemmy/blob/main/crates/db_views_actor/src/structs.rs
+      type: object
+      required:
+        - person
+        - instance
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+        instance:
+          $ref: '#/components/schemas/Instance'
+        site:
+          $ref: '#/components/schemas/Site'
 
     LocalSite:
       type: object
@@ -4469,6 +4521,7 @@ components:
         - follows
         - moderates
         - community_blocks
+        - instance_blocks
         - person_blocks
         - discussion_languages
       properties:
@@ -4486,6 +4539,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CommunityBlockView'
+        instance_blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceBlockView'
         person_blocks:
           type: array
           items:
@@ -5510,7 +5567,6 @@ components:
         - id
         - mod_person_id
         - other_person_id
-        - community_id
         - banned
         - when_
       properties:
@@ -5521,8 +5577,6 @@ components:
           $ref: '#/components/schemas/PersonID'
         other_person_id:
           $ref: '#/components/schemas/PersonID'
-        community_id:
-          $ref: '#/components/schemas/CommunityID'
         reason:
           type: string
         banned:
@@ -5573,8 +5627,6 @@ components:
           $ref: '#/components/schemas/PersonID'
         community_id:
           $ref: '#/components/schemas/CommunityID'
-        reason:
-          type: string
         removed:
           type: boolean
         when_:
@@ -5646,6 +5698,7 @@ components:
         - id
         - mod_person_id
         - other_person_id
+        - removed
         - when_
       properties:
         id:
@@ -5850,6 +5903,7 @@ components:
         - type_
         - comments
         - posts
+        - communities
         - users
       properties:
         type_:
@@ -7042,7 +7096,6 @@ components:
         - original_pm_text
         - reason
         - resolved
-        - resolver_id
         - published
       properties:
         id:
@@ -7710,8 +7763,6 @@ components:
       # https://github.com/LemmyNet/lemmy/blob/main/crates/api_common/src/site.rs
       type: object
       description: A response of federated instances.
-      required:
-        - federated_instances
       properties:
         federated_instances:
           $ref: '#/components/schemas/FederatedInstances'
