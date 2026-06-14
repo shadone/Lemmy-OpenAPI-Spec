@@ -7,6 +7,74 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"EmptyRequestState": {
+				"properties": {
+					"state": {
+						"type": "string",
+						"enum": [
+							"empty"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"state"
+				],
+				"type": "object"
+			},
+			"LoadingRequestState": {
+				"properties": {
+					"state": {
+						"type": "string",
+						"enum": [
+							"loading"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"state"
+				],
+				"type": "object"
+			},
+			"Error": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"stack": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FailedRequestState": {
+				"properties": {
+					"err": {
+						"$ref": "#/components/schemas/Error"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"failed"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"err",
+					"state"
+				],
+				"type": "object"
+			},
 			"SiteId": {
 				"type": "number",
 				"format": "double",
@@ -103,6 +171,7 @@
 				"enum": [
 					"closed",
 					"require_application",
+					"require_invitation",
 					"open"
 				],
 				"description": "The registration mode for your site. Determines what happens after a user signs up."
@@ -166,6 +235,11 @@
 			},
 			"LocalSite": {
 				"properties": {
+					"max_invites_per_user_allowed": {
+						"type": "number",
+						"format": "double",
+						"description": "How many active invite links a user can have"
+					},
 					"image_upload_disabled": {
 						"type": "boolean"
 					},
@@ -359,6 +433,7 @@
 					}
 				},
 				"required": [
+					"max_invites_per_user_allowed",
 					"image_upload_disabled",
 					"image_allow_video_uploads",
 					"image_max_upload_size",
@@ -984,6 +1059,42 @@
 				"type": "object",
 				"description": "An expanded response for a site."
 			},
+			"SuccessRequestState_GetSiteResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetSiteResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetSiteResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetSiteResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"SiteResponse": {
 				"properties": {
 					"site_view": {
@@ -996,8 +1107,48 @@
 				"type": "object",
 				"description": "The response for a site."
 			},
+			"SuccessRequestState_SiteResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/SiteResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_SiteResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_SiteResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CreateSite": {
 				"properties": {
+					"max_invites_per_user_allowed": {
+						"type": "number",
+						"format": "double"
+					},
 					"image_upload_disabled": {
 						"type": "boolean"
 					},
@@ -1193,6 +1344,10 @@
 			},
 			"EditSite": {
 				"properties": {
+					"max_invites_per_user_allowed": {
+						"type": "number",
+						"format": "double"
+					},
 					"image_upload_disabled": {
 						"type": "boolean"
 					},
@@ -1442,6 +1597,42 @@
 				],
 				"type": "object"
 			},
+			"SuccessRequestState_GenerateTotpSecretResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GenerateTotpSecretResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GenerateTotpSecretResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GenerateTotpSecretResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"LocalUserId": {
 				"type": "number",
 				"format": "double",
@@ -1458,6 +1649,13 @@
 			},
 			"LocalUser": {
 				"properties": {
+					"show_media": {
+						"type": "boolean",
+						"description": "Whether to show media in the UI."
+					},
+					"invited_by_local_user_id": {
+						"$ref": "#/components/schemas/LocalUserId"
+					},
 					"default_items_per_page": {
 						"type": "number",
 						"format": "double"
@@ -1482,9 +1680,9 @@
 						"format": "double",
 						"description": "A default time range limit to apply to post sorts, in seconds."
 					},
-					"hide_media": {
+					"hide_posts_with_media": {
 						"type": "boolean",
-						"description": "Whether to hide posts containing images/videos"
+						"description": "Whether to hide posts containing images/videos. Often labeled hide_memes."
 					},
 					"auto_mark_fetched_posts_as_read": {
 						"type": "boolean",
@@ -1582,13 +1780,14 @@
 					}
 				},
 				"required": [
+					"show_media",
 					"default_items_per_page",
 					"show_person_votes",
 					"show_upvote_percentage",
 					"show_downvotes",
 					"show_upvotes",
 					"show_score",
-					"hide_media",
+					"hide_posts_with_media",
 					"auto_mark_fetched_posts_as_read",
 					"default_comment_sort_type",
 					"private_messages_enabled",
@@ -1794,7 +1993,6 @@
 					"deleted",
 					"published_at",
 					"removed",
-					"title",
 					"name",
 					"id"
 				],
@@ -2007,6 +2205,78 @@
 				"type": "object",
 				"description": "Your user info."
 			},
+			"SuccessRequestState_MyUserInfo_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/MyUserInfo"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_MyUserInfo_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_MyUserInfo_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
+			"SuccessRequestState_string_": {
+				"properties": {
+					"data": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_string_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_string_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"SuccessResponse": {
 				"properties": {
 					"success": {
@@ -2018,6 +2288,42 @@
 				],
 				"type": "object",
 				"description": "A response that completes successfully."
+			},
+			"SuccessRequestState_SuccessResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/SuccessResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_SuccessResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_SuccessResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"UserSettingsBackup": {
 				"properties": {
@@ -2148,6 +2454,42 @@
 					"logins"
 				],
 				"type": "object"
+			},
+			"SuccessRequestState_ListLoginsResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/ListLoginsResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_ListLoginsResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_ListLoginsResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"PostId": {
 				"type": "number",
@@ -2377,6 +2719,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_LocalImageView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_LocalImageView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_LocalImageView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_LocalImageView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ListMediaI": {
 				"properties": {
 					"limit": {
@@ -2412,6 +2790,42 @@
 					"enabled"
 				],
 				"type": "object"
+			},
+			"SuccessRequestState_EditTotpResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/EditTotpResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_EditTotpResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_EditTotpResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"EditTotp": {
 				"properties": {
@@ -2461,6 +2875,10 @@
 			},
 			"Modlog": {
 				"properties": {
+					"child_count": {
+						"type": "number",
+						"format": "double"
+					},
 					"bulk_action_parent_id": {
 						"$ref": "#/components/schemas/ModlogId"
 					},
@@ -2484,6 +2902,7 @@
 					}
 				},
 				"required": [
+					"child_count",
 					"published_at",
 					"is_revert",
 					"kind",
@@ -2651,6 +3070,42 @@
 				],
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_ModlogView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_ModlogView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_ModlogView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_ModlogView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"ModlogKindFilter": {
 				"anyOf": [
@@ -3186,6 +3641,12 @@
 			},
 			"SearchResponse": {
 				"properties": {
+					"next_page": {
+						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"prev_page": {
+						"$ref": "#/components/schemas/PaginationCursor"
+					},
 					"multi_communities": {
 						"items": {
 							"$ref": "#/components/schemas/MultiCommunityView"
@@ -3218,7 +3679,7 @@
 					},
 					"resolve": {
 						"$ref": "#/components/schemas/ResolveObjectView",
-						"description": "If `Search.q` contains an ActivityPub ID (eg `https://lemmy.world/comment/1`) or an\nidentifier (eg `!fediverse@lemmy.ml`) then this field contains the resolved object.\nIt should always be shown above other search results."
+						"description": "If `Search.search_term` contains an ActivityPub ID (eg `https://lemmy.world/comment/1`) or an\nidentifier (eg `!fediverse@lemmy.ml`) then this field contains the resolved object.\nIt should always be shown above other search results."
 					}
 				},
 				"required": [
@@ -3230,6 +3691,42 @@
 				],
 				"type": "object",
 				"description": "The search response, containing lists of the return type possibilities"
+			},
+			"SuccessRequestState_SearchResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/SearchResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_SearchResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_SearchResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"SearchType": {
 				"type": "string",
@@ -3248,6 +3745,9 @@
 					"limit": {
 						"type": "number",
 						"format": "double"
+					},
+					"page_cursor": {
+						"$ref": "#/components/schemas/PaginationCursor"
 					},
 					"show_nsfw": {
 						"type": "boolean",
@@ -3293,6 +3793,42 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SuccessRequestState_ResolveObjectView_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/ResolveObjectView"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_ResolveObjectView_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_ResolveObjectView_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ResolveObjectI": {
 				"properties": {
 					"q": {
@@ -3325,6 +3861,42 @@
 				"type": "object",
 				"description": "A simple community response."
 			},
+			"SuccessRequestState_CommunityResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CommunityResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CommunityResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CommunityResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CreateCommunity": {
 				"properties": {
 					"visibility": {
@@ -3344,14 +3916,6 @@
 						"type": "boolean",
 						"description": "Whether its an NSFW community."
 					},
-					"banner": {
-						"type": "string",
-						"description": "A banner URL."
-					},
-					"icon": {
-						"type": "string",
-						"description": "An icon URL."
-					},
 					"summary": {
 						"type": "string",
 						"description": "A shorter, one line summary of your community."
@@ -3370,7 +3934,6 @@
 					}
 				},
 				"required": [
-					"title",
 					"name"
 				],
 				"type": "object",
@@ -3404,6 +3967,42 @@
 				],
 				"type": "object",
 				"description": "The community response."
+			},
+			"SuccessRequestState_GetCommunityResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetCommunityResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetCommunityResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetCommunityResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"GetCommunityI": {
 				"properties": {
@@ -3479,6 +4078,42 @@
 				],
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_CommunityView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_CommunityView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_CommunityView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_CommunityView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CommunitySortType": {
 				"type": "string",
@@ -3576,6 +4211,42 @@
 				"type": "object",
 				"description": "Contains the amount of unread items of various types. For normal users this means the number of\nunread notifications, mods and admins get additional unread counts for reports, registration\napplications and pending follows to private communities."
 			},
+			"SuccessRequestState_UnreadCountsResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/UnreadCountsResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_UnreadCountsResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_UnreadCountsResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"PendingFollowerView": {
 				"properties": {
 					"follow_state": {
@@ -3618,6 +4289,42 @@
 				],
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_PendingFollowerView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_PendingFollowerView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_PendingFollowerView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_PendingFollowerView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"ListCommunityPendingFollowsI": {
 				"properties": {
@@ -3758,6 +4465,42 @@
 				"type": "object",
 				"description": "A person response for actions done to a person."
 			},
+			"SuccessRequestState_PersonResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PersonResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PersonResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PersonResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"BanFromCommunity": {
 				"properties": {
 					"expires_at": {
@@ -3805,6 +4548,42 @@
 				],
 				"type": "object",
 				"description": "The response of adding a moderator to a community."
+			},
+			"SuccessRequestState_AddModToCommunityResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/AddModToCommunityResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_AddModToCommunityResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_AddModToCommunityResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"AddModToCommunity": {
 				"properties": {
@@ -3892,7 +4671,6 @@
 					"published_at",
 					"resolved",
 					"reason",
-					"original_community_title",
 					"original_community_name",
 					"community_id",
 					"creator_id",
@@ -3958,6 +4736,42 @@
 				"type": "object",
 				"description": "A community report response."
 			},
+			"SuccessRequestState_CommunityReportResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CommunityReportResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CommunityReportResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CommunityReportResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CreateCommunityReport": {
 				"properties": {
 					"reason": {
@@ -4000,6 +4814,42 @@
 					"post_view"
 				],
 				"type": "object"
+			},
+			"SuccessRequestState_PostResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PostResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PostResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PostResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreatePost": {
 				"properties": {
@@ -4076,6 +4926,42 @@
 				],
 				"type": "object",
 				"description": "The post response."
+			},
+			"SuccessRequestState_GetPostResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetPostResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetPostResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetPostResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"GetPostI": {
 				"properties": {
@@ -4333,6 +5219,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_PostView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_PostView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_PostView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_PostView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetPostsI": {
 				"properties": {
 					"limit": {
@@ -4341,6 +5263,10 @@
 					},
 					"page_cursor": {
 						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"tag_id": {
+						"$ref": "#/components/schemas/CommunityTagId",
+						"description": "Only show posts which have this tag"
 					},
 					"search_url_only": {
 						"type": "boolean"
@@ -4359,7 +5285,7 @@
 						"type": "boolean",
 						"description": "Whether to automatically mark fetched posts as read."
 					},
-					"hide_media": {
+					"hide_posts_with_media": {
 						"type": "boolean",
 						"description": "If false, then show posts with media attached (even if your user setting is to hide them)"
 					},
@@ -4469,6 +5395,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_VoteView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_VoteView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_VoteView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_VoteView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ListPostLikesI": {
 				"properties": {
 					"limit": {
@@ -4566,6 +5528,9 @@
 			},
 			"PostReportView": {
 				"properties": {
+					"tags": {
+						"$ref": "#/components/schemas/CommunityTagsView"
+					},
 					"creator_community_ban_expires_at": {
 						"type": "string"
 					},
@@ -4613,6 +5578,7 @@
 					}
 				},
 				"required": [
+					"tags",
 					"creator_banned_from_community",
 					"creator_banned",
 					"creator_is_moderator",
@@ -4637,6 +5603,42 @@
 				],
 				"type": "object",
 				"description": "The post report response."
+			},
+			"SuccessRequestState_PostReportResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PostReportResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PostReportResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PostReportResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreatePostReport": {
 				"properties": {
@@ -4723,6 +5725,42 @@
 				"type": "object",
 				"description": "The site metadata response."
 			},
+			"SuccessRequestState_GetSiteMetadataResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetSiteMetadataResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetSiteMetadataResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetSiteMetadataResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetSiteMetadataI": {
 				"properties": {
 					"url": {
@@ -4746,6 +5784,42 @@
 				],
 				"type": "object",
 				"description": "A comment response."
+			},
+			"SuccessRequestState_CommentResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CommentResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CommentResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CommentResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateComment": {
 				"properties": {
@@ -4935,6 +6009,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_CommentView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_CommentView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_CommentView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_CommentView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetCommentsI": {
 				"properties": {
 					"search_term": {
@@ -5047,6 +6157,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_CommentSlimView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_CommentSlimView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_CommentSlimView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_CommentSlimView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetCommentI": {
 				"properties": {
 					"id": {
@@ -5128,6 +6274,9 @@
 			},
 			"CommentReportView": {
 				"properties": {
+					"tags": {
+						"$ref": "#/components/schemas/CommunityTagsView"
+					},
 					"creator_community_ban_expires_at": {
 						"type": "string"
 					},
@@ -5178,6 +6327,7 @@
 					}
 				},
 				"required": [
+					"tags",
 					"creator_banned_from_community",
 					"creator_banned",
 					"creator_is_moderator",
@@ -5203,6 +6353,42 @@
 				],
 				"type": "object",
 				"description": "The comment report response."
+			},
+			"SuccessRequestState_CommentReportResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CommentReportResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CommentReportResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CommentReportResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateCommentReport": {
 				"properties": {
@@ -5327,6 +6513,42 @@
 				],
 				"type": "object",
 				"description": "A single private message response."
+			},
+			"SuccessRequestState_PrivateMessageResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PrivateMessageResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PrivateMessageResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PrivateMessageResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreatePrivateMessage": {
 				"properties": {
@@ -5474,6 +6696,42 @@
 				"type": "object",
 				"description": "A private message report response."
 			},
+			"SuccessRequestState_PrivateMessageReportResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PrivateMessageReportResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PrivateMessageReportResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PrivateMessageReportResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CreatePrivateMessageReport": {
 				"properties": {
 					"reason": {
@@ -5528,8 +6786,48 @@
 				"type": "object",
 				"description": "A response for your login."
 			},
+			"SuccessRequestState_LoginResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/LoginResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_LoginResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_LoginResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"Register": {
 				"properties": {
+					"token": {
+						"type": "string",
+						"description": "Invitation token"
+					},
 					"stay_logged_in": {
 						"type": "boolean",
 						"description": "If this is true the login is valid forever, otherwise it expires after one week."
@@ -5628,6 +6926,42 @@
 				"type": "object",
 				"description": "A person's details response."
 			},
+			"SuccessRequestState_GetPersonDetailsResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetPersonDetailsResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetPersonDetailsResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetPersonDetailsResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetPersonDetailsI": {
 				"properties": {
 					"username": {
@@ -5710,6 +7044,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_PostCommentCombinedView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_PostCommentCombinedView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_PostCommentCombinedView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_PostCommentCombinedView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"PersonContentType": {
 				"type": "string",
 				"enum": [
@@ -5784,6 +7154,42 @@
 				],
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_PersonView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_PersonView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_PersonView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_PersonView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"PersonListingType": {
 				"type": "string",
@@ -5878,6 +7284,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_LocalUserView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_LocalUserView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_LocalUserView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_LocalUserView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"LocalUserSortType": {
 				"type": "string",
 				"enum": [
@@ -5954,6 +7396,42 @@
 				"type": "object",
 				"description": "A wrapper for the captcha response."
 			},
+			"SuccessRequestState_GetCaptchaResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetCaptchaResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetCaptchaResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetCaptchaResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"DeleteAccount": {
 				"properties": {
 					"delete_content": {
@@ -5970,7 +7448,7 @@
 				"type": "object",
 				"description": "Delete your account."
 			},
-			"PasswordReset": {
+			"ResetPassword": {
 				"properties": {
 					"email": {
 						"$ref": "#/components/schemas/SensitiveString"
@@ -5982,7 +7460,7 @@
 				"type": "object",
 				"description": "Reset your password via email."
 			},
-			"PasswordChangeAfterReset": {
+			"ChangePasswordAfterReset": {
 				"properties": {
 					"password_verify": {
 						"$ref": "#/components/schemas/SensitiveString"
@@ -6028,9 +7506,9 @@
 						"type": "boolean",
 						"description": "Whether to show vote totals given to others."
 					},
-					"hide_media": {
+					"hide_posts_with_media": {
 						"type": "boolean",
-						"description": "Whether to hide posts containing images/videos."
+						"description": "Whether to hide posts containing images/videos. Often labeled hide_memes."
 					},
 					"auto_mark_fetched_posts_as_read": {
 						"type": "boolean",
@@ -6097,6 +7575,10 @@
 					"send_notifications_to_email": {
 						"type": "boolean",
 						"description": "Sends notifications to your email."
+					},
+					"show_media": {
+						"type": "boolean",
+						"description": "Whether to show media in the UI."
 					},
 					"show_avatars": {
 						"type": "boolean",
@@ -6370,6 +7852,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_NotificationView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_NotificationView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_NotificationView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_NotificationView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"NotificationTypeFilter": {
 				"anyOf": [
 					{
@@ -6438,6 +7956,9 @@
 					},
 					"page_cursor": {
 						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"search_term": {
+						"type": "string"
 					},
 					"type_": {
 						"$ref": "#/components/schemas/PersonContentType"
@@ -6514,6 +8035,42 @@
 				],
 				"type": "object",
 				"description": "The response of current admins."
+			},
+			"SuccessRequestState_AddAdminResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/AddAdminResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_AddAdminResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_AddAdminResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"AddAdmin": {
 				"properties": {
@@ -6613,6 +8170,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_RegistrationApplicationView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_RegistrationApplicationView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_RegistrationApplicationView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_RegistrationApplicationView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ListRegistrationApplicationsI": {
 				"properties": {
 					"limit": {
@@ -6641,6 +8234,42 @@
 				],
 				"type": "object",
 				"description": "The response of an action done to a registration application."
+			},
+			"SuccessRequestState_RegistrationApplicationResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/RegistrationApplicationResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_RegistrationApplicationResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_RegistrationApplicationResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"ApproveRegistrationApplication": {
 				"properties": {
@@ -6824,6 +8453,42 @@
 				"type": "object",
 				"description": "A response for a custom emoji."
 			},
+			"SuccessRequestState_CustomEmojiResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CustomEmojiResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CustomEmojiResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CustomEmojiResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CreateCustomEmoji": {
 				"properties": {
 					"keywords": {
@@ -6912,6 +8577,42 @@
 				"type": "object",
 				"description": "A response for custom emojis."
 			},
+			"SuccessRequestState_ListCustomEmojisResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/ListCustomEmojisResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_ListCustomEmojisResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_ListCustomEmojisResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ListCustomEmojisI": {
 				"properties": {
 					"category": {
@@ -6931,6 +8632,42 @@
 					"tagline"
 				],
 				"type": "object"
+			},
+			"SuccessRequestState_TaglineResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/TaglineResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_TaglineResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_TaglineResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateTagline": {
 				"properties": {
@@ -6993,6 +8730,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_Tagline__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_Tagline_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_Tagline__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_Tagline__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ListTaglinesI": {
 				"properties": {
 					"limit": {
@@ -7005,6 +8778,42 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"SuccessRequestState_CommunityTag_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CommunityTag"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CommunityTag_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CommunityTag_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateCommunityTag": {
 				"properties": {
@@ -7067,6 +8876,42 @@
 				],
 				"type": "object",
 				"description": "Delete a community tag."
+			},
+			"SuccessRequestState_AdminOAuthProvider_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/AdminOAuthProvider"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_AdminOAuthProvider_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_AdminOAuthProvider_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateOAuthProvider": {
 				"properties": {
@@ -7326,6 +9171,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_FederatedInstanceView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_FederatedInstanceView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_FederatedInstanceView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_FederatedInstanceView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetFederatedInstancesKind": {
 				"type": "string",
 				"enum": [
@@ -7470,6 +9351,42 @@
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
 			},
+			"SuccessRequestState_PagedResponse_ReportCombinedView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_ReportCombinedView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_ReportCombinedView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_ReportCombinedView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"ReportType": {
 				"type": "string",
 				"enum": [
@@ -7480,6 +9397,15 @@
 					"communities"
 				],
 				"description": "A list of possible types for reports."
+			},
+			"ReportSortType": {
+				"type": "string",
+				"enum": [
+					"default",
+					"new",
+					"old"
+				],
+				"description": "The Report sort type."
 			},
 			"ListReportsI": {
 				"properties": {
@@ -7497,6 +9423,10 @@
 					},
 					"page_cursor": {
 						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/ReportSortType",
+						"description": "If this is None, then the default sort is Old / First In First Out if viewing unresolved\nreports, but new if viewing all reports. Setting this overrides the default."
 					},
 					"community_id": {
 						"$ref": "#/components/schemas/CommunityId",
@@ -7608,6 +9538,42 @@
 				],
 				"type": "object"
 			},
+			"SuccessRequestState_UploadImageResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/UploadImageResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_UploadImageResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_UploadImageResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"CommunityIdQueryI": {
 				"properties": {
 					"id": {
@@ -7642,6 +9608,42 @@
 					"multi_community_view"
 				],
 				"type": "object"
+			},
+			"SuccessRequestState_MultiCommunityResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/MultiCommunityResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_MultiCommunityResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_MultiCommunityResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"CreateMultiCommunity": {
 				"properties": {
@@ -7704,6 +9706,42 @@
 				],
 				"type": "object"
 			},
+			"SuccessRequestState_GetMultiCommunityResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetMultiCommunityResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_GetMultiCommunityResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_GetMultiCommunityResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
 			"GetMultiCommunityI": {
 				"properties": {
 					"name": {
@@ -7751,6 +9789,42 @@
 				],
 				"type": "object",
 				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_MultiCommunityView__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_MultiCommunityView_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_MultiCommunityView__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_MultiCommunityView__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			},
 			"MultiCommunityListingType": {
 				"type": "string",
@@ -7853,6 +9927,186 @@
 				"type": "object",
 				"description": "Change notification settings for a post"
 			},
+			"InvitationId": {
+				"type": "number",
+				"format": "double",
+				"description": "The invitation id."
+			},
+			"LocalUserInvite": {
+				"properties": {
+					"published_at": {
+						"type": "string"
+					},
+					"expires_at": {
+						"type": "string"
+					},
+					"uses_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_uses": {
+						"type": "number",
+						"format": "double"
+					},
+					"local_user_id": {
+						"$ref": "#/components/schemas/LocalUserId"
+					},
+					"token": {
+						"type": "string"
+					},
+					"id": {
+						"$ref": "#/components/schemas/InvitationId"
+					}
+				},
+				"required": [
+					"published_at",
+					"uses_count",
+					"local_user_id",
+					"token",
+					"id"
+				],
+				"type": "object"
+			},
+			"CreateInvitationResponse": {
+				"properties": {
+					"invite": {
+						"$ref": "#/components/schemas/LocalUserInvite"
+					}
+				},
+				"required": [
+					"invite"
+				],
+				"type": "object"
+			},
+			"SuccessRequestState_CreateInvitationResponse_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/CreateInvitationResponse"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_CreateInvitationResponse_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_CreateInvitationResponse_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
+			"CreateInvitation": {
+				"properties": {
+					"expires_at": {
+						"type": "string"
+					},
+					"max_uses": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object"
+			},
+			"RevokeInvitation": {
+				"properties": {
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"token"
+				],
+				"type": "object"
+			},
+			"PagedResponse_LocalUserInvite_": {
+				"properties": {
+					"prev_page": {
+						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"next_page": {
+						"$ref": "#/components/schemas/PaginationCursor"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/LocalUserInvite"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"description": "This response contains only a single page of items. To get the next page, take the\ncursor string from `next_page` and pass it to the same API endpoint via `page_cursor`\nparameter. For going to the previous page, use `prev_page` instead."
+			},
+			"SuccessRequestState_PagedResponse_LocalUserInvite__": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PagedResponse_LocalUserInvite_"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_PagedResponse_LocalUserInvite__": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_PagedResponse_LocalUserInvite__"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
+			},
+			"ListInvitationsI": {
+				"properties": {
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_cursor": {
+						"$ref": "#/components/schemas/PaginationCursor"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"NodeInfoSoftware": {
 				"properties": {
 					"homepage": {
@@ -7954,6 +10208,42 @@
 				},
 				"type": "object",
 				"description": "Nodeinfo spec: http://nodeinfo.diaspora.software/docson/index.html#/ns/schema/2.1"
+			},
+			"SuccessRequestState_NodeInfo_": {
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/NodeInfo"
+					},
+					"state": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"state"
+				],
+				"type": "object"
+			},
+			"RequestState_NodeInfo_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/EmptyRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/LoadingRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/FailedRequestState"
+					},
+					{
+						"$ref": "#/components/schemas/SuccessRequestState_NodeInfo_"
+					}
+				],
+				"description": "Shows the state of an API request.\n\nCan be empty, loading, failed, or success"
 			}
 		},
 		"securitySchemes": {
@@ -7966,7 +10256,7 @@
 	},
 	"info": {
 		"title": "lemmy-js-client",
-		"version": "1.0.0-search.4",
+		"version": "1.0.0-tag-id.3",
 		"description": "A javascript / typescript client for Lemmy",
 		"license": {
 			"name": "AGPL-3.0"
@@ -7985,7 +10275,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetSiteResponse"
+									"$ref": "#/components/schemas/RequestState_GetSiteResponse_"
 								}
 							}
 						}
@@ -8011,7 +10301,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SiteResponse"
+									"$ref": "#/components/schemas/RequestState_SiteResponse_"
 								}
 							}
 						}
@@ -8046,7 +10336,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SiteResponse"
+									"$ref": "#/components/schemas/RequestState_SiteResponse_"
 								}
 							}
 						}
@@ -8083,7 +10373,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetSiteResponse"
+									"$ref": "#/components/schemas/RequestState_GetSiteResponse_"
 								}
 							}
 						}
@@ -8110,7 +10400,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GenerateTotpSecretResponse"
+									"$ref": "#/components/schemas/RequestState_GenerateTotpSecretResponse_"
 								}
 							}
 						}
@@ -8137,7 +10427,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MyUserInfo"
+									"$ref": "#/components/schemas/RequestState_MyUserInfo_"
 								}
 							}
 						}
@@ -8162,7 +10452,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -8199,7 +10489,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"$ref": "#/components/schemas/RequestState_string_"
 								}
 							}
 						}
@@ -8226,7 +10516,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -8263,7 +10553,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ListLoginsResponse"
+									"$ref": "#/components/schemas/RequestState_ListLoginsResponse_"
 								}
 							}
 						}
@@ -8290,7 +10580,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -8317,7 +10607,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_LocalImageView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_LocalImageView__"
 								}
 							}
 						}
@@ -8363,7 +10653,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -8394,14 +10684,14 @@
 		},
 		"/api/v4/image": {
 			"delete": {
-				"operationId": "DeleteMediaAdmin",
+				"operationId": "AdminDeleteMedia",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -8437,7 +10727,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -8476,14 +10766,14 @@
 		},
 		"/api/v4/image/list": {
 			"get": {
-				"operationId": "ListMediaAdmin",
+				"operationId": "AdminListMedia",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_LocalImageView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_LocalImageView__"
 								}
 							}
 						}
@@ -8529,7 +10819,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/EditTotpResponse"
+									"$ref": "#/components/schemas/RequestState_EditTotpResponse_"
 								}
 							}
 						}
@@ -8566,7 +10856,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_ModlogView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_ModlogView__"
 								}
 							}
 						}
@@ -8693,7 +10983,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SearchResponse"
+									"$ref": "#/components/schemas/RequestState_SearchResponse_"
 								}
 							}
 						}
@@ -8717,6 +11007,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_cursor",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PaginationCursor"
 						}
 					},
 					{
@@ -8823,7 +11121,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ResolveObjectView"
+									"$ref": "#/components/schemas/RequestState_ResolveObjectView_"
 								}
 							}
 						}
@@ -8861,7 +11159,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -8896,7 +11194,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_GetCommunityResponse_"
 								}
 							}
 						}
@@ -8940,7 +11238,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -8975,7 +11273,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -9012,7 +11310,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_CommunityView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_CommunityView__"
 								}
 							}
 						}
@@ -9116,7 +11414,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -9153,7 +11451,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UnreadCountsResponse"
+									"$ref": "#/components/schemas/RequestState_UnreadCountsResponse_"
 								}
 							}
 						}
@@ -9180,7 +11478,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PendingFollowerView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PendingFollowerView__"
 								}
 							}
 						}
@@ -9242,7 +11540,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -9279,7 +11577,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -9317,7 +11615,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -9355,7 +11653,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -9393,7 +11691,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_GetCommunityResponse_"
 								}
 							}
 						}
@@ -9431,7 +11729,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PersonResponse"
+									"$ref": "#/components/schemas/RequestState_PersonResponse_"
 								}
 							}
 						}
@@ -9469,7 +11767,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AddModToCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_AddModToCommunityResponse_"
 								}
 							}
 						}
@@ -9507,7 +11805,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -9552,7 +11850,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityReportResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityReportResponse_"
 								}
 							}
 						}
@@ -9589,7 +11887,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityReportResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityReportResponse_"
 								}
 							}
 						}
@@ -9627,7 +11925,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9662,7 +11960,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetPostResponse"
+									"$ref": "#/components/schemas/RequestState_GetPostResponse_"
 								}
 							}
 						}
@@ -9705,7 +12003,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9740,7 +12038,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9777,7 +12075,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9814,7 +12112,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9851,7 +12149,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9889,7 +12187,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -9919,14 +12217,14 @@
 		},
 		"/api/v4/post/mark_as_read/many": {
 			"post": {
-				"operationId": "MarkManyPostAsRead",
+				"operationId": "MarkManyPostsAsRead",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -9963,7 +12261,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -10000,7 +12298,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -10037,7 +12335,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -10075,7 +12373,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostView__"
 								}
 							}
 						}
@@ -10107,6 +12405,15 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/PaginationCursor"
+						}
+					},
+					{
+						"description": "Only show posts which have this tag",
+						"in": "query",
+						"name": "tag_id",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CommunityTagId"
 						}
 					},
 					{
@@ -10154,7 +12461,7 @@
 					{
 						"description": "If false, then show posts with media attached (even if your user setting is to hide them)",
 						"in": "query",
-						"name": "hide_media",
+						"name": "hide_posts_with_media",
 						"required": false,
 						"schema": {
 							"type": "boolean"
@@ -10272,7 +12579,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -10309,7 +12616,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_VoteView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_VoteView__"
 								}
 							}
 						}
@@ -10363,7 +12670,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostResponse"
+									"$ref": "#/components/schemas/RequestState_PostResponse_"
 								}
 							}
 						}
@@ -10400,7 +12707,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostReportResponse"
+									"$ref": "#/components/schemas/RequestState_PostReportResponse_"
 								}
 							}
 						}
@@ -10437,7 +12744,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PostReportResponse"
+									"$ref": "#/components/schemas/RequestState_PostReportResponse_"
 								}
 							}
 						}
@@ -10475,7 +12782,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetSiteMetadataResponse"
+									"$ref": "#/components/schemas/RequestState_GetSiteMetadataResponse_"
 								}
 							}
 						}
@@ -10512,7 +12819,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10547,7 +12854,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10582,7 +12889,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10617,7 +12924,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10654,7 +12961,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10692,7 +12999,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10730,7 +13037,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10766,7 +13073,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_VoteView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_VoteView__"
 								}
 							}
 						}
@@ -10820,7 +13127,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10857,7 +13164,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -10895,7 +13202,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_CommentView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_CommentView__"
 								}
 							}
 						}
@@ -11032,7 +13339,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_CommentSlimView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_CommentSlimView__"
 								}
 							}
 						}
@@ -11169,7 +13476,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentResponse"
+									"$ref": "#/components/schemas/RequestState_CommentResponse_"
 								}
 							}
 						}
@@ -11206,7 +13513,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentReportResponse"
+									"$ref": "#/components/schemas/RequestState_CommentReportResponse_"
 								}
 							}
 						}
@@ -11243,7 +13550,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommentReportResponse"
+									"$ref": "#/components/schemas/RequestState_CommentReportResponse_"
 								}
 							}
 						}
@@ -11281,7 +13588,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PrivateMessageResponse"
+									"$ref": "#/components/schemas/RequestState_PrivateMessageResponse_"
 								}
 							}
 						}
@@ -11316,7 +13623,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PrivateMessageResponse"
+									"$ref": "#/components/schemas/RequestState_PrivateMessageResponse_"
 								}
 							}
 						}
@@ -11351,7 +13658,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PrivateMessageResponse"
+									"$ref": "#/components/schemas/RequestState_PrivateMessageResponse_"
 								}
 							}
 						}
@@ -11388,7 +13695,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PrivateMessageReportResponse"
+									"$ref": "#/components/schemas/RequestState_PrivateMessageReportResponse_"
 								}
 							}
 						}
@@ -11425,7 +13732,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PrivateMessageReportResponse"
+									"$ref": "#/components/schemas/RequestState_PrivateMessageReportResponse_"
 								}
 							}
 						}
@@ -11463,7 +13770,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
+									"$ref": "#/components/schemas/RequestState_LoginResponse_"
 								}
 							}
 						}
@@ -11496,7 +13803,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
+									"$ref": "#/components/schemas/RequestState_LoginResponse_"
 								}
 							}
 						}
@@ -11529,7 +13836,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -11556,7 +13863,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetPersonDetailsResponse"
+									"$ref": "#/components/schemas/RequestState_GetPersonDetailsResponse_"
 								}
 							}
 						}
@@ -11602,7 +13909,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostCommentCombinedView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__"
 								}
 							}
 						}
@@ -11689,7 +13996,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -11726,7 +14033,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PersonView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PersonView__"
 								}
 							}
 						}
@@ -11804,7 +14111,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PersonResponse"
+									"$ref": "#/components/schemas/RequestState_PersonResponse_"
 								}
 							}
 						}
@@ -11834,14 +14141,14 @@
 		},
 		"/api/v4/admin/users": {
 			"get": {
-				"operationId": "ListUsers",
+				"operationId": "AdminListUsers",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_LocalUserView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_LocalUserView__"
 								}
 							}
 						}
@@ -11903,7 +14210,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PersonResponse"
+									"$ref": "#/components/schemas/RequestState_PersonResponse_"
 								}
 							}
 						}
@@ -11940,7 +14247,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetCaptchaResponse"
+									"$ref": "#/components/schemas/RequestState_GetCaptchaResponse_"
 								}
 							}
 						}
@@ -11956,14 +14263,14 @@
 		},
 		"/api/v4/account/auth/password_reset": {
 			"post": {
-				"operationId": "PasswordReset",
+				"operationId": "ResetPassword",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -11984,7 +14291,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/PasswordReset"
+								"$ref": "#/components/schemas/ResetPassword"
 							}
 						}
 					}
@@ -11993,14 +14300,14 @@
 		},
 		"/api/v4/account/auth/password_change": {
 			"post": {
-				"operationId": "PasswordChangeAfterReset",
+				"operationId": "ChangePasswordAfterReset",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12021,7 +14328,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/PasswordChangeAfterReset"
+								"$ref": "#/components/schemas/ChangePasswordAfterReset"
 							}
 						}
 					}
@@ -12037,7 +14344,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12064,7 +14371,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12101,7 +14408,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12138,7 +14445,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
+									"$ref": "#/components/schemas/RequestState_LoginResponse_"
 								}
 							}
 						}
@@ -12175,7 +14482,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_NotificationView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_NotificationView__"
 								}
 							}
 						}
@@ -12244,7 +14551,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12277,7 +14584,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12310,7 +14617,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostCommentCombinedView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__"
 								}
 							}
 						}
@@ -12345,6 +14652,14 @@
 					},
 					{
 						"in": "query",
+						"name": "search_term",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "type_",
 						"required": false,
 						"schema": {
@@ -12363,7 +14678,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostView__"
 								}
 							}
 						}
@@ -12408,7 +14723,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostView__"
 								}
 							}
 						}
@@ -12453,7 +14768,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_PostCommentCombinedView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__"
 								}
 							}
 						}
@@ -12514,7 +14829,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AddAdminResponse"
+									"$ref": "#/components/schemas/RequestState_AddAdminResponse_"
 								}
 							}
 						}
@@ -12551,7 +14866,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_RegistrationApplicationView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_RegistrationApplicationView__"
 								}
 							}
 						}
@@ -12605,7 +14920,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RegistrationApplicationResponse"
+									"$ref": "#/components/schemas/RequestState_RegistrationApplicationResponse_"
 								}
 							}
 						}
@@ -12642,7 +14957,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/RegistrationApplicationResponse"
+									"$ref": "#/components/schemas/RequestState_RegistrationApplicationResponse_"
 								}
 							}
 						}
@@ -12678,7 +14993,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12715,7 +15030,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12752,7 +15067,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12789,7 +15104,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12826,7 +15141,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CustomEmojiResponse"
+									"$ref": "#/components/schemas/RequestState_CustomEmojiResponse_"
 								}
 							}
 						}
@@ -12861,7 +15176,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CustomEmojiResponse"
+									"$ref": "#/components/schemas/RequestState_CustomEmojiResponse_"
 								}
 							}
 						}
@@ -12898,7 +15213,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -12935,7 +15250,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ListCustomEmojisResponse"
+									"$ref": "#/components/schemas/RequestState_ListCustomEmojisResponse_"
 								}
 							}
 						}
@@ -12972,7 +15287,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/TaglineResponse"
+									"$ref": "#/components/schemas/RequestState_TaglineResponse_"
 								}
 							}
 						}
@@ -13008,7 +15323,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/TaglineResponse"
+									"$ref": "#/components/schemas/RequestState_TaglineResponse_"
 								}
 							}
 						}
@@ -13044,7 +15359,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13082,7 +15397,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_Tagline_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_Tagline__"
 								}
 							}
 						}
@@ -13129,7 +15444,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityTag"
+									"$ref": "#/components/schemas/RequestState_CommunityTag_"
 								}
 							}
 						}
@@ -13164,7 +15479,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityTag"
+									"$ref": "#/components/schemas/RequestState_CommunityTag_"
 								}
 							}
 						}
@@ -13199,7 +15514,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityTag"
+									"$ref": "#/components/schemas/RequestState_CommunityTag_"
 								}
 							}
 						}
@@ -13236,7 +15551,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AdminOAuthProvider"
+									"$ref": "#/components/schemas/RequestState_AdminOAuthProvider_"
 								}
 							}
 						}
@@ -13272,7 +15587,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AdminOAuthProvider"
+									"$ref": "#/components/schemas/RequestState_AdminOAuthProvider_"
 								}
 							}
 						}
@@ -13308,7 +15623,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13346,7 +15661,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LoginResponse"
+									"$ref": "#/components/schemas/RequestState_LoginResponse_"
 								}
 							}
 						}
@@ -13384,7 +15699,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_FederatedInstanceView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_FederatedInstanceView__"
 								}
 							}
 						}
@@ -13441,7 +15756,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_ReportCombinedView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_ReportCombinedView__"
 								}
 							}
 						}
@@ -13493,6 +15808,15 @@
 						}
 					},
 					{
+						"description": "If this is None, then the default sort is Old / First In First Out if viewing unresolved\nreports, but new if viewing all reports. Setting this overrides the default.",
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ReportSortType"
+						}
+					},
+					{
 						"description": "if no community is given, it returns reports for all communities moderated by the auth user",
 						"in": "query",
 						"name": "community_id",
@@ -13540,7 +15864,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13578,7 +15902,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13616,7 +15940,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13653,7 +15977,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13690,7 +16014,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -13735,7 +16059,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13763,7 +16087,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -13808,7 +16132,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13836,7 +16160,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -13890,7 +16214,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -13928,7 +16252,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -13982,7 +16306,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14020,7 +16344,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -14065,7 +16389,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14093,7 +16417,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UploadImageResponse"
+									"$ref": "#/components/schemas/RequestState_UploadImageResponse_"
 								}
 							}
 						}
@@ -14138,7 +16462,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14166,7 +16490,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14189,7 +16513,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14216,7 +16540,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MultiCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_MultiCommunityResponse_"
 								}
 							}
 						}
@@ -14250,7 +16574,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MultiCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_MultiCommunityResponse_"
 								}
 							}
 						}
@@ -14284,7 +16608,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetMultiCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_GetMultiCommunityResponse_"
 								}
 							}
 						}
@@ -14323,7 +16647,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CommunityResponse"
+									"$ref": "#/components/schemas/RequestState_CommunityResponse_"
 								}
 							}
 						}
@@ -14357,7 +16681,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14393,7 +16717,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PagedResponse_MultiCommunityView_"
+									"$ref": "#/components/schemas/RequestState_PagedResponse_MultiCommunityView__"
 								}
 							}
 						}
@@ -14483,7 +16807,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MultiCommunityResponse"
+									"$ref": "#/components/schemas/RequestState_MultiCommunityResponse_"
 								}
 							}
 						}
@@ -14515,7 +16839,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14552,7 +16876,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse"
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
 								}
 							}
 						}
@@ -14580,6 +16904,123 @@
 				}
 			}
 		},
+		"/api/v4/account/invite": {
+			"post": {
+				"operationId": "CreateRegistrationInvitation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequestState_CreateInvitationResponse_"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Create a new registration invitation",
+				"tags": [
+					"Account"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateInvitation"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RevokeRegistrationInvitation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequestState_SuccessResponse_"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Revoke a previously created registration invitation",
+				"tags": [
+					"Account"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RevokeInvitation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v4/account/invite/list": {
+			"get": {
+				"operationId": "ListRegistrationInvitations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequestState_PagedResponse_LocalUserInvite__"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Revoke a previously created registration invitation",
+				"tags": [
+					"Account"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_cursor",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PaginationCursor"
+						}
+					}
+				]
+			}
+		},
 		"/nodeinfo/2.1": {
 			"get": {
 				"operationId": "Nodeinfo",
@@ -14589,7 +17030,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/NodeInfo"
+									"$ref": "#/components/schemas/RequestState_NodeInfo_"
 								}
 							}
 						}
@@ -14597,7 +17038,7 @@
 				},
 				"summary": "Metadata for the instance",
 				"tags": [
-					"Post"
+					"Site"
 				],
 				"security": [],
 				"parameters": []

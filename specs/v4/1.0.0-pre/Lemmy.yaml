@@ -6,6 +6,52 @@ components:
   requestBodies: {}
   responses: {}
   schemas:
+    EmptyRequestState:
+      properties:
+        state:
+          type: string
+          enum:
+            - empty
+          nullable: false
+      required:
+        - state
+      type: object
+    LoadingRequestState:
+      properties:
+        state:
+          type: string
+          enum:
+            - loading
+          nullable: false
+      required:
+        - state
+      type: object
+    Error:
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        stack:
+          type: string
+      required:
+        - name
+        - message
+      type: object
+      additionalProperties: false
+    FailedRequestState:
+      properties:
+        err:
+          $ref: '#/components/schemas/Error'
+        state:
+          type: string
+          enum:
+            - failed
+          nullable: false
+      required:
+        - err
+        - state
+      type: object
     SiteId:
       type: integer
       format: int64
@@ -84,6 +130,7 @@ components:
       enum:
         - closed
         - require_application
+        - require_invitation
         - open
       description: The registration mode for your site. Determines what happens after a user signs up.
     PostListingMode:
@@ -134,6 +181,10 @@ components:
       description: A mode for setting how pictrs handles images.
     LocalSite:
       properties:
+        max_invites_per_user_allowed:
+          type: integer
+          format: int64
+          description: How many active invite links a user can have
         image_upload_disabled:
           type: boolean
         image_allow_video_uploads:
@@ -284,6 +335,7 @@ components:
         id:
           $ref: '#/components/schemas/LocalSiteId'
       required:
+        - max_invites_per_user_allowed
         - image_upload_disabled
         - image_allow_video_uploads
         - image_max_upload_size
@@ -779,6 +831,29 @@ components:
         - site_view
       type: object
       description: An expanded response for a site.
+    SuccessRequestState_GetSiteResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetSiteResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetSiteResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetSiteResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     SiteResponse:
       properties:
         site_view:
@@ -787,8 +862,34 @@ components:
         - site_view
       type: object
       description: The response for a site.
+    SuccessRequestState_SiteResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SiteResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_SiteResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_SiteResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateSite:
       properties:
+        max_invites_per_user_allowed:
+          type: integer
+          format: int64
         image_upload_disabled:
           type: boolean
         image_allow_video_uploads:
@@ -926,6 +1027,9 @@ components:
       description: Creates a site. Should be done after first running lemmy.
     EditSite:
       properties:
+        max_invites_per_user_allowed:
+          type: integer
+          format: int64
         image_upload_disabled:
           type: boolean
         image_allow_video_uploads:
@@ -1121,6 +1225,29 @@ components:
       required:
         - totp_secret_url
       type: object
+    SuccessRequestState_GenerateTotpSecretResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GenerateTotpSecretResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GenerateTotpSecretResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GenerateTotpSecretResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     LocalUserId:
       type: integer
       format: int64
@@ -1134,6 +1261,11 @@ components:
       description: 'Lets you show votes for others only, show all votes, or hide all votes.'
     LocalUser:
       properties:
+        show_media:
+          type: boolean
+          description: Whether to show media in the UI.
+        invited_by_local_user_id:
+          $ref: '#/components/schemas/LocalUserId'
         default_items_per_page:
           type: integer
           format: int64
@@ -1151,9 +1283,9 @@ components:
           type: integer
           format: int64
           description: 'A default time range limit to apply to post sorts, in seconds.'
-        hide_media:
+        hide_posts_with_media:
           type: boolean
-          description: Whether to hide posts containing images/videos
+          description: Whether to hide posts containing images/videos. Often labeled hide_memes.
         auto_mark_fetched_posts_as_read:
           type: boolean
           description: Whether to automatically mark fetched posts as read.
@@ -1227,13 +1359,14 @@ components:
         id:
           $ref: '#/components/schemas/LocalUserId'
       required:
+        - show_media
         - default_items_per_page
         - show_person_votes
         - show_upvote_percentage
         - show_downvotes
         - show_upvotes
         - show_score
-        - hide_media
+        - hide_posts_with_media
         - auto_mark_fetched_posts_as_read
         - default_comment_sort_type
         - private_messages_enabled
@@ -1397,7 +1530,6 @@ components:
         - deleted
         - published_at
         - removed
-        - title
         - name
         - id
       type: object
@@ -1549,6 +1681,52 @@ components:
         - local_user_view
       type: object
       description: Your user info.
+    SuccessRequestState_MyUserInfo_:
+      properties:
+        data:
+          $ref: '#/components/schemas/MyUserInfo'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_MyUserInfo_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_MyUserInfo_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
+    SuccessRequestState_string_:
+      properties:
+        data:
+          type: string
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_string_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_string_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     SuccessResponse:
       properties:
         success:
@@ -1557,6 +1735,29 @@ components:
         - success
       type: object
       description: A response that completes successfully.
+    SuccessRequestState_SuccessResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SuccessResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_SuccessResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_SuccessResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     UserSettingsBackup:
       properties:
         discussion_languages:
@@ -1657,6 +1858,29 @@ components:
       required:
         - logins
       type: object
+    SuccessRequestState_ListLoginsResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ListLoginsResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_ListLoginsResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_ListLoginsResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     PostId:
       type: integer
       format: int64
@@ -1836,6 +2060,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_LocalImageView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_LocalImageView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_LocalImageView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_LocalImageView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListMediaI:
       properties:
         limit:
@@ -1860,6 +2107,29 @@ components:
       required:
         - enabled
       type: object
+    SuccessRequestState_EditTotpResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/EditTotpResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_EditTotpResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_EditTotpResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     EditTotp:
       properties:
         enabled:
@@ -1900,6 +2170,9 @@ components:
       description: A list of possible types for the various modlog actions.
     Modlog:
       properties:
+        child_count:
+          type: integer
+          format: int64
         bulk_action_parent_id:
           $ref: '#/components/schemas/ModlogId'
         published_at:
@@ -1915,6 +2188,7 @@ components:
         id:
           $ref: '#/components/schemas/ModlogId'
       required:
+        - child_count
         - published_at
         - is_revert
         - kind
@@ -2046,6 +2320,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_ModlogView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_ModlogView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_ModlogView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_ModlogView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ModlogKindFilter:
       anyOf:
         - $ref: '#/components/schemas/ModlogKind'
@@ -2412,6 +2709,10 @@ components:
             - $ref: '#/components/schemas/MultiCommunityView'
     SearchResponse:
       properties:
+        next_page:
+          $ref: '#/components/schemas/PaginationCursor'
+        prev_page:
+          $ref: '#/components/schemas/PaginationCursor'
         multi_communities:
           items:
             $ref: '#/components/schemas/MultiCommunityView'
@@ -2435,7 +2736,7 @@ components:
         resolve:
           $ref: '#/components/schemas/ResolveObjectView'
           description: |-
-            If `Search.q` contains an ActivityPub ID (eg `https://lemmy.world/comment/1`) or an
+            If `Search.search_term` contains an ActivityPub ID (eg `https://lemmy.world/comment/1`) or an
             identifier (eg `!fediverse@lemmy.ml`) then this field contains the resolved object.
             It should always be shown above other search results.
       required:
@@ -2446,6 +2747,29 @@ components:
         - comments
       type: object
       description: 'The search response, containing lists of the return type possibilities'
+    SuccessRequestState_SearchResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SearchResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_SearchResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_SearchResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     SearchType:
       type: string
       enum:
@@ -2461,6 +2785,8 @@ components:
         limit:
           type: integer
           format: int64
+        page_cursor:
+          $ref: '#/components/schemas/PaginationCursor'
         show_nsfw:
           type: boolean
           description: 'If true, then show the nsfw posts (even if your user setting is to hide them)'
@@ -2495,6 +2821,29 @@ components:
         - search_term
       type: object
       additionalProperties: false
+    SuccessRequestState_ResolveObjectView_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ResolveObjectView'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_ResolveObjectView_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_ResolveObjectView_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ResolveObjectI:
       properties:
         q:
@@ -2517,6 +2866,29 @@ components:
         - community_view
       type: object
       description: A simple community response.
+    SuccessRequestState_CommunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CommunityResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CommunityResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CommunityResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateCommunity:
       properties:
         visibility:
@@ -2531,12 +2903,6 @@ components:
         nsfw:
           type: boolean
           description: Whether its an NSFW community.
-        banner:
-          type: string
-          description: A banner URL.
-        icon:
-          type: string
-          description: An icon URL.
         summary:
           type: string
           description: 'A shorter, one line summary of your community.'
@@ -2550,7 +2916,6 @@ components:
           type: string
           description: The unique name.
       required:
-        - title
         - name
       type: object
       description: Create a community.
@@ -2574,6 +2939,29 @@ components:
         - community_view
       type: object
       description: The community response.
+    SuccessRequestState_GetCommunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetCommunityResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetCommunityResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetCommunityResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetCommunityI:
       properties:
         name:
@@ -2629,6 +3017,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_CommunityView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_CommunityView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_CommunityView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_CommunityView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CommunitySortType:
       type: string
       enum:
@@ -2705,6 +3116,29 @@ components:
         Contains the amount of unread items of various types. For normal users this means the number of
         unread notifications, mods and admins get additional unread counts for reports, registration
         applications and pending follows to private communities.
+    SuccessRequestState_UnreadCountsResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/UnreadCountsResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_UnreadCountsResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_UnreadCountsResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     PendingFollowerView:
       properties:
         follow_state:
@@ -2737,6 +3171,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_PendingFollowerView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_PendingFollowerView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_PendingFollowerView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_PendingFollowerView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListCommunityPendingFollowsI:
       properties:
         limit:
@@ -2833,6 +3290,29 @@ components:
         - person_view
       type: object
       description: A person response for actions done to a person.
+    SuccessRequestState_PersonResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/PersonResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PersonResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PersonResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     BanFromCommunity:
       properties:
         expires_at:
@@ -2872,6 +3352,29 @@ components:
         - moderators
       type: object
       description: The response of adding a moderator to a community.
+    SuccessRequestState_AddModToCommunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AddModToCommunityResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_AddModToCommunityResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_AddModToCommunityResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     AddModToCommunity:
       properties:
         added:
@@ -2932,7 +3435,6 @@ components:
         - published_at
         - resolved
         - reason
-        - original_community_title
         - original_community_name
         - community_id
         - creator_id
@@ -2979,6 +3481,29 @@ components:
         - community_report_view
       type: object
       description: A community report response.
+    SuccessRequestState_CommunityReportResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CommunityReportResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CommunityReportResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CommunityReportResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateCommunityReport:
       properties:
         reason:
@@ -3008,6 +3533,29 @@ components:
       required:
         - post_view
       type: object
+    SuccessRequestState_PostResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/PostResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PostResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PostResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreatePost:
       properties:
         scheduled_publish_time_at:
@@ -3062,6 +3610,29 @@ components:
         - post_view
       type: object
       description: The post response.
+    SuccessRequestState_GetPostResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetPostResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetPostResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetPostResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetPostI:
       properties:
         comment_id:
@@ -3244,6 +3815,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_PostView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_PostView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_PostView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_PostView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetPostsI:
       properties:
         limit:
@@ -3251,6 +3845,9 @@ components:
           format: int64
         page_cursor:
           $ref: '#/components/schemas/PaginationCursor'
+        tag_id:
+          $ref: '#/components/schemas/CommunityTagId'
+          description: Only show posts which have this tag
         search_url_only:
           type: boolean
         search_title_only:
@@ -3263,7 +3860,7 @@ components:
         mark_as_read:
           type: boolean
           description: Whether to automatically mark fetched posts as read.
-        hide_media:
+        hide_posts_with_media:
           type: boolean
           description: 'If false, then show posts with media attached (even if your user setting is to hide them)'
         show_nsfw:
@@ -3345,6 +3942,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_VoteView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_VoteView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_VoteView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_VoteView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListPostLikesI:
       properties:
         limit:
@@ -3415,6 +4035,8 @@ components:
       description: A post report.
     PostReportView:
       properties:
+        tags:
+          $ref: '#/components/schemas/CommunityTagsView'
         creator_community_ban_expires_at:
           type: string
         creator_banned_from_community:
@@ -3446,6 +4068,7 @@ components:
         post_report:
           $ref: '#/components/schemas/PostReport'
       required:
+        - tags
         - creator_banned_from_community
         - creator_banned
         - creator_is_moderator
@@ -3465,6 +4088,29 @@ components:
         - post_report_view
       type: object
       description: The post report response.
+    SuccessRequestState_PostReportResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/PostReportResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PostReportResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PostReportResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreatePostReport:
       properties:
         violates_instance_rules:
@@ -3526,6 +4172,29 @@ components:
         - metadata
       type: object
       description: The site metadata response.
+    SuccessRequestState_GetSiteMetadataResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetSiteMetadataResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetSiteMetadataResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetSiteMetadataResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetSiteMetadataI:
       properties:
         url:
@@ -3542,6 +4211,29 @@ components:
         - comment_view
       type: object
       description: A comment response.
+    SuccessRequestState_CommentResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CommentResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CommentResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CommentResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateComment:
       properties:
         language_id:
@@ -3676,6 +4368,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_CommentView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_CommentView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_CommentView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_CommentView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetCommentsI:
       properties:
         search_term:
@@ -3759,6 +4474,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_CommentSlimView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_CommentSlimView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_CommentSlimView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_CommentSlimView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetCommentI:
       properties:
         id:
@@ -3817,6 +4555,8 @@ components:
       description: A comment report.
     CommentReportView:
       properties:
+        tags:
+          $ref: '#/components/schemas/CommunityTagsView'
         creator_community_ban_expires_at:
           type: string
         creator_banned_from_community:
@@ -3850,6 +4590,7 @@ components:
         comment_report:
           $ref: '#/components/schemas/CommentReport'
       required:
+        - tags
         - creator_banned_from_community
         - creator_banned
         - creator_is_moderator
@@ -3870,6 +4611,29 @@ components:
         - comment_report_view
       type: object
       description: The comment report response.
+    SuccessRequestState_CommentReportResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CommentReportResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CommentReportResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CommentReportResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateCommentReport:
       properties:
         violates_instance_rules:
@@ -3960,6 +4724,29 @@ components:
         - private_message_view
       type: object
       description: A single private message response.
+    SuccessRequestState_PrivateMessageResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/PrivateMessageResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PrivateMessageResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PrivateMessageResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreatePrivateMessage:
       properties:
         recipient_id:
@@ -4063,6 +4850,29 @@ components:
         - private_message_report_view
       type: object
       description: A private message report response.
+    SuccessRequestState_PrivateMessageReportResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/PrivateMessageReportResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PrivateMessageReportResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PrivateMessageReportResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreatePrivateMessageReport:
       properties:
         reason:
@@ -4103,8 +4913,34 @@ components:
         - registration_created
       type: object
       description: A response for your login.
+    SuccessRequestState_LoginResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/LoginResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_LoginResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_LoginResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     Register:
       properties:
+        token:
+          type: string
+          description: Invitation token
         stay_logged_in:
           type: boolean
           description: 'If this is true the login is valid forever, otherwise it expires after one week.'
@@ -4178,6 +5014,29 @@ components:
         - person_view
       type: object
       description: A person's details response.
+    SuccessRequestState_GetPersonDetailsResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetPersonDetailsResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetPersonDetailsResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetPersonDetailsResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetPersonDetailsI:
       properties:
         username:
@@ -4228,6 +5087,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_PostCommentCombinedView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_PostCommentCombinedView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_PostCommentCombinedView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_PostCommentCombinedView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     PersonContentType:
       type: string
       enum:
@@ -4286,6 +5168,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_PersonView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_PersonView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_PersonView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_PersonView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     PersonListingType:
       type: string
       enum:
@@ -4360,6 +5265,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_LocalUserView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_LocalUserView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_LocalUserView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_LocalUserView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     LocalUserSortType:
       type: string
       enum:
@@ -4414,6 +5342,29 @@ components:
           description: Will be None if captchas are disabled.
       type: object
       description: A wrapper for the captcha response.
+    SuccessRequestState_GetCaptchaResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetCaptchaResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetCaptchaResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetCaptchaResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     DeleteAccount:
       properties:
         delete_content:
@@ -4425,7 +5376,7 @@ components:
         - password
       type: object
       description: Delete your account.
-    PasswordReset:
+    ResetPassword:
       properties:
         email:
           $ref: '#/components/schemas/SensitiveString'
@@ -4433,7 +5384,7 @@ components:
         - email
       type: object
       description: Reset your password via email.
-    PasswordChangeAfterReset:
+    ChangePasswordAfterReset:
       properties:
         password_verify:
           $ref: '#/components/schemas/SensitiveString'
@@ -4466,9 +5417,9 @@ components:
         show_person_votes:
           type: boolean
           description: Whether to show vote totals given to others.
-        hide_media:
+        hide_posts_with_media:
           type: boolean
-          description: Whether to hide posts containing images/videos.
+          description: Whether to hide posts containing images/videos. Often labeled hide_memes.
         auto_mark_fetched_posts_as_read:
           type: boolean
           description: Whether to automatically mark fetched posts as read.
@@ -4519,6 +5470,9 @@ components:
         send_notifications_to_email:
           type: boolean
           description: Sends notifications to your email.
+        show_media:
+          type: boolean
+          description: Whether to show media in the UI.
         show_avatars:
           type: boolean
           description: Whether to show or hide avatars.
@@ -4697,6 +5651,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_NotificationView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_NotificationView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_NotificationView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_NotificationView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     NotificationTypeFilter:
       anyOf:
         - $ref: '#/components/schemas/NotificationType'
@@ -4742,6 +5719,8 @@ components:
           format: int64
         page_cursor:
           $ref: '#/components/schemas/PaginationCursor'
+        search_term:
+          type: string
         type_:
           $ref: '#/components/schemas/PersonContentType'
       type: object
@@ -4794,6 +5773,29 @@ components:
         - admins
       type: object
       description: The response of current admins.
+    SuccessRequestState_AddAdminResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AddAdminResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_AddAdminResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_AddAdminResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     AddAdmin:
       properties:
         added:
@@ -4865,6 +5867,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_RegistrationApplicationView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_RegistrationApplicationView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_RegistrationApplicationView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_RegistrationApplicationView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListRegistrationApplicationsI:
       properties:
         limit:
@@ -4885,6 +5910,29 @@ components:
         - registration_application
       type: object
       description: The response of an action done to a registration application.
+    SuccessRequestState_RegistrationApplicationResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/RegistrationApplicationResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_RegistrationApplicationResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_RegistrationApplicationResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ApproveRegistrationApplication:
       properties:
         deny_reason:
@@ -5011,6 +6059,29 @@ components:
         - custom_emoji
       type: object
       description: A response for a custom emoji.
+    SuccessRequestState_CustomEmojiResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CustomEmojiResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CustomEmojiResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CustomEmojiResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateCustomEmoji:
       properties:
         keywords:
@@ -5071,6 +6142,29 @@ components:
         - custom_emojis
       type: object
       description: A response for custom emojis.
+    SuccessRequestState_ListCustomEmojisResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ListCustomEmojisResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_ListCustomEmojisResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_ListCustomEmojisResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListCustomEmojisI:
       properties:
         category:
@@ -5084,6 +6178,29 @@ components:
       required:
         - tagline
       type: object
+    SuccessRequestState_TaglineResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TaglineResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_TaglineResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_TaglineResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateTagline:
       properties:
         content:
@@ -5128,6 +6245,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_Tagline__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_Tagline_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_Tagline__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_Tagline__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ListTaglinesI:
       properties:
         limit:
@@ -5137,6 +6277,29 @@ components:
           $ref: '#/components/schemas/PaginationCursor'
       type: object
       additionalProperties: false
+    SuccessRequestState_CommunityTag_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CommunityTag'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CommunityTag_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CommunityTag_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateCommunityTag:
       properties:
         color:
@@ -5179,6 +6342,29 @@ components:
         - tag_id
       type: object
       description: Delete a community tag.
+    SuccessRequestState_AdminOAuthProvider_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AdminOAuthProvider'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_AdminOAuthProvider_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_AdminOAuthProvider_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateOAuthProvider:
       properties:
         enabled:
@@ -5359,6 +6545,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_FederatedInstanceView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_FederatedInstanceView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_FederatedInstanceView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_FederatedInstanceView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetFederatedInstancesKind:
       type: string
       enum:
@@ -5444,6 +6653,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_ReportCombinedView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_ReportCombinedView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_ReportCombinedView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_ReportCombinedView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     ReportType:
       type: string
       enum:
@@ -5453,6 +6685,13 @@ components:
         - private_messages
         - communities
       description: A list of possible types for reports.
+    ReportSortType:
+      type: string
+      enum:
+        - default
+        - new
+        - old
+      description: The Report sort type.
     ListReportsI:
       properties:
         my_reports_only:
@@ -5466,6 +6705,11 @@ components:
           format: int64
         page_cursor:
           $ref: '#/components/schemas/PaginationCursor'
+        sort:
+          $ref: '#/components/schemas/ReportSortType'
+          description: |-
+            If this is None, then the default sort is Old / First In First Out if viewing unresolved
+            reports, but new if viewing all reports. Setting this overrides the default.
         community_id:
           $ref: '#/components/schemas/CommunityId'
           description: 'if no community is given, it returns reports for all communities moderated by the auth user'
@@ -5545,6 +6789,29 @@ components:
         - filename
         - image_url
       type: object
+    SuccessRequestState_UploadImageResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/UploadImageResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_UploadImageResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_UploadImageResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CommunityIdQueryI:
       properties:
         id:
@@ -5570,6 +6837,29 @@ components:
       required:
         - multi_community_view
       type: object
+    SuccessRequestState_MultiCommunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/MultiCommunityResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_MultiCommunityResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_MultiCommunityResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     CreateMultiCommunity:
       properties:
         sidebar:
@@ -5610,6 +6900,29 @@ components:
         - communities
         - multi_community_view
       type: object
+    SuccessRequestState_GetMultiCommunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/GetMultiCommunityResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_GetMultiCommunityResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_GetMultiCommunityResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     GetMultiCommunityI:
       properties:
         name:
@@ -5645,6 +6958,29 @@ components:
         This response contains only a single page of items. To get the next page, take the
         cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
         parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_MultiCommunityView__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_MultiCommunityView_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_MultiCommunityView__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_MultiCommunityView__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
     MultiCommunityListingType:
       type: string
       enum:
@@ -5719,6 +7055,129 @@ components:
         - post_id
       type: object
       description: Change notification settings for a post
+    InvitationId:
+      type: integer
+      format: int64
+      description: The invitation id.
+    LocalUserInvite:
+      properties:
+        published_at:
+          type: string
+        expires_at:
+          type: string
+        uses_count:
+          type: integer
+          format: int64
+        max_uses:
+          type: integer
+          format: int64
+        local_user_id:
+          $ref: '#/components/schemas/LocalUserId'
+        token:
+          type: string
+        id:
+          $ref: '#/components/schemas/InvitationId'
+      required:
+        - published_at
+        - uses_count
+        - local_user_id
+        - token
+        - id
+      type: object
+    CreateInvitationResponse:
+      properties:
+        invite:
+          $ref: '#/components/schemas/LocalUserInvite'
+      required:
+        - invite
+      type: object
+    SuccessRequestState_CreateInvitationResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/CreateInvitationResponse'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_CreateInvitationResponse_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_CreateInvitationResponse_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
+    CreateInvitation:
+      properties:
+        expires_at:
+          type: string
+        max_uses:
+          type: integer
+          format: int64
+      type: object
+    RevokeInvitation:
+      properties:
+        token:
+          type: string
+      required:
+        - token
+      type: object
+    PagedResponse_LocalUserInvite_:
+      properties:
+        prev_page:
+          $ref: '#/components/schemas/PaginationCursor'
+        next_page:
+          $ref: '#/components/schemas/PaginationCursor'
+        items:
+          items:
+            $ref: '#/components/schemas/LocalUserInvite'
+          type: array
+      required:
+        - items
+      type: object
+      description: |-
+        This response contains only a single page of items. To get the next page, take the
+        cursor string from `next_page` and pass it to the same API endpoint via `page_cursor`
+        parameter. For going to the previous page, use `prev_page` instead.
+    SuccessRequestState_PagedResponse_LocalUserInvite__:
+      properties:
+        data:
+          $ref: '#/components/schemas/PagedResponse_LocalUserInvite_'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_PagedResponse_LocalUserInvite__:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_PagedResponse_LocalUserInvite__'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
+    ListInvitationsI:
+      properties:
+        limit:
+          type: integer
+          format: int64
+        page_cursor:
+          $ref: '#/components/schemas/PaginationCursor'
+      type: object
+      additionalProperties: false
     NodeInfoSoftware:
       properties:
         homepage:
@@ -5788,6 +7247,29 @@ components:
           type: string
       type: object
       description: 'Nodeinfo spec: http://nodeinfo.diaspora.software/docson/index.html#/ns/schema/2.1'
+    SuccessRequestState_NodeInfo_:
+      properties:
+        data:
+          $ref: '#/components/schemas/NodeInfo'
+        state:
+          type: string
+          enum:
+            - success
+          nullable: false
+      required:
+        - data
+        - state
+      type: object
+    RequestState_NodeInfo_:
+      anyOf:
+        - $ref: '#/components/schemas/EmptyRequestState'
+        - $ref: '#/components/schemas/LoadingRequestState'
+        - $ref: '#/components/schemas/FailedRequestState'
+        - $ref: '#/components/schemas/SuccessRequestState_NodeInfo_'
+      description: |-
+        Shows the state of an API request.
+
+        Can be empty, loading, failed, or success
   securitySchemes:
     bearerAuth:
       type: http
@@ -5814,7 +7296,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetSiteResponse'
+                $ref: '#/components/schemas/RequestState_GetSiteResponse_'
       summary: 'Gets the site, and your user data.'
       tags:
         - Site
@@ -5830,7 +7312,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteResponse'
+                $ref: '#/components/schemas/RequestState_SiteResponse_'
       summary: Create your site.
       tags:
         - Site
@@ -5851,7 +7333,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SiteResponse'
+                $ref: '#/components/schemas/RequestState_SiteResponse_'
       summary: Edit your site.
       tags:
         - Site
@@ -5873,7 +7355,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetSiteResponse'
+                $ref: '#/components/schemas/RequestState_GetSiteResponse_'
       summary: Leave the Site admins.
       tags:
         - Admin
@@ -5889,7 +7371,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenerateTotpSecretResponse'
+                $ref: '#/components/schemas/RequestState_GenerateTotpSecretResponse_'
       summary: |-
         Generate a TOTP / two-factor secret.
 
@@ -5909,7 +7391,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MyUserInfo'
+                $ref: '#/components/schemas/RequestState_MyUserInfo_'
       summary: Get data of current user.
       tags:
         - Account
@@ -5924,7 +7406,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete your account.
       tags:
         - Account
@@ -5946,7 +7428,7 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/RequestState_string_'
       summary: |-
         Export a backup of your user settings.
 
@@ -5966,7 +7448,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Import a backup of your user settings.
       tags:
         - Account
@@ -5988,7 +7470,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListLoginsResponse'
+                $ref: '#/components/schemas/RequestState_ListLoginsResponse_'
       summary: List login tokens for your user
       tags:
         - Account
@@ -6004,7 +7486,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Returns an error message if your auth token is invalid
       tags:
         - Account
@@ -6020,7 +7502,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_LocalImageView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_LocalImageView__'
       summary: List all the media for your account.
       tags:
         - Account
@@ -6048,7 +7530,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete media for your account.
       tags:
         - Account
@@ -6064,14 +7546,14 @@ paths:
               $ref: '#/components/schemas/DeleteImageParamsI'
   /api/v4/image:
     delete:
-      operationId: DeleteMediaAdmin
+      operationId: AdminDeleteMedia
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete any media. (Admin only)
       tags:
         - Admin
@@ -6093,7 +7575,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload an image to the server.
       tags:
         - Media
@@ -6114,14 +7596,14 @@ paths:
                 - image
   /api/v4/image/list:
     get:
-      operationId: ListMediaAdmin
+      operationId: AdminListMedia
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_LocalImageView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_LocalImageView__'
       summary: List all the media known to your instance.
       tags:
         - Admin
@@ -6149,7 +7631,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditTotpResponse'
+                $ref: '#/components/schemas/RequestState_EditTotpResponse_'
       summary: |-
         Enable / Disable TOTP / two-factor authentication.
 
@@ -6176,7 +7658,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_ModlogView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_ModlogView__'
       summary: Get the modlog.
       tags:
         - Miscellaneous
@@ -6260,7 +7742,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResponse'
+                $ref: '#/components/schemas/RequestState_SearchResponse_'
       summary: 'Search lemmy. If `search_term` is a url it also attempts to fetch it, just like `resolve_object`.'
       tags:
         - Miscellaneous
@@ -6274,6 +7756,11 @@ paths:
           schema:
             format: int64
             type: integer
+        - in: query
+          name: page_cursor
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaginationCursor'
         - description: 'If true, then show the nsfw posts (even if your user setting is to hide them)'
           in: query
           name: show_nsfw
@@ -6346,7 +7833,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResolveObjectView'
+                $ref: '#/components/schemas/RequestState_ResolveObjectView_'
       summary: Fetch a non-local / federated object.
       tags:
         - Miscellaneous
@@ -6369,7 +7856,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Create a new community.
       tags:
         - Community
@@ -6390,7 +7877,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCommunityResponse'
+                $ref: '#/components/schemas/RequestState_GetCommunityResponse_'
       summary: Get / fetch a community.
       tags:
         - Community
@@ -6417,7 +7904,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Edit a community.
       tags:
         - Community
@@ -6438,7 +7925,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Delete a community.
       tags:
         - Community
@@ -6460,7 +7947,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_CommunityView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_CommunityView__'
       summary: 'List communities, with various filters.'
       tags:
         - Community
@@ -6527,7 +8014,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Follow / subscribe to a community.
       tags:
         - Community
@@ -6549,7 +8036,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnreadCountsResponse'
+                $ref: '#/components/schemas/RequestState_UnreadCountsResponse_'
       summary: |-
         Returns the amount of unread items of various types. For normal users this means * the number of unread notifications, mods and admins get additional unread counts for
         reports, registration applications and pending follows to private communities.
@@ -6567,7 +8054,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PendingFollowerView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PendingFollowerView__'
       summary: Get a community's pending followers.
       tags:
         - Community
@@ -6605,7 +8092,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Approve a community pending follow request.
       tags:
         - Community
@@ -6627,7 +8114,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Block a community.
       tags:
         - Account
@@ -6650,7 +8137,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Hide a community from public / "All" view. Admins only.
       tags:
         - Community
@@ -6673,7 +8160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: A moderator remove for a community.
       tags:
         - Community
@@ -6696,7 +8183,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCommunityResponse'
+                $ref: '#/components/schemas/RequestState_GetCommunityResponse_'
       summary: Transfer your community to an existing moderator.
       tags:
         - Community
@@ -6719,7 +8206,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonResponse'
+                $ref: '#/components/schemas/RequestState_PersonResponse_'
       summary: Ban a user from a community.
       tags:
         - Community
@@ -6742,7 +8229,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddModToCommunityResponse'
+                $ref: '#/components/schemas/RequestState_AddModToCommunityResponse_'
       summary: Add a moderator to your community.
       tags:
         - Community
@@ -6765,7 +8252,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       summary: Get a random community.
       tags:
         - Community
@@ -6792,7 +8279,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityReportResponse'
+                $ref: '#/components/schemas/RequestState_CommunityReportResponse_'
       summary: Create a report for a community.
       tags:
         - Community
@@ -6814,7 +8301,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityReportResponse'
+                $ref: '#/components/schemas/RequestState_CommunityReportResponse_'
       summary: Resolve a report for a private message.
       tags:
         - Community
@@ -6837,7 +8324,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Create a post.
       tags:
         - Post
@@ -6858,7 +8345,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPostResponse'
+                $ref: '#/components/schemas/RequestState_GetPostResponse_'
       summary: Get / fetch a post.
       tags:
         - Post
@@ -6884,7 +8371,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Edit a post.
       tags:
         - Post
@@ -6905,7 +8392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Delete a post.
       tags:
         - Post
@@ -6927,7 +8414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Mods can change nsfw flag and tags for a post
       tags:
         - Post
@@ -6949,7 +8436,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Creates a warning against a post and notifies the user.
       tags:
         - Post
@@ -6971,7 +8458,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: A moderator remove for a post.
       tags:
         - Post
@@ -6994,7 +8481,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Mark a post as read.
       tags:
         - Post
@@ -7009,14 +8496,14 @@ paths:
               $ref: '#/components/schemas/MarkPostAsRead'
   /api/v4/post/mark_as_read/many:
     post:
-      operationId: MarkManyPostAsRead
+      operationId: MarkManyPostsAsRead
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Mark multiple posts as read.
       tags:
         - Post
@@ -7038,7 +8525,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Hide a post from list views.
       tags:
         - Post
@@ -7060,7 +8547,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: A moderator can lock a post ( IE disable new comments ).
       tags:
         - Post
@@ -7082,7 +8569,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: A moderator can feature a community post ( IE stick it to the top of a community ).
       tags:
         - Post
@@ -7105,7 +8592,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostView__'
       summary: 'Get / fetch posts, with various filters.'
       tags:
         - Post
@@ -7124,6 +8611,12 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/PaginationCursor'
+        - description: Only show posts which have this tag
+          in: query
+          name: tag_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/CommunityTagId'
         - in: query
           name: search_url_only
           required: false
@@ -7153,7 +8646,7 @@ paths:
             type: boolean
         - description: 'If false, then show posts with media attached (even if your user setting is to hide them)'
           in: query
-          name: hide_media
+          name: hide_posts_with_media
           required: false
           schema:
             type: boolean
@@ -7233,7 +8726,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Like / vote on a post.
       tags:
         - Post
@@ -7255,7 +8748,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_VoteView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_VoteView__'
       summary: List a post's likes. Admin-only.
       tags:
         - Post
@@ -7288,7 +8781,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostResponse'
+                $ref: '#/components/schemas/RequestState_PostResponse_'
       summary: Save a post.
       tags:
         - Post
@@ -7310,7 +8803,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostReportResponse'
+                $ref: '#/components/schemas/RequestState_PostReportResponse_'
       summary: Report a post.
       tags:
         - Post
@@ -7332,7 +8825,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PostReportResponse'
+                $ref: '#/components/schemas/RequestState_PostReportResponse_'
       summary: Resolve a post report. Only a mod can do this.
       tags:
         - Post
@@ -7355,7 +8848,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetSiteMetadataResponse'
+                $ref: '#/components/schemas/RequestState_GetSiteMetadataResponse_'
       summary: Fetch metadata for any given site.
       tags:
         - Miscellaneous
@@ -7377,7 +8870,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Create a comment.
       tags:
         - Comment
@@ -7398,7 +8891,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Edit a comment.
       tags:
         - Comment
@@ -7419,7 +8912,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Delete a comment.
       tags:
         - Comment
@@ -7440,7 +8933,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Get / fetch comment.
       tags:
         - Comment
@@ -7462,7 +8955,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: A moderator remove for a comment.
       tags:
         - Comment
@@ -7485,7 +8978,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: A moderator can lock a comment (IE disable replies).
       tags:
         - Comment
@@ -7508,7 +9001,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       tags:
         - Comment
       security:
@@ -7529,7 +9022,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_VoteView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_VoteView__'
       summary: List a comment's likes. Admin-only.
       tags:
         - Comment
@@ -7562,7 +9055,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Save a comment.
       tags:
         - Comment
@@ -7584,7 +9077,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Distinguishes a comment (speak as moderator)
       tags:
         - Comment
@@ -7607,7 +9100,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_CommentView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_CommentView__'
       summary: Get / fetch comments.
       tags:
         - Comment
@@ -7695,7 +9188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_CommentSlimView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_CommentSlimView__'
       summary: 'Get / fetch comments, but without the post or community.'
       tags:
         - Comment
@@ -7783,7 +9276,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                $ref: '#/components/schemas/RequestState_CommentResponse_'
       summary: Creates a warning against a comment and notifies the user.
       tags:
         - Comment
@@ -7805,7 +9298,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentReportResponse'
+                $ref: '#/components/schemas/RequestState_CommentReportResponse_'
       summary: Report a comment.
       tags:
         - Comment
@@ -7827,7 +9320,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentReportResponse'
+                $ref: '#/components/schemas/RequestState_CommentReportResponse_'
       summary: Resolve a comment report. Only a mod can do this.
       tags:
         - Comment
@@ -7850,7 +9343,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateMessageResponse'
+                $ref: '#/components/schemas/RequestState_PrivateMessageResponse_'
       summary: Create a private message.
       tags:
         - PrivateMessage
@@ -7871,7 +9364,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateMessageResponse'
+                $ref: '#/components/schemas/RequestState_PrivateMessageResponse_'
       summary: Edit a private message.
       tags:
         - PrivateMessage
@@ -7892,7 +9385,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateMessageResponse'
+                $ref: '#/components/schemas/RequestState_PrivateMessageResponse_'
       summary: Delete a private message.
       tags:
         - PrivateMessage
@@ -7914,7 +9407,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateMessageReportResponse'
+                $ref: '#/components/schemas/RequestState_PrivateMessageReportResponse_'
       summary: Create a report for a private message.
       tags:
         - PrivateMessage
@@ -7936,7 +9429,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PrivateMessageReportResponse'
+                $ref: '#/components/schemas/RequestState_PrivateMessageReportResponse_'
       summary: Resolve a report for a private message.
       tags:
         - PrivateMessage
@@ -7959,7 +9452,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/RequestState_LoginResponse_'
       summary: Register a new user.
       tags:
         - Account
@@ -7980,7 +9473,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/RequestState_LoginResponse_'
       summary: Log into lemmy.
       tags:
         - Account
@@ -8001,7 +9494,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Invalidate the currently used auth token.
       tags:
         - Account
@@ -8017,7 +9510,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPersonDetailsResponse'
+                $ref: '#/components/schemas/RequestState_GetPersonDetailsResponse_'
       summary: Get the details for a person.
       tags:
         - Person
@@ -8045,7 +9538,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostCommentCombinedView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__'
       summary: List the content for a person.
       tags:
         - Person
@@ -8099,7 +9592,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Make a note for a person.
       tags:
         - Person
@@ -8121,7 +9614,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PersonView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PersonView__'
       summary: List persons.
       tags:
         - Person
@@ -8169,7 +9662,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonResponse'
+                $ref: '#/components/schemas/RequestState_PersonResponse_'
       summary: Ban a person from your site.
       tags:
         - Admin
@@ -8184,14 +9677,14 @@ paths:
               $ref: '#/components/schemas/BanPerson'
   /api/v4/admin/users:
     get:
-      operationId: ListUsers
+      operationId: AdminListUsers
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_LocalUserView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_LocalUserView__'
       summary: Get a list of users.
       tags:
         - Admin
@@ -8229,7 +9722,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonResponse'
+                $ref: '#/components/schemas/RequestState_PersonResponse_'
       summary: Block a person.
       tags:
         - Account
@@ -8251,7 +9744,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetCaptchaResponse'
+                $ref: '#/components/schemas/RequestState_GetCaptchaResponse_'
       summary: Fetch a Captcha.
       tags:
         - Account
@@ -8259,14 +9752,14 @@ paths:
       parameters: []
   /api/v4/account/auth/password_reset:
     post:
-      operationId: PasswordReset
+      operationId: ResetPassword
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Reset your password.
       tags:
         - Account
@@ -8278,17 +9771,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordReset'
+              $ref: '#/components/schemas/ResetPassword'
   /api/v4/account/auth/password_change:
     post:
-      operationId: PasswordChangeAfterReset
+      operationId: ChangePasswordAfterReset
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Change your password from an email / token based reset.
       tags:
         - Account
@@ -8300,7 +9793,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordChangeAfterReset'
+              $ref: '#/components/schemas/ChangePasswordAfterReset'
   /api/v4/account/notification/mark_as_read/all:
     post:
       operationId: MarkAllNotificationsAsRead
@@ -8310,7 +9803,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Mark all notifications as read.
       tags:
         - Account
@@ -8326,7 +9819,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Mark a notification as read.
       tags:
         - Account
@@ -8348,7 +9841,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Save your user settings.
       tags:
         - Account
@@ -8370,7 +9863,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/RequestState_LoginResponse_'
       summary: Change your user password.
       tags:
         - Account
@@ -8392,7 +9885,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_NotificationView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_NotificationView__'
       summary: 'Get your inbox (replies, comment mentions, post mentions, and messages)'
       tags:
         - Account
@@ -8434,7 +9927,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Verify your email
       tags:
         - Account
@@ -8455,7 +9948,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Resend a verification email.
       tags:
         - Account
@@ -8476,7 +9969,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostCommentCombinedView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__'
       summary: List your saved content.
       tags:
         - Account
@@ -8495,6 +9988,11 @@ paths:
           schema:
             $ref: '#/components/schemas/PaginationCursor'
         - in: query
+          name: search_term
+          required: false
+          schema:
+            type: string
+        - in: query
           name: type_
           required: false
           schema:
@@ -8508,7 +10006,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostView__'
       summary: List your read content.
       tags:
         - Account
@@ -8535,7 +10033,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostView__'
       summary: List your hidden content.
       tags:
         - Account
@@ -8562,7 +10060,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_PostCommentCombinedView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_PostCommentCombinedView__'
       summary: List your liked content.
       tags:
         - Account
@@ -8599,7 +10097,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddAdminResponse'
+                $ref: '#/components/schemas/RequestState_AddAdminResponse_'
       summary: Add an admin to your site.
       tags:
         - Admin
@@ -8621,7 +10119,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_RegistrationApplicationView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_RegistrationApplicationView__'
       summary: List the registration applications.
       tags:
         - Admin
@@ -8654,7 +10152,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationApplicationResponse'
+                $ref: '#/components/schemas/RequestState_RegistrationApplicationResponse_'
       summary: Approve a registration application
       tags:
         - Admin
@@ -8676,7 +10174,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationApplicationResponse'
+                $ref: '#/components/schemas/RequestState_RegistrationApplicationResponse_'
       summary: Get the application a user submitted when they first registered their account
       tags:
         - Admin
@@ -8697,7 +10195,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Purge / Delete a person from the database.
       tags:
         - Admin
@@ -8719,7 +10217,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Purge / Delete a community from the database.
       tags:
         - Admin
@@ -8741,7 +10239,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Purge / Delete a post from the database.
       tags:
         - Admin
@@ -8763,7 +10261,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Purge / Delete a comment from the database.
       tags:
         - Admin
@@ -8785,7 +10283,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomEmojiResponse'
+                $ref: '#/components/schemas/RequestState_CustomEmojiResponse_'
       summary: Create a new custom emoji.
       tags:
         - CustomEmoji
@@ -8806,7 +10304,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomEmojiResponse'
+                $ref: '#/components/schemas/RequestState_CustomEmojiResponse_'
       summary: Edit an existing custom emoji.
       tags:
         - CustomEmoji
@@ -8828,7 +10326,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete a custom emoji.
       tags:
         - CustomEmoji
@@ -8850,7 +10348,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListCustomEmojisResponse'
+                $ref: '#/components/schemas/RequestState_ListCustomEmojisResponse_'
       summary: List custom emojis
       tags:
         - CustomEmoji
@@ -8872,7 +10370,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaglineResponse'
+                $ref: '#/components/schemas/RequestState_TaglineResponse_'
       summary: Create a new tagline
       tags:
         - Admin
@@ -8894,7 +10392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaglineResponse'
+                $ref: '#/components/schemas/RequestState_TaglineResponse_'
       summary: Edit an existing tagline
       tags:
         - Admin
@@ -8916,7 +10414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete a tagline
       tags:
         - Admin
@@ -8939,7 +10437,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_Tagline_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_Tagline__'
       summary: List taglines.
       tags:
         - Admin
@@ -8968,7 +10466,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityTag'
+                $ref: '#/components/schemas/RequestState_CommunityTag_'
       summary: Create a community post tag.
       tags:
         - Community
@@ -8989,7 +10487,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityTag'
+                $ref: '#/components/schemas/RequestState_CommunityTag_'
       summary: Edit a community post tag.
       tags:
         - Community
@@ -9010,7 +10508,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityTag'
+                $ref: '#/components/schemas/RequestState_CommunityTag_'
       summary: Delete a post tag in a community.
       tags:
         - Community
@@ -9032,7 +10530,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminOAuthProvider'
+                $ref: '#/components/schemas/RequestState_AdminOAuthProvider_'
       summary: Create a new oauth provider method
       tags:
         - Miscellaneous
@@ -9054,7 +10552,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminOAuthProvider'
+                $ref: '#/components/schemas/RequestState_AdminOAuthProvider_'
       summary: Edit an existing oauth provider method
       tags:
         - Miscellaneous
@@ -9076,7 +10574,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete an oauth provider method
       tags:
         - Miscellaneous
@@ -9099,7 +10597,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/RequestState_LoginResponse_'
       summary: Authenticate with OAuth
       tags:
         - Miscellaneous
@@ -9122,7 +10620,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_FederatedInstanceView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_FederatedInstanceView__'
       summary: Fetch federated instances.
       tags:
         - Miscellaneous
@@ -9158,7 +10656,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_ReportCombinedView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_ReportCombinedView__'
       summary: List user reports.
       tags:
         - Admin
@@ -9188,6 +10686,14 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/PaginationCursor'
+        - description: |-
+            If this is None, then the default sort is Old / First In First Out if viewing unresolved
+            reports, but new if viewing all reports. Setting this overrides the default.
+          in: query
+          name: sort
+          required: false
+          schema:
+            $ref: '#/components/schemas/ReportSortType'
         - description: 'if no community is given, it returns reports for all communities moderated by the auth user'
           in: query
           name: community_id
@@ -9221,7 +10727,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Block an instance's communities as a user.
       tags:
         - Account
@@ -9244,7 +10750,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Block an instance's persons as a user.
       tags:
         - Account
@@ -9267,7 +10773,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Globally block an instance as admin.
       tags:
         - Admin
@@ -9289,7 +10795,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Globally allow an instance as admin.
       tags:
         - Admin
@@ -9311,7 +10817,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new user avatar.
       tags:
         - Account
@@ -9339,7 +10845,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the user avatar.
       tags:
         - Account
@@ -9356,7 +10862,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new user banner.
       tags:
         - Account
@@ -9384,7 +10890,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the user banner.
       tags:
         - Account
@@ -9401,7 +10907,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new community icon.
       tags:
         - Community
@@ -9434,7 +10940,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the community icon.
       tags:
         - Community
@@ -9457,7 +10963,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new community banner.
       tags:
         - Community
@@ -9490,7 +10996,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the community banner.
       tags:
         - Community
@@ -9513,7 +11019,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new site icon.
       tags:
         - Site
@@ -9541,7 +11047,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the site icon.
       tags:
         - Site
@@ -9558,7 +11064,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadImageResponse'
+                $ref: '#/components/schemas/RequestState_UploadImageResponse_'
       summary: Upload new site banner.
       tags:
         - Site
@@ -9586,7 +11092,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Delete the site banner.
       tags:
         - Site
@@ -9603,7 +11109,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Health check for image functionality
       tags:
         - Media
@@ -9618,7 +11124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       description: 'Mark the donation dialog as shown, so it isn''t displayed anymore.'
       tags:
         - Account
@@ -9634,7 +11140,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiCommunityResponse'
+                $ref: '#/components/schemas/RequestState_MultiCommunityResponse_'
       tags:
         - Multicommunity
       security:
@@ -9654,7 +11160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiCommunityResponse'
+                $ref: '#/components/schemas/RequestState_MultiCommunityResponse_'
       tags:
         - Multicommunity
       security:
@@ -9674,7 +11180,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetMultiCommunityResponse'
+                $ref: '#/components/schemas/RequestState_GetMultiCommunityResponse_'
       tags:
         - Multicommunity
       security: []
@@ -9698,7 +11204,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommunityResponse'
+                $ref: '#/components/schemas/RequestState_CommunityResponse_'
       tags:
         - Multicommunity
       security:
@@ -9718,7 +11224,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       tags:
         - Multicommunity
       security:
@@ -9739,7 +11245,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResponse_MultiCommunityView_'
+                $ref: '#/components/schemas/RequestState_PagedResponse_MultiCommunityView__'
       tags:
         - Multicommunity
       security: []
@@ -9798,7 +11304,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiCommunityResponse'
+                $ref: '#/components/schemas/RequestState_MultiCommunityResponse_'
       tags:
         - Multicommunity
       security: []
@@ -9818,7 +11324,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Change notification settings for a community
       tags:
         - Community
@@ -9840,7 +11346,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
       summary: Change notification settings for a post
       tags:
         - Post
@@ -9853,6 +11359,76 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EditPostNotifications'
+  /api/v4/account/invite:
+    post:
+      operationId: CreateRegistrationInvitation
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestState_CreateInvitationResponse_'
+      summary: Create a new registration invitation
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvitation'
+    delete:
+      operationId: RevokeRegistrationInvitation
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestState_SuccessResponse_'
+      summary: Revoke a previously created registration invitation
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeInvitation'
+  /api/v4/account/invite/list:
+    get:
+      operationId: ListRegistrationInvitations
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestState_PagedResponse_LocalUserInvite__'
+      summary: Revoke a previously created registration invitation
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: int64
+            type: integer
+        - in: query
+          name: page_cursor
+          required: false
+          schema:
+            $ref: '#/components/schemas/PaginationCursor'
   /nodeinfo/2.1:
     get:
       operationId: Nodeinfo
@@ -9862,10 +11438,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NodeInfo'
+                $ref: '#/components/schemas/RequestState_NodeInfo_'
       summary: Metadata for the instance
       tags:
-        - Post
+        - Site
       security: []
       parameters: []
 servers:
