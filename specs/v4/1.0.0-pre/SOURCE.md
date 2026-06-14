@@ -14,12 +14,12 @@
   released, run `scripts/sync-v4 <tag>` to produce `specs/v4/1.0.0/`.
 
 `base.json` is **pristine** — never hand-edit it. Patches and curated
-descriptions live in `overlay.yaml`; the consumer-facing `Lemmy.yaml` is built
+descriptions live in `overlay.yaml`; the consumer-facing `openapi.yaml` is built
 from `base.json ⊕ overlay.yaml`.
 
 ## Codegen verification (2026-06-14)
 
-The built `Lemmy.yaml` was run through swift-openapi-generator 1.12.0 /
+The built `openapi.yaml` was run through swift-openapi-generator 1.12.0 /
 runtime 1.11.0 (LemmyKit's exact toolchain, `generate: [types, client]`,
 `accessModifier: public`). Result: **clean `swift build` (exit 0, no
 warnings)** — generated `Types.swift` (~43k lines) + `Client.swift` (~11.8k)

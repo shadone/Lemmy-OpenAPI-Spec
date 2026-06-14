@@ -11,7 +11,7 @@ rm -rf "$out"
 mkdir -p "$out"
 
 items=""
-for f in $(ls specs/v3/*/Lemmy.yaml specs/v4/*/Lemmy.yaml 2>/dev/null | sort -V); do
+for f in $(ls specs/v3/*/openapi.yaml specs/v4/*/openapi.yaml 2>/dev/null | sort -V); do
   surface=$(echo "$f" | cut -d/ -f2)
   version=$(echo "$f" | cut -d/ -f3)
   dir="$out/$surface/$version"

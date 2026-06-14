@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build the consumer-facing Lemmy.yaml for each vendored v4 spec by applying its
+# Build the consumer-facing openapi.yaml for each vendored v4 spec by applying its
 # OpenAPI Overlay to the pristine base. v3 specs are hand-authored directly and
 # are not built here.
 #
@@ -18,13 +18,13 @@ build_one() {
   done
   [ -n "$base" ] || { echo "skip $dir (no base)"; return; }
   overlay="${dir}overlay.yaml"
-  out="${dir}Lemmy.yaml"
+  out="${dir}openapi.yaml"
 
   # 1. deterministic normalization (number/double -> integer/int64)
   norm="$(mktemp -t lemmy-base-XXXXXX).json"
   node scripts/normalize.mjs "$base" > "$norm"
 
-  # 2. apply curation overlay (if any) -> consumer Lemmy.yaml.
+  # 2. apply curation overlay (if any) -> consumer openapi.yaml.
   #    -o infers YAML from the .yaml extension; remove any prior output first so
   #    bump-cli doesn't prompt to overwrite (which would hang non-interactively).
   rm -f "$out"

@@ -11,7 +11,7 @@ SKIP="--skip-rule info-license-url \
 --skip-rule no-unused-components"
 
 status=0
-for f in specs/v3/*/Lemmy.yaml specs/v4/*/Lemmy.yaml; do
+for f in specs/v3/*/openapi.yaml specs/v4/*/openapi.yaml; do
   [ -f "$f" ] || continue
   echo "== lint $f =="
   # shellcheck disable=SC2086

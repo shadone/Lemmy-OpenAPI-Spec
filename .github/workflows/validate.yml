@@ -32,7 +32,7 @@ jobs:
         run: |
           sh scripts/build.sh
           if ! git diff --quiet -- specs/v4; then
-            echo "::error::Built v4 Lemmy.yaml is stale — run scripts/build.sh and commit the result."
+            echo "::error::Built v4 openapi.yaml is stale — run scripts/build.sh and commit the result."
             git --no-pager diff -- specs/v4 | head -80
             exit 1
           fi
