@@ -26,7 +26,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # pnpm 10 / tsoa in the js-client toolchain require node:sqlite (Node 22.5+).
+          node-version: '24'
 
       - name: Clone lemmy-js-client
         run: git clone https://github.com/LemmyNet/lemmy-js-client "$RUNNER_TEMP/lemmy-js-client"
