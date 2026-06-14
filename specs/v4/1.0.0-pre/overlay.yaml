@@ -1,0 +1,23 @@
+overlay: 1.0.0
+info:
+  title: Lemmy v4 spec overlay (Spud / LemmyKit patches)
+  version: 0.1.0
+actions:
+  # Re-brand the upstream-generated spec as our curated, vendored copy.
+  - target: $.info
+    update:
+      title: Lemmy client API
+      description: >-
+        (unofficial) OpenAPI spec for the Lemmy /api/v4 client API (Lemmy 1.0).
+        Vendored from the official lemmy-js-client tsoa output and patched via
+        an OpenAPI Overlay. See specs/v4/<version>/SOURCE.md for provenance.
+      version: 1.0.0-pre
+      contact:
+        url: https://github.com/shadone/Lemmy-OpenAPI-Spec
+        email: denis@ddenis.info
+      license:
+        name: BSD 2-Clause
+        url: https://opensource.org/licenses/BSD-2-Clause
+  # Curated endpoint/schema descriptions and shape fixes for clean Swift codegen
+  # are added below as we work through trial LemmyKit generation. Keep base.json
+  # pristine — every hand-authored change to the v4 surface goes here.
