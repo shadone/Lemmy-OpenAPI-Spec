@@ -22,10 +22,6 @@ permissions:
 jobs:
   drift:
     runs-on: ubuntu-latest
-    env:
-      LEMMY_JS_CLIENT: ${{ runner.temp }}/lemmy-js-client
-      REF: ${{ inputs.ref || 'main' }}
-      VERSION: ${{ inputs.version || '1.0.0-pre' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,7 +29,11 @@ jobs:
           node-version: '20'
 
       - name: Clone lemmy-js-client
-        run: git clone https://github.com/LemmyNet/lemmy-js-client "$LEMMY_JS_CLIENT"
+        run: git clone https://github.com/LemmyNet/lemmy-js-client "$RUNNER_TEMP/lemmy-js-client"
 
       - name: Check v4 base drift
-        run: sh scripts/drift-check.sh "$REF" "$VERSION"
+        env:
+          LEMMY_JS_CLIENT: ${{ runner.temp }}/lemmy-js-client
+          REF: ${{ github.event.inputs.ref }}
+          VERSION: ${{ github.event.inputs.version }}
+        run: sh scripts/drift-check.sh "${REF:-main}" "${VERSION:-1.0.0-pre}"
