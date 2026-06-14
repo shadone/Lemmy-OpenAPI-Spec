@@ -1,0 +1,39 @@
+name: drift-check
+
+# Regenerate the v4 base from upstream lemmy-js-client and fail if the vendored
+# base.json has drifted. Catches upstream type/endpoint changes so the spec
+# cannot silently fall behind.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: lemmy-js-client ref to compare against
+        default: main
+      version:
+        description: vendored v4 version dir to check
+        default: 1.0.0-pre
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    env:
+      LEMMY_JS_CLIENT: ${{ runner.temp }}/lemmy-js-client
+      REF: ${{ inputs.ref || 'main' }}
+      VERSION: ${{ inputs.version || '1.0.0-pre' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clone lemmy-js-client
+        run: git clone https://github.com/LemmyNet/lemmy-js-client "$LEMMY_JS_CLIENT"
+
+      - name: Check v4 base drift
+        run: sh scripts/drift-check.sh "$REF" "$VERSION"

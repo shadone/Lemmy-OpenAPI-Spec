@@ -1,0 +1,38 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'specs/**'
+      - 'scripts/**'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - 'specs/**'
+      - 'scripts/**'
+      - '.github/workflows/validate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Lint all specs
+        run: sh scripts/validate.sh
+
+      - name: Verify built v4 spec is up to date with base + overlay
+        run: |
+          sh scripts/build.sh
+          if ! git diff --quiet -- specs/v4; then
+            echo "::error::Built v4 Lemmy.yaml is stale — run scripts/build.sh and commit the result."
+            git --no-pager diff -- specs/v4 | head -80
+            exit 1
+          fi
